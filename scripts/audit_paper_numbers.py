@@ -201,6 +201,8 @@ def main() -> int:
               approx(row["itemset_lift_failure"], 1.37, tol=0.01))
 
     # 5.3 Predictive table cells
+    bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")
+    scania_pred = pd.read_parquet(TAB / "scania_predictive.parquet")
     for row_spec in [
         ("Azure", "24h", "combined", 0.996, 0.988),
         ("Azure", "last5", "combined", 0.810, 0.720),
@@ -209,9 +211,14 @@ def main() -> int:
         ("Alibaba", "last3", "combined", 0.813, 0.631),
         ("Alibaba", "last5", "combined", 0.741, 0.574),
         ("Alibaba", "last10", "combined", 0.741, 0.593),
+        ("BGL",    "last20", "combined", 0.512, 0.256),
+        ("BGL",    "last20", "itemsets_only", 0.483, 0.245),
+        ("SCANIA", "last10", "combined", 0.596, 0.154),
+        ("SCANIA", "last20", "combined", 0.567, 0.132),
     ]:
         ds, h, fs, cited_auroc, cited_auprc = row_spec
-        df = azure_pred if ds == "Azure" else ali_pred
+        df = {"Azure": azure_pred, "Alibaba": ali_pred,
+              "BGL": bgl_pred, "SCANIA": scania_pred}[ds]
         r = df[(df["horizon"] == h) & (df["feature_set"] == fs)]
         if len(r) == 0:
             check("5.3", f"{ds} {h} {fs} AUROC/AUPRC",

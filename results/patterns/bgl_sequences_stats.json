@@ -1,0 +1,39 @@
+{
+  "min_support": 0.05,
+  "lift_ratio_sanity": 1.5,
+  "n_patterns_by_horizon": {
+    "last5": 20,
+    "last10": 39,
+    "last20": 150
+  },
+  "max_real_lift_by_horizon": {
+    "last5": 1.6782046759723508,
+    "last10": 1.5869113449801246,
+    "last20": 1.6298374536052418
+  },
+  "max_shuffled_lift_by_horizon": {
+    "last5": 1.6782046759723508,
+    "last10": 1.5869113449801246,
+    "last20": 1.6298374536052418
+  },
+  "mean_top10_real_lift_by_horizon": {
+    "last5": 1.3833240515023268,
+    "last10": 1.415745413257549,
+    "last20": 1.5624498898937185
+  },
+  "mean_top10_shuffled_lift_by_horizon": {
+    "last5": 1.3833240515023268,
+    "last10": 1.415745413257549,
+    "last20": 1.5624498898937185
+  },
+  "n_patterns_above_shuffle_ceiling_by_horizon": {
+    "last5": 0,
+    "last10": 0,
+    "last20": 0
+  },
+  "invariants": {
+    "rich_horizon_top10_real_lift_exceeds_shuffled": false,
+    "at_least_one_horizon_mined": true,
+    "short_horizon_shuffle_negligible": true
+  }
+}

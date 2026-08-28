@@ -75,7 +75,7 @@ RNG_SEED = 20260828
 
 @dataclass
 class WindowRow:
-    entity_id: int
+    entity_id: object   # int for Azure machines, str for BGL racks / Alibaba jobs
     horizon: str
     anchor: pd.Timestamp
     window_start: pd.Timestamp
@@ -248,7 +248,7 @@ def build_windows(
                 ws = anchor - htd
                 slc = _slice_time_window(ent_events, anchor, htd)
                 rows.append(_row_from_slice(
-                    entity_id=int(entity_id), horizon=hname, anchor=anchor,
+                    entity_id=entity_id, horizon=hname, anchor=anchor,
                     window_start=ws, window_end=anchor,
                     slc=slc, is_failure=True, target_failure_type=target,
                 ))
@@ -257,7 +257,7 @@ def build_windows(
                 slc = _slice_count_window(ent_events, anchor, k)
                 ws = slc["timestamp"].min() if not slc.empty else anchor
                 rows.append(_row_from_slice(
-                    entity_id=int(entity_id), horizon=hname, anchor=anchor,
+                    entity_id=entity_id, horizon=hname, anchor=anchor,
                     window_start=ws, window_end=anchor,
                     slc=slc, is_failure=True, target_failure_type=target,
                 ))
@@ -275,7 +275,7 @@ def build_windows(
                 ws = anchor - htd
                 slc = _slice_time_window(ent_events, anchor, htd)
                 rows.append(_row_from_slice(
-                    entity_id=int(entity_id), horizon=hname, anchor=anchor,
+                    entity_id=entity_id, horizon=hname, anchor=anchor,
                     window_start=ws, window_end=anchor,
                     slc=slc, is_failure=False, target_failure_type=None,
                 ))
@@ -290,7 +290,7 @@ def build_windows(
                 slc = _slice_count_window(ent_events, anchor, k)
                 ws = slc["timestamp"].min() if not slc.empty else anchor
                 rows.append(_row_from_slice(
-                    entity_id=int(entity_id), horizon=hname, anchor=anchor,
+                    entity_id=entity_id, horizon=hname, anchor=anchor,
                     window_start=ws, window_end=anchor,
                     slc=slc, is_failure=False, target_failure_type=None,
                 ))

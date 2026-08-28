@@ -1,6 +1,8 @@
 % References for "Mining Frequent Failure Sequences in Operational Event Logs"
 
-% --- Datasets ---
+% ============================================================
+% Datasets
+% ============================================================
 
 @article{alibaba2018trace,
   author  = {Lu, Chengzhi and Ye, Kejiang and Xu, Guoyao and Xu, Cheng-Zhong and Bai, Tongxin},
@@ -27,7 +29,19 @@
   note         = {Synthetic dataset}
 }
 
-% --- Mining algorithms ---
+@article{kharazian2025scania,
+  author  = {Kharazian, Zahra and Lindgren, Tony and Magn{\'u}sson, Sindri and Steinert, Olof and Asadi Khoshkangini, Reza},
+  title   = {{SCANIA} {Component X} Dataset: A Real-World Multivariate Time Series Dataset for Predictive Maintenance},
+  journal = {Scientific Data},
+  year    = {2025},
+  volume  = {12},
+  pages   = {493},
+  doi     = {10.1038/s41597-025-04802-6},
+}
+
+% ============================================================
+% Mining algorithms: itemsets
+% ============================================================
 
 @inproceedings{agrawal1994fast,
   author    = {Agrawal, Rakesh and Srikant, Ramakrishnan},
@@ -46,6 +60,22 @@
   doi       = {10.1145/342009.335372},
 }
 
+% ============================================================
+% Mining algorithms: sequences
+% ============================================================
+
+@inproceedings{srikant1996gsp,
+  author    = {Srikant, Ramakrishnan and Agrawal, Rakesh},
+  title     = {Mining Sequential Patterns: Generalizations and Performance Improvements},
+  booktitle = {Advances in Database Technology --- EDBT 1996},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {1057},
+  year      = {1996},
+  pages     = {1--17},
+  publisher = {Springer},
+  doi       = {10.1007/BFb0014140},
+}
+
 @inproceedings{pei2001prefixspan,
   author    = {Pei, Jian and Han, Jiawei and Mortazavi-Asl, Behzad and Pinto, Helen and Chen, Qiming and Dayal, Umeshwar and Hsu, Mei-Chun},
   title     = {{PrefixSpan}: Mining sequential patterns efficiently by prefix-projected pattern growth},
@@ -55,7 +85,56 @@
   doi       = {10.1109/ICDE.2001.914830},
 }
 
-% --- Prior work on failure prediction with pattern mining ---
+@article{zaki2001spade,
+  author  = {Zaki, Mohammed J.},
+  title   = {{SPADE}: An Efficient Algorithm for Mining Frequent Sequences},
+  journal = {Machine Learning},
+  year    = {2001},
+  volume  = {42},
+  number  = {1/2},
+  pages   = {31--60},
+  doi     = {10.1023/A:1007652502315},
+}
+
+@inproceedings{fournierviger2014cmspade,
+  author    = {Fournier-Viger, Philippe and Gomariz, Antonio and Campos, Manuel and Thomas, Rincy},
+  title     = {Fast Vertical Mining of Sequential Patterns Using Co-Occurrence Information},
+  booktitle = {Advances in Knowledge Discovery and Data Mining (PAKDD 2014)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {8443},
+  year      = {2014},
+  pages     = {40--52},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-319-06608-0_4},
+}
+
+@inproceedings{fournierviger2014vmsp,
+  author    = {Fournier-Viger, Philippe and Wu, Cheng-Wei and Gomariz, Antonio and Tseng, Vincent S.},
+  title     = {{VMSP}: Efficient Vertical Mining of Maximal Sequential Patterns},
+  booktitle = {Advances in Artificial Intelligence (Canadian AI 2014)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {8436},
+  year      = {2014},
+  pages     = {83--94},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-319-06483-3_8},
+}
+
+@inproceedings{fournierviger2022patternmining,
+  author    = {Fournier-Viger, Philippe and Gan, Wensheng and Wu, Youxi and Nouioua, Mourad and Song, Wei and Truong, Tin and Duong, Hai},
+  title     = {Pattern Mining: Current Challenges and Opportunities},
+  booktitle = {Database Systems for Advanced Applications (DASFAA 2022) International Workshops},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13248},
+  year      = {2022},
+  pages     = {34--49},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-031-11217-1_3},
+}
+
+% ============================================================
+% Pattern mining on system logs
+% ============================================================
 
 @inproceedings{ren2020failure,
   author    = {Ren, Rui and Li, Jinheng and Yin, Yan and Tian, Shuai},
@@ -76,6 +155,101 @@
   doi     = {10.1007/s11227-024-06297-1},
 }
 
+% ============================================================
+% Deep-learning log anomaly detection
+% ============================================================
+
+@inproceedings{du2017deeplog,
+  author    = {Du, Min and Li, Feifei and Zheng, Guineng and Srikumar, Vivek},
+  title     = {{DeepLog}: Anomaly Detection and Diagnosis from System Logs through Deep Learning},
+  booktitle = {Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security (CCS)},
+  year      = {2017},
+  pages     = {1285--1298},
+  doi       = {10.1145/3133956.3134015},
+}
+
+@inproceedings{guo2021logbert,
+  author    = {Guo, Haixuan and Yuan, Shuhan and Wu, Xintao},
+  title     = {{LogBERT}: Log Anomaly Detection via {BERT}},
+  booktitle = {2021 International Joint Conference on Neural Networks (IJCNN)},
+  year      = {2021},
+  doi       = {10.1109/IJCNN52387.2021.9534113},
+}
+
+@inproceedings{meng2019loganomaly,
+  author    = {Meng, Weibin and Liu, Ying and Zhu, Yichen and Zhang, Shenglin and Pei, Dan and Liu, Yuqing and Chen, Yihao and Zhang, Ruizhi and Tao, Shimin and Sun, Pei and Zhou, Rong},
+  title     = {{LogAnomaly}: Unsupervised Detection of Sequential and Quantitative Anomalies in Unstructured Logs},
+  booktitle = {Proceedings of the 28th International Joint Conference on Artificial Intelligence (IJCAI)},
+  year      = {2019},
+  pages     = {4739--4745},
+  doi       = {10.24963/ijcai.2019/658},
+}
+
+@inproceedings{zhang2019logrobust,
+  author    = {Zhang, Xu and Xu, Yong and Lin, Qingwei and Qiao, Bo and Zhang, Hongyu and Dang, Yingnong and Xie, Chunyu and Yang, Xinsheng and Cheng, Qian and Li, Ze and Chen, Junjie and He, Xiaoting and Yao, Randolph and Lou, Jian-Guang and Chintalapati, Murali and Shen, Furao and Zhang, Dongmei},
+  title     = {Robust Log-Based Anomaly Detection on Unstable Log Data},
+  booktitle = {Proceedings of the 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE)},
+  year      = {2019},
+  pages     = {807--817},
+  doi       = {10.1145/3338906.3338931},
+}
+
+@inproceedings{yang2021plelog,
+  author    = {Yang, Lin and Chen, Junjie and Wang, Zan and Wang, Weijing and Jiang, Jiajun and Dong, Xuyuan and Zhang, Wenbin},
+  title     = {Semi-Supervised Log-Based Anomaly Detection via Probabilistic Label Estimation},
+  booktitle = {Proceedings of the 43rd International Conference on Software Engineering (ICSE)},
+  year      = {2021},
+  pages     = {1448--1460},
+  doi       = {10.1109/ICSE43902.2021.00130},
+}
+
+@techreport{guo2024logformer,
+  author        = {Guo, Hongcheng and Yang, Jian and Liu, Jiaheng and Bai, Jiaqi and Wang, Boyang and Li, Zhoujun and Zheng, Tieqiao and Zhang, Bo and Peng, Junran and Tian, Qi},
+  title         = {{LogFormer}: A Pre-Train and Tuning Pipeline for Log Anomaly Detection},
+  year          = {2024},
+  institution   = {arXiv},
+  eprint        = {2401.04749},
+  archivePrefix = {arXiv},
+}
+
+% ============================================================
+% Log-parsing and Loghub infrastructure
+% ============================================================
+
+@inproceedings{zhu2019logparsing,
+  author    = {Zhu, Jieming and He, Shilin and Liu, Jinyang and He, Pinjia and Xie, Qi and Zheng, Zibin and Lyu, Michael R.},
+  title     = {Tools and Benchmarks for Automated Log Parsing},
+  booktitle = {2019 IEEE/ACM 41st International Conference on Software Engineering: Software Engineering in Practice (ICSE-SEIP)},
+  year      = {2019},
+  pages     = {121--130},
+  doi       = {10.1109/ICSE-SEIP.2019.00021},
+}
+
+@inproceedings{zhu2023loghub,
+  author    = {Zhu, Jieming and He, Shilin and He, Pinjia and Liu, Jinyang and Lyu, Michael R.},
+  title     = {Loghub: A Large Collection of System Log Datasets for {AI}-Driven Log Analytics},
+  booktitle = {2023 IEEE 34th International Symposium on Software Reliability Engineering (ISSRE)},
+  year      = {2023},
+  doi       = {10.1109/ISSRE59848.2023.00071},
+}
+
+% ============================================================
+% HPC / supercomputer log studies
+% ============================================================
+
+@inproceedings{oliner2007supercomputers,
+  author    = {Oliner, Adam and Stearley, Jon},
+  title     = {What Supercomputers Say: A Study of Five System Logs},
+  booktitle = {37th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)},
+  year      = {2007},
+  pages     = {575--584},
+  doi       = {10.1109/DSN.2007.103},
+}
+
+% ============================================================
+% Alibaba / cloud trace characterisation
+% ============================================================
+
 @techreport{cheng2018characterizing,
   author      = {Cheng, Yue and Chai, Zheng and Anwar, Ali},
   title       = {Characterizing Co-located Datacenter Workloads: An Alibaba Case Study},
@@ -86,11 +260,57 @@
   primaryClass = {cs.DC},
 }
 
-% --- Software ---
+@inproceedings{luo2021alibaba,
+  author    = {Luo, Shutian and Xu, Huanle and Lu, Chengzhi and Ye, Kejiang and Xu, Guoyao and Zhang, Liping and Ding, Yu and He, Jian and Xu, Chengzhong},
+  title     = {Characterizing Microservice Dependency and Performance: {Alibaba} Trace Analysis},
+  booktitle = {Proceedings of the ACM Symposium on Cloud Computing (SoCC)},
+  year      = {2021},
+  pages     = {412--426},
+  doi       = {10.1145/3472883.3487003},
+}
+
+% ============================================================
+% Predictive maintenance in ML
+% ============================================================
+
+@inproceedings{saxena2008cmapss,
+  author    = {Saxena, Abhinav and Goebel, Kai and Simon, Don and Eklund, Neil},
+  title     = {Damage Propagation Modeling for Aircraft Engine Run-to-Failure Simulation},
+  booktitle = {2008 International Conference on Prognostics and Health Management (PHM)},
+  year      = {2008},
+  doi       = {10.1109/PHM.2008.4711414},
+}
+
+@article{serradilla2022pdmsurvey,
+  author  = {Serradilla, Oscar and Zugasti, Ekhi and Rodriguez, Jon and Zurutuza, Urko},
+  title   = {Deep Learning Models for Predictive Maintenance: A Survey, Comparison, Challenges and Prospects},
+  journal = {Applied Intelligence},
+  year    = {2022},
+  volume  = {52},
+  number  = {10},
+  pages   = {10934--10964},
+  doi     = {10.1007/s10489-021-03004-y},
+}
+
+@inproceedings{costa2016ida,
+  author    = {Costa, Camila Ferreira and Nascimento, Mario A.},
+  title     = {{IDA} 2016 Industrial Challenge: Using Machine Learning for Predicting Failures},
+  booktitle = {Advances in Intelligent Data Analysis XV (IDA 2016)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {9897},
+  year      = {2016},
+  pages     = {381--386},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-319-46349-0_33},
+}
+
+% ============================================================
+% Software
+% ============================================================
 
 @article{raschka2018mlxtend,
   author  = {Raschka, Sebastian},
-  title   = {{MLxtend}: Providing machine learning and data science utilities and extensions to {Python}'s scientific computing stack},
+  title   = {{MLxtend}: Providing machine learning and data science utilities and extensions to Python scientific computing stack},
   journal = {Journal of Open Source Software},
   volume  = {3},
   number  = {24},
@@ -108,7 +328,9 @@
   doi       = {10.1007/978-3-319-46131-1_8},
 }
 
-% --- Statistics ---
+% ============================================================
+% Statistics
+% ============================================================
 
 @article{benjamini1995controlling,
   author  = {Benjamini, Yoav and Hochberg, Yosef},

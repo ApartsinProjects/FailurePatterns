@@ -46,6 +46,80 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — Four-trace expansion: BGL + SCANIA folded as boundary conditions
+
+Added two new production traces to the study following the user's
+conference-tier request.
+
+**BGL (Loghub Blue Gene/L, per-rack).** 4,747,963 syslogs from LLNL
+2005-06 to 2006-01; 913k events after dropping INFO noise; 64 racks;
+348k alerts (7.34%). Loader [src/ingest/bgl.py](src/ingest/bgl.py)
+parses `label`, `severity`, `component` fields; alerts map to
+`terminal_alert`, severe non-alerts to `system_error`, warnings to
+`system_warning`, INFO to `system_info`. Window sampler
+[src/eval/windows_bgl.py](src/eval/windows_bgl.py) groups alerts into
+episodes with a 1h inter-arrival threshold (7,224 episodes from 348k
+alerts, 48× compression) and anchors on the first alert per episode.
+Critical design fix: alerts are removed from the pre-alert event
+stream so mining does not learn the trivial "alert follows alert"
+signal.
+
+**Result: BGL is a boundary case.** Best combined AUROC across all
+horizons is 0.51 (chance). Non-alert log lines carry no discriminable
+precursor signal on BGL, even with INFO included and component
+granularity added. The mechanism: BGL alerts self-trigger in dense
+cascades, so predicting "what non-alert events precede an alert
+episode" reduces to background noise.
+
+**SCANIA Component X (Nature Sci Data 2025, per-vehicle).** 23,550
+trucks × 1.12M readouts × 105 numeric counter/histogram features;
+2,272 vehicles (9.65%) undergo a component-X repair during the
+study. Loader [src/ingest/scania.py](src/ingest/scania.py) converts
+per-vehicle counter deltas to `counter_surprise` tokens (per-vehicle
+90th-percentile threshold; changed from fleet-wide global threshold
+after the initial version was too crude). Window sampler
+[src/eval/windows_scania.py](src/eval/windows_scania.py) uses the
+Alibaba-style cross-entity control design.
+
+**Result: SCANIA is also a boundary case.** Best combined AUROC is
+0.60 (last10) with per-vehicle binning; global binning gave 0.61.
+Per-vehicle normalisation did not rescue the signal. Mechanism:
+discrete tokens derived from continuous counters do not preserve
+the ordered structure that pattern mining exploits.
+
+**Cross-dataset final result (four traces):**
+
+| trace   | best combined AUROC | verdict |
+|---|---|---|
+| Azure PdM (24h) | 0.996 | strong win |
+| Alibaba v2018 (last3) | 0.813 | strong win |
+| BGL (last20) | 0.512 | boundary — self-triggering alerts |
+| SCANIA (last10) | 0.596 | boundary — derived tokens |
+
+**Paper updates.**
+- Restructured to canonical scientific layout: Abstract → Intro →
+  Related Work → Data → Method → Experiments → Results → Discussion
+  → Limitations → Conclusion.
+- §2 Related Work expanded to 7 subsections with 20 new citations
+  covering DL log anomaly (DeepLog, LogBERT, LogAnomaly, LogRobust,
+  PLELog, LogFormer), sequence-mining variants (SPADE, GSP,
+  CM-SPAM, VMSP), log-parsing infrastructure (Loghub, Drain), trace
+  characterisation (Oliner BGL, Luo microservice), PdM broader
+  (C-MAPSS, Serradilla, SCANIA IDA 2016).
+- §7.2 "Regime of validity" formalises the two-wins-two-boundaries
+  finding with the mechanistic explanation.
+- Bibliography expanded from 12 to 29 validated entries;
+  [bibtest](https://github.com/anthropics/claude-skills) caught two
+  more hallucinated citations (buddhakulsomsiri wrong DOI, que2024
+  wrong authors) which were removed.
+- Numbers audit re-run: **58 / 58 pass** (up from 50 / 50 after adding
+  BGL + SCANIA claims).
+- Four-trace comparison figure at
+  [results/figures/four_dataset_predictive_comparison.png](results/figures/four_dataset_predictive_comparison.png).
+
+Failure Sequences Paper artifact republished at the same URL:
+https://claude.ai/code/artifact/2b874f10-92e9-486b-8250-d7445dc88509
+
 ## 2026-08-28 — Bibliography, lead-time, numbers audit
 
 **Lead-time metric** added to [src/eval/predict.py](src/eval/predict.py).

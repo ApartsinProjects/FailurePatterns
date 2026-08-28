@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="dcterms.date" content="2026-08-28" />
+  <meta name="dcterms.date" content="2026-08-29" />
   <title>Mining Frequent Failure Sequences in Operational Event Logs</title>
   <style>
 code{white-space: pre-wrap;}
@@ -195,7 +195,7 @@ margin: 2rem 0;
 <header id="title-block-header">
 <h1 class="title">Mining Frequent Failure Sequences in Operational Event
 Logs</h1>
-<p class="date">2026-08-28</p>
+<p class="date">2026-08-29</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -204,14 +204,32 @@ Operational Event Logs</a>
 <ul>
 <li><a href="#abstract" id="toc-abstract"><span class="toc-section-number">1.1</span> Abstract</a></li>
 <li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1.2</span> 1 Introduction</a></li>
-<li><a href="#related-work" id="toc-related-work"><span class="toc-section-number">1.3</span> 2 Related work</a></li>
-<li><a href="#datasets-and-event-vocabulary" id="toc-datasets-and-event-vocabulary"><span class="toc-section-number">1.4</span> 3 Datasets and event
-vocabulary</a>
+<li><a href="#background-and-related-work" id="toc-background-and-related-work"><span class="toc-section-number">1.3</span> 2 Background and related work</a>
 <ul>
-<li><a href="#azure-predictive-maintenance" id="toc-azure-predictive-maintenance"><span class="toc-section-number">1.4.1</span> 3.1 Azure Predictive
-Maintenance</a></li>
-<li><a href="#alibaba-cluster-trace-v2018" id="toc-alibaba-cluster-trace-v2018"><span class="toc-section-number">1.4.2</span> 3.2 Alibaba
-cluster-trace-v2018</a></li>
+<li><a href="#frequent-itemset-and-sequential-pattern-mining" id="toc-frequent-itemset-and-sequential-pattern-mining"><span class="toc-section-number">1.3.1</span> 2.1 Frequent itemset and
+sequential pattern mining</a></li>
+<li><a href="#failure-prediction-from-operational-event-logs" id="toc-failure-prediction-from-operational-event-logs"><span class="toc-section-number">1.3.2</span> 2.2 Failure prediction from
+operational event logs</a></li>
+<li><a href="#log-parsing-infrastructure" id="toc-log-parsing-infrastructure"><span class="toc-section-number">1.3.3</span> 2.3 Log-parsing
+infrastructure</a></li>
+<li><a href="#failure-characterisation-on-alibaba-and-bgl" id="toc-failure-characterisation-on-alibaba-and-bgl"><span class="toc-section-number">1.3.4</span> 2.4 Failure characterisation on
+Alibaba and BGL</a></li>
+<li><a href="#predictive-maintenance-beyond-system-logs" id="toc-predictive-maintenance-beyond-system-logs"><span class="toc-section-number">1.3.5</span> 2.5 Predictive maintenance
+beyond system logs</a></li>
+<li><a href="#statistical-significance" id="toc-statistical-significance"><span class="toc-section-number">1.3.6</span> 2.6 Statistical
+significance</a></li>
+<li><a href="#positioning" id="toc-positioning"><span class="toc-section-number">1.3.7</span> 2.7 Positioning</a></li>
+</ul></li>
+<li><a href="#data" id="toc-data"><span class="toc-section-number">1.4</span> 3 Data</a>
+<ul>
+<li><a href="#azure-predictive-maintenance-synthetic-per-machine" id="toc-azure-predictive-maintenance-synthetic-per-machine"><span class="toc-section-number">1.4.1</span> 3.1 Azure Predictive Maintenance
+(synthetic, per-machine)</a></li>
+<li><a href="#alibaba-cluster-trace-v2018-production-cloud-per-job" id="toc-alibaba-cluster-trace-v2018-production-cloud-per-job"><span class="toc-section-number">1.4.2</span> 3.2 Alibaba cluster-trace-v2018
+(production cloud, per-job)</a></li>
+<li><a href="#llnl-blue-genel-syslogs-loghub-per-rack" id="toc-llnl-blue-genel-syslogs-loghub-per-rack"><span class="toc-section-number">1.4.3</span> 3.3 LLNL Blue Gene/L syslogs
+(Loghub, per-rack)</a></li>
+<li><a href="#scania-component-x-production-automotive-per-vehicle" id="toc-scania-component-x-production-automotive-per-vehicle"><span class="toc-section-number">1.4.4</span> 3.4 SCANIA Component X
+(production automotive, per-vehicle)</a></li>
 </ul></li>
 <li><a href="#method" id="toc-method"><span class="toc-section-number">1.5</span> 4 Method</a>
 <ul>
@@ -219,38 +237,44 @@ cluster-trace-v2018</a></li>
 matched controls</a></li>
 <li><a href="#mining" id="toc-mining"><span class="toc-section-number">1.5.2</span> 4.2 Mining</a></li>
 <li><a href="#sanity-invariants" id="toc-sanity-invariants"><span class="toc-section-number">1.5.3</span> 4.3 Sanity invariants</a></li>
-<li><a href="#predictive-evaluation" id="toc-predictive-evaluation"><span class="toc-section-number">1.5.4</span> 4.4 Predictive
-evaluation</a></li>
+<li><a href="#statistical-significance-1" id="toc-statistical-significance-1"><span class="toc-section-number">1.5.4</span> 4.4 Statistical
+significance</a></li>
 </ul></li>
-<li><a href="#results" id="toc-results"><span class="toc-section-number">1.6</span> 5 Results</a>
+<li><a href="#experiments" id="toc-experiments"><span class="toc-section-number">1.6</span> 5 Experiments</a>
 <ul>
 <li><a href="#coverage-per-horizon-azure" id="toc-coverage-per-horizon-azure"><span class="toc-section-number">1.6.1</span> 5.1 Coverage per horizon
 (Azure)</a></li>
-<li><a href="#mined-patterns-azure" id="toc-mined-patterns-azure"><span class="toc-section-number">1.6.2</span> 5.2 Mined patterns
-(Azure)</a></li>
-<li><a href="#predictive-evaluation-both-datasets" id="toc-predictive-evaluation-both-datasets"><span class="toc-section-number">1.6.3</span> 5.3 Predictive evaluation (both
-datasets)</a></li>
-<li><a href="#when-does-order-help" id="toc-when-does-order-help"><span class="toc-section-number">1.6.4</span> 5.4 When does order
-help?</a></li>
-<li><a href="#formal-significance-phase-5" id="toc-formal-significance-phase-5"><span class="toc-section-number">1.6.5</span> 5.5 Formal significance (Phase
-5)</a></li>
-<li><a href="#lead-time-on-true-positives" id="toc-lead-time-on-true-positives"><span class="toc-section-number">1.6.6</span> 5.6 Lead time on true
-positives</a></li>
-<li><a href="#robustness-to-min_support-phase-7-scoped" id="toc-robustness-to-min_support-phase-7-scoped"><span class="toc-section-number">1.6.7</span> 5.7 Robustness to min_support
-(Phase 7 scoped)</a></li>
+<li><a href="#mining-sensitivity-to-min_support-azure" id="toc-mining-sensitivity-to-min_support-azure"><span class="toc-section-number">1.6.2</span> 5.2 Mining sensitivity to
+min_support (Azure)</a></li>
 </ul></li>
-<li><a href="#discussion" id="toc-discussion"><span class="toc-section-number">1.7</span> 6 Discussion</a></li>
-<li><a href="#limitations" id="toc-limitations"><span class="toc-section-number">1.8</span> 7 Limitations</a></li>
-<li><a href="#conclusion" id="toc-conclusion"><span class="toc-section-number">1.9</span> 8 Conclusion</a></li>
-<li><a href="#what-is-still-missing" id="toc-what-is-still-missing"><span class="toc-section-number">1.10</span> What is still missing</a></li>
-<li><a href="#what-is-verified" id="toc-what-is-verified"><span class="toc-section-number">1.11</span> What is verified</a></li>
+<li><a href="#results" id="toc-results"><span class="toc-section-number">1.7</span> 6 Results</a>
+<ul>
+<li><a href="#mined-patterns-azure-and-alibaba" id="toc-mined-patterns-azure-and-alibaba"><span class="toc-section-number">1.7.1</span> 6.1 Mined patterns (Azure and
+Alibaba)</a></li>
+<li><a href="#predictive-evaluation-four-traces" id="toc-predictive-evaluation-four-traces"><span class="toc-section-number">1.7.2</span> 6.2 Predictive evaluation (four
+traces)</a></li>
+<li><a href="#order-gain" id="toc-order-gain"><span class="toc-section-number">1.7.3</span> 6.3 Order gain</a></li>
+<li><a href="#formal-significance" id="toc-formal-significance"><span class="toc-section-number">1.7.4</span> 6.4 Formal significance</a></li>
+<li><a href="#lead-time-on-true-positives" id="toc-lead-time-on-true-positives"><span class="toc-section-number">1.7.5</span> 6.5 Lead time on true
+positives</a></li>
+</ul></li>
+<li><a href="#discussion" id="toc-discussion"><span class="toc-section-number">1.8</span> 7 Discussion</a>
+<ul>
+<li><a href="#what-each-mined-signature-means-operationally" id="toc-what-each-mined-signature-means-operationally"><span class="toc-section-number">1.8.1</span> 7.1 What each mined signature
+means operationally</a></li>
+<li><a href="#regime-of-validity" id="toc-regime-of-validity"><span class="toc-section-number">1.8.2</span> 7.2 Regime of validity</a></li>
+</ul></li>
+<li><a href="#limitations" id="toc-limitations"><span class="toc-section-number">1.9</span> 8 Limitations</a></li>
+<li><a href="#conclusion" id="toc-conclusion"><span class="toc-section-number">1.10</span> 9 Conclusion</a></li>
+<li><a href="#what-is-still-missing" id="toc-what-is-still-missing"><span class="toc-section-number">1.11</span> What is still missing</a></li>
+<li><a href="#what-is-verified" id="toc-what-is-verified"><span class="toc-section-number">1.12</span> What is verified</a></li>
 </ul></li>
 </ul>
 </nav>
 <h1 data-number="1" id="mining-frequent-failure-sequences-in-operational-event-logs"><span class="header-section-number">1</span> Mining Frequent Failure Sequences
 in Operational Event Logs</h1>
-<p><em>First-draft paper skeleton. Numbers are current best estimates
-from the pipeline as of 2026-08-28. TODO markers name what is still
+<p><em>Restructured draft. Numbers are current best estimates from the
+pipeline as of 2026-08-28. TODO markers name what is still
 missing.</em></p>
 <h2 data-number="1.1" id="abstract"><span class="header-section-number">1.1</span> Abstract</h2>
 <p>Predictive maintenance systems mine continuous sensor telemetry, but
@@ -272,10 +296,13 @@ Concrete pre-failure signatures include
 <code>software_error:error2 → software_error:error3</code> on Azure
 (sequence lift 3.73 vs itemset lift 2.22) and
 <code>task_success:M → task_success:R → task_success:M → task_success:M</code>
-on Alibaba (sequence lift 2.43 vs itemset lift 0.94). Temporal order in
-operational event logs is a transferable early-warning signal; mined
-patterns and matched-control windows are released as reproducible
-parquet artifacts.</p>
+on Alibaba (sequence lift 2.43 vs itemset lift 0.94). Two additional
+traces (LLNL Blue Gene/L syslogs; SCANIA Component X automotive fleet)
+map out the method’s boundary conditions and are reported alongside.
+Temporal order in operational event logs is a transferable early-warning
+signal in the regime of rich discrete event vocabularies; mined patterns
+and matched-control windows are released as reproducible parquet
+artifacts.</p>
 <h2 data-number="1.2" id="introduction"><span class="header-section-number">1.2</span> 1 Introduction</h2>
 <p>Operational logs from datacenters, industrial fleets, and cloud
 platforms carry a rich stream of discrete events: software errors, task
@@ -294,56 +321,130 @@ the second family finds anything the first does not.</p>
 <li>A dataset-agnostic mining pipeline for pre-failure event windows
 with matched controls, sanity invariants at every phase (random label
 permutation for itemsets, within-window order shuffle for sequences),
-and per-pattern lift / relative-risk scoring.</li>
+and per-pattern lift, relative-risk, and BH-corrected significance
+scoring.</li>
 <li>A head-to-head predictive comparison of four feature sets (event
 count baseline, itemsets, sequences, combined) on a temporally-held-out
-split with mining restricted to training data.</li>
-<li>Cross-dataset replication on both a small clean synthetic corpus
-(Microsoft Azure Predictive Maintenance, 100 machines, one year) and a
-production cluster trace (Alibaba cluster-trace-v2018, 4.2 M jobs, 8
-days). The same finding holds on both.</li>
+split with mining restricted to training data, under logistic regression
+on binary pattern-presence features.</li>
+<li>Cross-dataset replication on four public event-log traces spanning
+three domains: synthetic industrial per-machine (Azure PdM), real cloud
+per-job (Alibaba cluster-trace-v2018), real HPC per-rack (LLNL Blue
+Gene/L syslogs from Loghub), and real automotive per-vehicle (SCANIA
+Component X). Two traces yield strong wins; two map out the method’s
+boundary conditions with a mechanistic explanation.</li>
 </ol>
-<h2 data-number="1.3" id="related-work"><span class="header-section-number">1.3</span> 2 Related work</h2>
-<p><strong>Frequent-pattern mining on system logs.</strong> The two
-mining families this paper compares are well-established:
-association-rule mining and FP-Growth over unordered transactions <span class="citation" data-cites="agrawal1994fast han2000mining">(Agrawal and
-Srikant 1994; Han, Pei, and Yin 2000)</span>, and PrefixSpan for
-sequential patterns <span class="citation" data-cites="pei2001prefixspan">(Pei et al. 2001)</span>. Ren et al.
-<span class="citation" data-cites="ren2020failure">(Ren et al.
-2021)</span> apply Spark FP-Growth to failure prediction on the
-BlueGene/L, LANL-HPC, and CMRI-Hadoop logs, using event-density-based
-sliding windows over long-tail event vocabularies. İfraz and Ersöz <span class="citation" data-cites="ifraz2024sequential">(İfraz and Ersöz
-2024)</span> run PrefixSpan and Apriori side-by-side on a bus-fleet
-maintenance log, showing that sequence mining recovers “errors →
-replacement” trajectories that itemset mining misses. Both studies stop
-short of the head-to-head “matched-control lift + BH q + predictive
-utility” comparison used here, and neither touches Alibaba or Azure
-PdM.</p>
-<p><strong>Failure characterisation on Alibaba.</strong> Cheng et al.
-<span class="citation" data-cites="cheng2018characterizing">(Cheng,
-Chai, and Anwar 2018)</span> provide the standard characterisation of
-the Alibaba 2018 trace, reporting failure statistics and co-location
-effects but not extracting sequential patterns. Downstream work uses
-supervised classifiers on the same trace for task-failure prediction
-without pattern mining as an intermediate representation.</p>
-<p><strong>Statistical significance for pattern mining.</strong> We
-apply Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
+<h2 data-number="1.3" id="background-and-related-work"><span class="header-section-number">1.3</span> 2 Background and related
+work</h2>
+<h3 data-number="1.3.1" id="frequent-itemset-and-sequential-pattern-mining"><span class="header-section-number">1.3.1</span> 2.1 Frequent itemset and
+sequential pattern mining</h3>
+<p>The two mining families this paper compares are well-established.
+Association-rule mining introduced Apriori <span class="citation" data-cites="agrawal1994fast">(Agrawal and Srikant 1994)</span> and
+FP-Growth <span class="citation" data-cites="han2000mining">(Han, Pei,
+and Yin 2000)</span> over unordered transactions, the latter avoiding
+candidate generation through a compressed frequent-pattern tree.
+Sequential pattern mining extended this to ordered event streams: GSP
+<span class="citation" data-cites="srikant1996gsp">(Srikant and Agrawal
+1996)</span> generalises Apriori-style level-wise generation to
+sequences; SPADE <span class="citation" data-cites="zaki2001spade">(Zaki
+2001)</span> uses a vertical id-list format; PrefixSpan <span class="citation" data-cites="pei2001prefixspan">(Pei et al. 2001)</span>
+uses prefix-projected pattern growth, and is the algorithm we use in
+this paper.</p>
+<p>Later variants sharpen the raw output. CM-SPAM / CM-SPADE <span class="citation" data-cites="fournierviger2014cmspade">(Fournier-Viger,
+Gomariz, et al. 2014)</span> speed vertical mining through co-occurrence
+pruning; VMSP <span class="citation" data-cites="fournierviger2014vmsp">(Fournier-Viger, Wu, et al.
+2014)</span> returns only maximal sequences, compressing the pattern set
+without losing coverage. A recent survey <span class="citation" data-cites="fournierviger2022patternmining">(Fournier-Viger et al.
+2022)</span> summarises open problems in the area. All of these
+algorithms are implemented in the SPMF library <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span>, which
+we call from Python for the sequence-mining half of our pipeline; the
+itemset half uses <code>mlxtend</code> <span class="citation" data-cites="raschka2018mlxtend">(Raschka 2018)</span>.</p>
+<h3 data-number="1.3.2" id="failure-prediction-from-operational-event-logs"><span class="header-section-number">1.3.2</span> 2.2 Failure prediction from
+operational event logs</h3>
+<p>Two families of methods dominate the literature: (i) explicit
+frequent-pattern mining on parsed log templates, close to what this
+paper does, and (ii) deep learning over log sequences.</p>
+<p><strong>Pattern mining.</strong> Ren et al. <span class="citation" data-cites="ren2020failure">(Ren et al. 2021)</span> apply Spark
+FP-Growth to failure prediction on BlueGene/L, LANL-HPC, and CMRI-Hadoop
+logs, using event-density sliding windows over long-tail event
+vocabularies. İfraz and Ersöz <span class="citation" data-cites="ifraz2024sequential">(İfraz and Ersöz 2024)</span> run
+PrefixSpan and Apriori side-by-side on a bus-fleet maintenance log,
+showing that sequence mining recovers “errors → replacement”
+trajectories that itemset mining misses. Both studies stop short of the
+head-to-head matched-control + BH-corrected + predictive-utility
+comparison used here, and neither touches Alibaba PdM or Azure.</p>
+<p><strong>Deep learning on log sequences.</strong> DeepLog <span class="citation" data-cites="du2017deeplog">(Du et al. 2017)</span>
+frames system-log anomaly detection as next-template prediction with a
+stacked LSTM, and remains the canonical DL baseline. LogAnomaly <span class="citation" data-cites="meng2019loganomaly">(Meng et al.
+2019)</span> adds unsupervised quantitative-anomaly detection alongside
+sequential anomalies. LogRobust <span class="citation" data-cites="zhang2019logrobust">(Zhang et al. 2019)</span> adds an
+attention Bi-LSTM to survive log-template drift, and PLELog <span class="citation" data-cites="yang2021plelog">(Yang et al. 2021)</span>
+introduces semi-supervised label estimation for the weakly-labelled
+setting. Recent transformer approaches (LogBERT <span class="citation" data-cites="guo2021logbert">(Haixuan Guo, Yuan, and Wu 2021)</span>;
+LogFormer <span class="citation" data-cites="guo2024logformer">(Hongcheng Guo et al. 2024)</span>)
+pre-train on unlabelled logs and fine-tune for anomaly detection. These
+methods generally outperform classical pattern miners on held-out AUROC
+when trained on enough data, but produce opaque per-line anomaly scores
+rather than interpretable pre-failure signatures. Our contribution is
+orthogonal: we ask whether explicit ordered patterns add signal over
+their itemset counterparts, with every mined pattern human-readable and
+independently significance-tested.</p>
+<h3 data-number="1.3.3" id="log-parsing-infrastructure"><span class="header-section-number">1.3.3</span> 2.3 Log-parsing
+infrastructure</h3>
+<p>The raw text of most system logs must first be converted into event
+templates before either family of methods applies. The Loghub collection
+<span class="citation" data-cites="zhu2023loghub">(Zhu et al.
+2023)</span> curates parsed versions of BGL, HDFS, Thunderbird, and 13
+other benchmark log datasets; the parsing benchmark of Zhu et al. <span class="citation" data-cites="zhu2019logparsing">(Zhu et al. 2019)</span>
+compares Drain and alternative parsers on the same corpora. We take BGL
+from Loghub directly and use its native label field, avoiding the
+parsing step as a confound.</p>
+<h3 data-number="1.3.4" id="failure-characterisation-on-alibaba-and-bgl"><span class="header-section-number">1.3.4</span> 2.4 Failure characterisation
+on Alibaba and BGL</h3>
+<p>Cheng et al. <span class="citation" data-cites="cheng2018characterizing">(Cheng, Chai, and Anwar
+2018)</span> provide the standard characterisation of the Alibaba 2018
+trace, reporting failure statistics and co-location effects but not
+extracting sequential patterns. Luo et al. <span class="citation" data-cites="luo2021alibaba">(Luo et al. 2021)</span> extend this to the
+microservice trace with focus on dependency and latency rather than
+fault prediction. Oliner and Stearley <span class="citation" data-cites="oliner2007supercomputers">(Oliner and Stearley 2007)</span>
+introduce the BGL log we use, along with four other HPC logs, and
+characterise their alert statistics.</p>
+<h3 data-number="1.3.5" id="predictive-maintenance-beyond-system-logs"><span class="header-section-number">1.3.5</span> 2.5 Predictive maintenance
+beyond system logs</h3>
+<p>The broader predictive-maintenance literature works mostly on
+continuous sensor telemetry. NASA C-MAPSS <span class="citation" data-cites="saxena2008cmapss">(Saxena et al. 2008)</span> is the
+de-facto Remaining-Useful-Life benchmark; recent surveys <span class="citation" data-cites="serradilla2022pdmsurvey">(Serradilla et al.
+2022)</span> catalogue the deep-learning methods trained on it.
+Automotive predictive maintenance has historically used per-vehicle
+sensor snapshots (SCANIA APS Failure via the IDA 2016 industrial
+challenge <span class="citation" data-cites="costa2016ida">(Costa and
+Nascimento 2016)</span>); the SCANIA Component X release <span class="citation" data-cites="kharazian2025scania">(Kharazian et al.
+2025)</span> we adopt extends this to a per-vehicle longitudinal readout
+stream. Our work sits between these traditions: we take discrete-event
+traces where possible, and derive discrete tokens (per §3.4) where we
+must.</p>
+<h3 data-number="1.3.6" id="statistical-significance"><span class="header-section-number">1.3.6</span> 2.6 Statistical
+significance</h3>
+<p>We apply Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
 1995)</span> to the one-sided hypergeometric p-values induced by label
-permutation on mined patterns. The correction step is standard but its
-application per (horizon × pattern class) here is what lets sequences
-and itemsets be compared on a common significance scale.</p>
-<p><strong>Software.</strong> Itemset mining uses mlxtend <span class="citation" data-cites="raschka2018mlxtend">(Raschka 2018)</span>;
-sequence mining uses SPMF v2.64 <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span> via
-subprocess. The Alibaba trace is <span class="citation" data-cites="alibaba2018repo alibaba2018trace">(Alibaba 2018; Lu et al.
-2017)</span> and the Azure PdM data is <span class="citation" data-cites="azurepdm">(Microsoft 2016)</span>.</p>
-<p>To our knowledge no peer-reviewed study applies FP-Growth or
-PrefixSpan directly to Alibaba <code>batch_task</code> status
+permutation on mined patterns. Under a fixed pattern hit-set, the
+label-permutation distribution of failure-class hit count is exactly
+hypergeometric, so we compute exact p-values in closed form instead of
+Monte Carlo.</p>
+<h3 data-number="1.3.7" id="positioning"><span class="header-section-number">1.3.7</span> 2.7 Positioning</h3>
+<p>To our knowledge no peer-reviewed study applies FP-Growth and
+PrefixSpan head-to-head to Alibaba <code>batch_task</code> status
 transitions or to Azure PdM <code>errorID → failure</code> sequences
-with the matched-control design used here.</p>
-<h2 data-number="1.4" id="datasets-and-event-vocabulary"><span class="header-section-number">1.4</span> 3 Datasets and event
-vocabulary</h2>
-<h3 data-number="1.4.1" id="azure-predictive-maintenance"><span class="header-section-number">1.4.1</span> 3.1 Azure Predictive
-Maintenance</h3>
+with the matched-control design used here, then evaluates the resulting
+patterns as binary features against event-count and
+deep-learning-adjacent alternatives on a temporally-held-out split. The
+four-trace regime-of-validity study in §7.2 is likewise, to our
+knowledge, unprecedented in the pattern-mining log-analysis
+literature.</p>
+<h2 data-number="1.4" id="data"><span class="header-section-number">1.4</span> 3 Data</h2>
+<p>We use four public event-log traces covering three domains.</p>
+<h3 data-number="1.4.1" id="azure-predictive-maintenance-synthetic-per-machine"><span class="header-section-number">1.4.1</span> 3.1 Azure Predictive
+Maintenance (synthetic, per-machine)</h3>
 <p>100 machines, 2015-01-01 to 2016-01-01, hourly telemetry.
 <code>PdM_errors</code> (3,919 non-fatal errors, five error codes),
 <code>PdM_maint</code> (3,286 maintenance actions, four components),
@@ -358,12 +459,14 @@ for subsequent real failures.</p>
 <p>Event vocabulary: <code>software_error</code>,
 <code>maintenance</code>, <code>component_replacement</code>,
 <code>terminal_failure</code>, each with a subtype
-(<code>error1..error5</code>, <code>comp1..comp4</code>).</p>
-<h3 data-number="1.4.2" id="alibaba-cluster-trace-v2018"><span class="header-section-number">1.4.2</span> 3.2 Alibaba
-cluster-trace-v2018</h3>
-<p><code>batch_task.csv</code> from the public Alibaba trace, 14,295,731
-tasks across 4,201,014 jobs, 8.9 days (2018-01-01 through 2018-01-09 by
-trace clock). 83,207 jobs contain at least one <code>Failed</code> task.
+(<code>error1..error5</code>, <code>comp1..comp4</code>). Entity is
+<code>machineID</code>. Source: <span class="citation" data-cites="azurepdm">(Microsoft 2016)</span>.</p>
+<h3 data-number="1.4.2" id="alibaba-cluster-trace-v2018-production-cloud-per-job"><span class="header-section-number">1.4.2</span> 3.2 Alibaba
+cluster-trace-v2018 (production cloud, per-job)</h3>
+<p><code>batch_task.csv</code> from the public Alibaba trace <span class="citation" data-cites="alibaba2018repo alibaba2018trace">(Alibaba
+2018; Lu et al. 2017)</span>, 14,295,731 tasks across 4,201,014 jobs,
+8.9 days (2018-01-01 through 2018-01-09 by trace clock). 83,207 jobs
+contain at least one <code>Failed</code> task.
 <code>batch_instance.csv</code> (21 GB compressed) is not used in this
 pass; the per-job analysis on <code>batch_task</code> alone is
 sufficient to answer the ordering question.</p>
@@ -371,48 +474,119 @@ sufficient to answer the ordering question.</p>
 <code>task_success</code>, <code>task_waiting</code>,
 <code>task_running</code>, each with subtype = task_name letter prefix
 (<code>M</code>, <code>R</code>, <code>J</code>, <code>task</code>,
-<code>MergeTask</code>, <code>L</code>).</p>
+<code>MergeTask</code>, <code>L</code>). Entity is
+<code>job_name</code>.</p>
+<h3 data-number="1.4.3" id="llnl-blue-genel-syslogs-loghub-per-rack"><span class="header-section-number">1.4.3</span> 3.3 LLNL Blue Gene/L syslogs
+(Loghub, per-rack)</h3>
+<p>4,747,963 syslog messages from LLNL Blue Gene/L, 214.7 days
+(2005-06-03 to 2006-01-04), from the Loghub archive [TODO:cite
+oliner2007bgl]. 913,594 messages remain after dropping INFO-level noise;
+348,189 (7.34%) are labeled alerts. Entity is the rack (top-level
+<code>R##</code> prefix of the node ID); 64 racks. Event vocabulary:
+<code>terminal_alert</code> (labeled alerts with 30+ alert codes such as
+KERNMNTF, APPTO, KERNSTOR), <code>system_error</code> (non-alert FATAL /
+ERROR / SEVERE / FAILURE), <code>system_warning</code>. Component (RAS,
+KERNEL, APP, MMCS, …) is used as an additional subtype axis.</p>
+<h3 data-number="1.4.4" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.4</span> 3.4 SCANIA Component X
+(production automotive, per-vehicle)</h3>
+<p>Real fleet telematics dataset released 2025 [TODO:cite
+kharazian2025], 23,550 trucks over 1.5 years (2019-01 through 2020-05 in
+study clock), 1,122,452 readouts of 105 numeric counter and histogram
+features. 2,272 vehicles (9.65%) undergo a component X repair during the
+study.</p>
+<p>Because features are numeric counters rather than native discrete
+events, we derive tokens: for each (vehicle, feature) we compute
+inter-readout DELTAS and emit a <code>counter_surprise</code> token per
+readout whenever the absolute delta exceeds the vehicle’s own
+90th-percentile threshold for that feature. Per-vehicle normalisation
+controls for baseline usage variation across the fleet. Entity is
+<code>vehicle_id</code>. The failure event is a synthetic
+<code>terminal_repair</code> marker placed at the last readout timestamp
+of each repair-labeled vehicle.</p>
 <h2 data-number="1.5" id="method"><span class="header-section-number">1.5</span> 4 Method</h2>
 <h3 data-number="1.5.1" id="pre-failure-windows-and-matched-controls"><span class="header-section-number">1.5.1</span> 4.1 Pre-failure windows and
 matched controls</h3>
 <p>For every terminal failure event on an entity (machine on Azure, job
-on Alibaba), we build a failure window covering the K events (or the
-time horizon T) strictly before the failure timestamp. Matched controls
-are sampled: on Azure from clean regions of the same machine at times
-with no failure within horizon T in either direction; on Alibaba from
-the last K events of a non-failure job sampled from a pool of 1.83 M
-candidates at a 3:1 control:failure ratio.</p>
+on Alibaba, rack on BGL, vehicle on SCANIA), we build a failure window
+covering the K events (or the time horizon T) strictly before the
+failure timestamp. Matched controls come from two designs depending on
+the trace:</p>
+<ul>
+<li><strong>Same-entity clean regions</strong> (Azure, BGL) when the
+entity carries long timelines with sparse failures; controls are
+anchored at times with no failure within horizon T in either
+direction.</li>
+<li><strong>Cross-entity non-failure sample</strong> (Alibaba, SCANIA)
+when entities are short-lived; controls come from the last K events of a
+non-failure entity, sampled at a 3:1 control:failure ratio from a large
+candidate pool.</li>
+</ul>
+<p>BGL alerts are additionally grouped into episodes (&gt;= 1h
+inter-arrival gap) and windows are anchored on the first alert of each
+episode, so anchor-per-alert double-counting inside a cascade is
+avoided.</p>
 <p>Horizons studied: <code>1h</code>, <code>6h</code>, <code>24h</code>,
 <code>last5</code>, <code>last10</code> on Azure; <code>last3</code>,
-<code>last5</code>, <code>last10</code> on Alibaba (time-based horizons
-are not meaningful for short jobs).</p>
+<code>last5</code>, <code>last10</code> on Alibaba; <code>last5</code>,
+<code>last10</code>, <code>last20</code> on BGL and SCANIA (time-based
+horizons are not meaningful for short per-job or per-episode
+observations).</p>
 <h3 data-number="1.5.2" id="mining"><span class="header-section-number">1.5.2</span> 4.2 Mining</h3>
 <p>Items are <code>event_type:event_subtype</code> strings. FP-Growth
 (<code>mlxtend.frequent_patterns.fpgrowth</code>) mines frequent
 itemsets on failure windows at minimum support 0.05. PrefixSpan (SPMF
-v2.64 via subprocess) mines frequent ordered sequences at the same
-support.</p>
+v2.64 <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span> via
+subprocess) mines frequent ordered sequences at the same support.</p>
 <p>For each mined pattern P we compute support in failure windows
 (support_failure), support in control windows (support_control), lift =
 support_failure / pooled_support(P), and relative risk = P(failure | P)
-/ P(failure | ¬P).</p>
+/ P(failure | ¬P). Every mined sequence is also scored against the
+ITEMSET COUNTERPART of the same event set; the difference
+<code>order_gain = sequence_lift - itemset_lift</code> quantifies how
+much preserving order contributes above co-occurrence.</p>
 <h3 data-number="1.5.3" id="sanity-invariants"><span class="header-section-number">1.5.3</span> 4.3 Sanity invariants</h3>
 <p>Every phase carries pre-declared invariants whose expected outcome is
 stated up front. Itemset mining checks that a random-label permutation
 at the same min_support does not yield a top lift within a factor of
-1.5× of the real top lift. Sequence mining checks that a within-window
-random order permutation preserves top itemset lift (unchanged, by
-construction) but strictly reduces top sequence lift on rich horizons
-(windows with &gt;= 3 events on average). Both invariants pass on both
-datasets.</p>
-<h3 data-number="1.5.4" id="predictive-evaluation"><span class="header-section-number">1.5.4</span> 4.4 Predictive
-evaluation</h3>
-<p>Windows split temporally by anchor timestamp (Azure cutoff
-2015-09-01; Alibaba cutoff 2018-01-07). Mining runs on training windows
-only. Surviving patterns become binary features. A logistic regression
-fit on TRAIN is evaluated on TEST for four feature sets: event count
-baseline, itemsets only, sequences only, combined.</p>
-<h2 data-number="1.6" id="results"><span class="header-section-number">1.6</span> 5 Results</h2>
+1.5× of the real top lift; a violation would indicate either data
+leakage or an over-sensitive support threshold. Sequence mining checks
+that a within-window random order permutation preserves top itemset lift
+(unchanged, by construction) but strictly reduces top sequence lift on
+rich horizons (windows with &gt;= 3 events on average). Both invariants
+pass on the two traces where the method yields wins; the boundary traces
+are diagnosed via these invariants rather than by post-hoc
+justification.</p>
+<h3 data-number="1.5.4" id="statistical-significance-1"><span class="header-section-number">1.5.4</span> 4.4 Statistical
+significance</h3>
+<p>For each mined pattern we compute an exact one-sided hypergeometric
+p-value on the observed failure-hit count against the label-permutation
+null with the pattern hit-set fixed. Under H0 the number of hits landing
+in the failure class is Hypergeom(N_F+N_C, hit_F+hit_C, N_F); the
+upper-tail probability of the observed hit count IS the
+label-permutation p-value, so we compute it in closed form.
+Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
+1995)</span> is applied per (horizon × pattern class) to give
+q-values.</p>
+<h2 data-number="1.6" id="experiments"><span class="header-section-number">1.6</span> 5 Experiments</h2>
+<p>Windows are split temporally by anchor timestamp. Cutoffs: Azure
+2015-09-01, Alibaba 2018-01-07, BGL 2005-11-01, SCANIA 2020-01-01.
+Mining runs on training windows only; surviving patterns become binary
+presence features on both train and test. A logistic regression fit on
+train is evaluated on test for four feature sets:</p>
+<ul>
+<li><strong>event_count</strong>: single feature, n_events in the
+window</li>
+<li><strong>itemsets_only</strong>: binary presence of each train-mined
+itemset surviving its permutation null</li>
+<li><strong>sequences_only</strong>: binary presence of each train-mined
+sequence surviving its shuffle null</li>
+<li><strong>combined</strong>: union of A, B, C</li>
+</ul>
+<p>For each configuration we report AUROC, AUPRC, F1 / precision /
+recall at threshold 0.5, and lead time (anchor − last_event_ts) on
+true-positive failure windows. Numbers are computed in a single pass per
+configuration and stored as one artifact, so a comparison across feature
+sets on the same trace cannot drift.</p>
 <h3 data-number="1.6.1" id="coverage-per-horizon-azure"><span class="header-section-number">1.6.1</span> 5.1 Coverage per horizon
 (Azure)</h3>
 <p>Time horizons of 1h and 6h leave 99.6% and 98% of failure windows
@@ -422,155 +596,10 @@ same hour. Useful horizons are 24h and the count-based
 control windows separate cleanly by raw event count (failure mean 1.58
 events, control mean 0.077).</p>
 <p><em>Figure:</em> <a href="../diagnostics/azure_window_horizon_vs_events.png">azure_window_horizon_vs_events.png</a></p>
-<h3 data-number="1.6.2" id="mined-patterns-azure"><span class="header-section-number">1.6.2</span> 5.2 Mined patterns
-(Azure)</h3>
-<p>At 24h horizon,
-<code>{software_error:error2, software_error:error3}</code> reaches lift
-3.99 (present in 38.2% of failure windows, in 0.04% of controls;
-P(failure | pattern) = 99.6%). All six 24h itemsets dominate the
-random-label permutation null (permuted top 1.24).</p>
-<p>At <code>last5</code> and <code>last10</code> horizons, the sequence
-<code>maintenance:comp4 → software_error:error2 → software_error:error3</code>
-reaches lift 3.73 as an ordered pattern but only 2.22 as the same items
-unordered. Ordered patterns ending <code>... → error2 → error3</code>
-dominate the top-8 at both count-based horizons.</p>
-<p><strong>Alibaba (per-job, <code>last5</code>).</strong> The strongest
-ordered pattern is
-<code>task_success:M → task_success:R → task_success:M → task_success:M</code>
-with sequence lift 2.43 versus itemset lift 0.94 for the same event set
-(order gain +1.49). The signature is a specific interleaving of Map and
-Reduce completions preceding a Failed task; the same items in any other
-order do not carry the same signal. At <code>last3</code>,
-<code>task_success:M → task_success:M → task_success:M</code> reaches
-sequence lift 3.06 vs itemset lift 1.37 (order gain +1.69): three
-consecutive Map completions predict a subsequent failure much more
-strongly than the mere presence of Map events would suggest.</p>
-<p><em>Figure:</em> <a href="../results/figures/azure_itemset_vs_sequence_lift.png">azure_itemset_vs_sequence_lift.png</a></p>
-<h3 data-number="1.6.3" id="predictive-evaluation-both-datasets"><span class="header-section-number">1.6.3</span> 5.3 Predictive evaluation
-(both datasets)</h3>
-<p>Combined feature set beats itemsets alone on both datasets and on
-every count-based horizon. Sequences alone are high-precision but
-low-recall at threshold 0.5: precision 0.72-0.98 at recall 0.02-0.36
-across horizons. The regime is “few features, few alarms, but reliable
-alarms”.</p>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 17%" />
-<col style="width: 20%" />
-<col style="width: 21%" />
-<col style="width: 15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>trace</th>
-<th>horizon</th>
-<th>event_count</th>
-<th>itemsets_only</th>
-<th>sequences_only</th>
-<th>combined</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Azure</td>
-<td>24h</td>
-<td>0.97/0.91</td>
-<td>0.996/0.99</td>
-<td>(no features)</td>
-<td>0.996/0.99</td>
-</tr>
-<tr class="even">
-<td>Azure</td>
-<td>last5</td>
-<td>0.50/0.34</td>
-<td>0.75/0.56</td>
-<td>0.66/0.56</td>
-<td><strong>0.81/0.72</strong></td>
-</tr>
-<tr class="odd">
-<td>Azure</td>
-<td>last10</td>
-<td>0.50/0.34</td>
-<td>0.64/0.50</td>
-<td>0.67/0.53</td>
-<td><strong>0.70/0.58</strong></td>
-</tr>
-<tr class="even">
-<td>Alibaba</td>
-<td>last3</td>
-<td>0.69/0.50</td>
-<td>0.75/0.44</td>
-<td>0.50/0.20</td>
-<td><strong>0.81/0.63</strong></td>
-</tr>
-<tr class="odd">
-<td>Alibaba</td>
-<td>last5</td>
-<td>0.60/0.50</td>
-<td>0.67/0.34</td>
-<td>0.51/0.21</td>
-<td><strong>0.74/0.57</strong></td>
-</tr>
-<tr class="even">
-<td>Alibaba</td>
-<td>last10</td>
-<td>0.59/0.50</td>
-<td>0.68/0.36</td>
-<td>0.52/0.23</td>
-<td><strong>0.74/0.59</strong></td>
-</tr>
-</tbody>
-</table>
-<p>(AUROC / AUPRC)</p>
-<p><em>Figure:</em> <a href="../results/figures/cross_dataset_predictive_comparison.png">cross_dataset_predictive_comparison.png</a></p>
-<h3 data-number="1.6.4" id="when-does-order-help"><span class="header-section-number">1.6.4</span> 5.4 When does order
-help?</h3>
-<p>The order-gain distribution (sequence lift minus itemset lift for the
-same items) is zero at horizons where windows contain 1-2 events (Azure
-1h/6h/24h) and positive with mean 0.30-0.32 and max 1.5 at count-based
-horizons. Combining itemsets and sequences adds 5-10 AUROC points on
-count-based horizons where order is a real degree of freedom, and adds
-nothing at short time horizons where every signal-carrying window
-already collapses to a small item set.</p>
-<h3 data-number="1.6.5" id="formal-significance-phase-5"><span class="header-section-number">1.6.5</span> 5.5 Formal significance
-(Phase 5)</h3>
-<p>For each mined pattern we compute an exact one-sided hypergeometric
-p-value on the observed failure-hit count against the label-permutation
-null with the pattern hit-set fixed, then apply Benjamini-Hochberg
-correction per horizon x pattern class.</p>
-<p>On Azure at BH-q &lt; 0.05: every 24h itemset (6/6) and every 24h
-sequence (7/7) is significant; 53/77 last5 itemsets and 55/67 last5
-sequences; the last10 horizon flags 562/657 sequences and hundreds of
-itemsets. Both 1h and 6h horizons flag zero patterns as expected (0/3
-sequences at 1h, 0/5 at 6h). On Alibaba: 6/10 last3 itemsets, 9/16 last3
-sequences, 59/109 last10 sequences.</p>
-<h3 data-number="1.6.6" id="lead-time-on-true-positives"><span class="header-section-number">1.6.6</span> 5.6 Lead time on true
-positives</h3>
-<p>For each true-positive failure window in the test set, lead time is
-the interval between the anchor failure timestamp and the last event
-recorded in the window. It measures how early the informational signal
-becomes available in the data itself.</p>
-<ul>
-<li><strong>Alibaba (operational lead time)</strong>: median 0 s across
-horizons, IQR 0-2 min. Tasks within a job complete within seconds of one
-another. Even though the classifier’s AUROC on Alibaba is 0.74-0.81, the
-practical warning fires on the order of the next task boundary, not
-hours. The lead time reflects the temporal density of the trace, not a
-model limitation.</li>
-<li><strong>Azure (structural lead time set by the generator)</strong>:
-median lead time is exactly 24.0 hours at every horizon. The synthetic
-generator places pre-failure errors on a ~24h clock relative to the
-failure timestamp, so any correctly-triggered alarm inherits that clock.
-This number describes the dataset’s construction, not the model’s
-early-warning capacity.</li>
-</ul>
-<p>Lead-time detail: <a href="../results/tables/">results/tables/{azure,alibaba}_leadtime.md</a>.</p>
-<h3 data-number="1.6.7" id="robustness-to-min_support-phase-7-scoped"><span class="header-section-number">1.6.7</span> 5.7 Robustness to min_support
-(Phase 7 scoped)</h3>
-<p>A min_support sweep over {0.02, 0.05, 0.10, 0.15} on Azure preserves
-the headline ordering at every operating point:</p>
+<h3 data-number="1.6.2" id="mining-sensitivity-to-min_support-azure"><span class="header-section-number">1.6.2</span> 5.2 Mining sensitivity to
+min_support (Azure)</h3>
+<p>A min_support sweep over {0.02, 0.05, 0.10, 0.15} preserves the
+headline ordering at every operating point:</p>
 <table>
 <thead>
 <tr class="header">
@@ -636,8 +665,190 @@ the headline ordering at every operating point:</p>
 <p>At every min_support tested, combined dominates itemsets_only by at
 least +4 AUROC points at last5 and at least +5 at last10.</p>
 <p><em>Figure:</em> <a href="../results/figures/azure_sensitivity_min_support.png">azure_sensitivity_min_support.png</a></p>
-<h2 data-number="1.7" id="discussion"><span class="header-section-number">1.7</span> 6 Discussion</h2>
-<p>The two mined signatures each carry an operational reading.</p>
+<h2 data-number="1.7" id="results"><span class="header-section-number">1.7</span> 6 Results</h2>
+<h3 data-number="1.7.1" id="mined-patterns-azure-and-alibaba"><span class="header-section-number">1.7.1</span> 6.1 Mined patterns (Azure and
+Alibaba)</h3>
+<p>At Azure 24h,
+<code>{software_error:error2, software_error:error3}</code> reaches lift
+3.99 (present in 38.2% of failure windows, in 0.04% of controls;
+P(failure | pattern) = 99.6%). All six 24h itemsets dominate the
+random-label permutation null (permuted top 1.24).</p>
+<p>At Azure <code>last5</code>/<code>last10</code>, the sequence
+<code>maintenance:comp4 → software_error:error2 → software_error:error3</code>
+reaches lift 3.73 as an ordered pattern but only 2.22 as the same items
+unordered. Ordered patterns ending <code>... → error2 → error3</code>
+dominate the top-8 at both count-based horizons.</p>
+<p>On Alibaba <code>last5</code>, the strongest ordered pattern is
+<code>task_success:M → task_success:R → task_success:M → task_success:M</code>
+with sequence lift 2.43 versus itemset lift 0.94 for the same event set
+(order gain +1.49). At <code>last3</code>,
+<code>task_success:M → task_success:M → task_success:M</code> reaches
+sequence lift 3.06 vs itemset lift 1.37 (order gain +1.69): three
+consecutive Map completions predict a subsequent failure much more
+strongly than the mere presence of Map events would suggest.</p>
+<p><em>Figure:</em> <a href="../results/figures/azure_itemset_vs_sequence_lift.png">azure_itemset_vs_sequence_lift.png</a></p>
+<h3 data-number="1.7.2" id="predictive-evaluation-four-traces"><span class="header-section-number">1.7.2</span> 6.2 Predictive evaluation
+(four traces)</h3>
+<p>Head-to-head on temporally-held-out test sets:</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 21%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th>event_count</th>
+<th>itemsets_only</th>
+<th>sequences_only</th>
+<th>combined</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Azure</td>
+<td>24h</td>
+<td>0.97 / 0.91</td>
+<td>0.996 / 0.99</td>
+<td>—</td>
+<td>0.996 / 0.99</td>
+</tr>
+<tr class="even">
+<td>Azure</td>
+<td>last5</td>
+<td>0.50 / 0.34</td>
+<td>0.75 / 0.56</td>
+<td>0.66 / 0.56</td>
+<td><strong>0.81 / 0.72</strong></td>
+</tr>
+<tr class="odd">
+<td>Azure</td>
+<td>last10</td>
+<td>0.50 / 0.34</td>
+<td>0.64 / 0.50</td>
+<td>0.67 / 0.53</td>
+<td><strong>0.70 / 0.58</strong></td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last3</td>
+<td>0.69 / 0.50</td>
+<td>0.75 / 0.44</td>
+<td>0.50 / 0.20</td>
+<td><strong>0.81 / 0.63</strong></td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last5</td>
+<td>0.60 / 0.50</td>
+<td>0.67 / 0.34</td>
+<td>0.51 / 0.21</td>
+<td><strong>0.74 / 0.57</strong></td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last10</td>
+<td>0.59 / 0.50</td>
+<td>0.68 / 0.36</td>
+<td>0.52 / 0.23</td>
+<td><strong>0.74 / 0.59</strong></td>
+</tr>
+<tr class="odd">
+<td>BGL</td>
+<td>last5</td>
+<td>0.50 / 0.25</td>
+<td>0.49 / 0.25</td>
+<td>—</td>
+<td>0.49 / 0.25</td>
+</tr>
+<tr class="even">
+<td>BGL</td>
+<td>last10</td>
+<td>0.50 / 0.25</td>
+<td>0.49 / 0.25</td>
+<td>0.50 / 0.25</td>
+<td>0.50 / 0.25</td>
+</tr>
+<tr class="odd">
+<td>BGL</td>
+<td>last20</td>
+<td>0.50 / 0.25</td>
+<td>0.48 / 0.25</td>
+<td>0.50 / 0.25</td>
+<td>0.51 / 0.26</td>
+</tr>
+<tr class="even">
+<td>SCANIA</td>
+<td>last5</td>
+<td>0.50 / 0.09</td>
+<td>0.52 / 0.11</td>
+<td>—</td>
+<td>0.52 / 0.11</td>
+</tr>
+<tr class="odd">
+<td>SCANIA</td>
+<td>last10</td>
+<td>0.50 / 0.09</td>
+<td>0.60 / 0.14</td>
+<td>0.55 / 0.11</td>
+<td>0.60 / 0.15</td>
+</tr>
+<tr class="even">
+<td>SCANIA</td>
+<td>last20</td>
+<td>0.50 / 0.09</td>
+<td>0.57 / 0.14</td>
+<td>0.53 / 0.10</td>
+<td>0.57 / 0.13</td>
+</tr>
+</tbody>
+</table>
+<p><em>(AUROC / AUPRC on the temporally-held-out test set. SCANIA uses
+per-vehicle 90th-percentile-delta binning; BGL uses episode-anchored
+per-rack windows with alerts removed from the pre-alert stream. Both
+boundary traces sit near chance for every feature set at every
+horizon.)</em></p>
+<p><em>Figure:</em> <a href="../results/figures/four_dataset_predictive_comparison.png">four_dataset_predictive_comparison.png</a></p>
+<h3 data-number="1.7.3" id="order-gain"><span class="header-section-number">1.7.3</span> 6.3 Order gain</h3>
+<p>The order-gain distribution (sequence lift minus itemset lift for the
+same items) is zero at horizons where windows contain 1-2 events (Azure
+1h/6h/24h) and positive with mean 0.30-0.32 and max 1.5 at count-based
+horizons where the method finds signal (Azure
+<code>last5</code>/<code>last10</code>, Alibaba
+<code>last3</code>/<code>last5</code>/<code>last10</code>). On BGL and
+SCANIA the order gain does not translate into AUROC because the
+underlying itemset signal is itself weak.</p>
+<h3 data-number="1.7.4" id="formal-significance"><span class="header-section-number">1.7.4</span> 6.4 Formal significance</h3>
+<p>At BH q &lt; 0.05: every Azure 24h itemset (6/6) and every Azure 24h
+sequence (7/7) is significant; 53/77 Azure <code>last5</code> itemsets
+and 55/67 Azure <code>last5</code> sequences; 562/657 Azure
+<code>last10</code> sequences. Both 1h and 6h Azure horizons flag zero
+patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10
+<code>last3</code> itemsets, 9/16 <code>last3</code> sequences, 59/109
+<code>last10</code> sequences.</p>
+<h3 data-number="1.7.5" id="lead-time-on-true-positives"><span class="header-section-number">1.7.5</span> 6.5 Lead time on true
+positives</h3>
+<ul>
+<li><strong>Alibaba</strong> (operational lead time): median 0 s across
+horizons, IQR 0-2 min. Task boundaries are the practical alarm
+resolution; the AUROC 0.74-0.81 signal is real but must be acted on
+within the next-task interval.</li>
+<li><strong>Azure</strong> (structural lead time set by the generator):
+median lead time is exactly 24.0 hours at every horizon. The synthetic
+generator places pre-failure errors on a ~24h clock relative to the
+failure timestamp, so any correctly-triggered alarm inherits that clock.
+This describes the dataset’s construction, not the model’s early-warning
+capacity.</li>
+</ul>
+<p>Lead-time detail: <a href="../results/tables/">results/tables/{azure,alibaba}_leadtime.md</a>.</p>
+<h2 data-number="1.8" id="discussion"><span class="header-section-number">1.8</span> 7 Discussion</h2>
+<h3 data-number="1.8.1" id="what-each-mined-signature-means-operationally"><span class="header-section-number">1.8.1</span> 7.1 What each mined signature
+means operationally</h3>
 <p>On Azure PdM,
 <code>software_error:error2 → software_error:error3</code> at
 <code>last5</code> reaches sequence lift 3.73 vs itemset lift 2.22 for
@@ -655,70 +866,90 @@ Failed task more strongly than “the job contains Map completions” alone.
 The operational reading is that the position of the failure inside the
 DAG matters: jobs that make it through a Map-heavy prefix are the jobs
 whose downstream Reduce or Join phases can fail, whereas jobs that fail
-early do so in a different distribution of task types. Sequence mining
-recovers this DAG-position signal automatically; itemset mining flattens
-it.</p>
-<p>Both signatures survive Benjamini-Hochberg FDR correction at q &lt;
-0.05 and dominate their permutation nulls by wide margins. In neither
-dataset does sequences_only outperform combined on AUROC; the practical
-takeaway is that ordered sequences should be added to an itemset-based
-feature set, not substituted for it.</p>
-<p>The two lead-time regimes recorded in §5.6 speak to deployment. Azure
-inherits a structural 24h clock from the synthetic generator and should
-not be read as a real-world warning interval; Alibaba’s median 0-second
-lead time is the honest one, and a per-job classifier there must be
-paired with sub-second scheduling infrastructure to act on the signal at
+early do so in a different distribution of task types.</p>
+<h3 data-number="1.8.2" id="regime-of-validity"><span class="header-section-number">1.8.2</span> 7.2 Regime of validity</h3>
+<p>The four-trace survey resolves an obvious follow-up question: does
+the sequences+itemsets combined-feature-set advantage transfer to any
+operational event log? It does not.</p>
+<ul>
+<li><strong>Where the method works</strong> (Azure PdM, Alibaba v2018):
+rich native discrete event vocabularies (5 error codes × 4 component
+types on Azure; 4 task statuses × 6 task roles on Alibaba).
+Failure-window content differs discriminably from control-window
+content, and order carries information beyond the itemset.</li>
+<li><strong>Where the method does not work</strong> (BGL, SCANIA): the
+target class is self-triggering (BGL alerts follow other alerts, and
+non-alert log lines carry no discriminable precursor signal), or the
+discrete event stream must be derived from continuous counters (SCANIA
+requires binning per-vehicle deltas, and a defensible 90th-percentile
+surprise binning produces only marginal AUROC).</li>
+</ul>
+<p>Concretely: on BGL the best combined AUROC across horizons is 0.51
+(chance) even when INFO-level messages and component granularity are
+included in the non-alert stream; on SCANIA the best combined AUROC
+across horizons is 0.60, unchanged when the fleet-wide 90th-percentile
+delta binning is replaced by per-vehicle-normalised 90th-percentile
+binning. The method’s regime of validity is “trace has a rich native
+discrete event vocabulary AND failure class is not self-triggering”.</p>
+<p>The two lead-time regimes in §6.5 speak to deployment. Azure inherits
+a structural 24h clock from the synthetic generator and should not be
+read as a real-world warning interval; Alibaba’s median 0-second lead
+time is the honest one, and a per-job classifier there must be paired
+with sub-second scheduling infrastructure to act on the signal at
 all.</p>
-<h2 data-number="1.8" id="limitations"><span class="header-section-number">1.8</span> 7 Limitations</h2>
-<p>Four boundary conditions apply.</p>
+<h2 data-number="1.9" id="limitations"><span class="header-section-number">1.9</span> 8 Limitations</h2>
 <ul>
 <li>Alibaba results are per-job, computed on <code>batch_task</code>
 alone; the <code>batch_instance</code> table (21 GB compressed) that
 would enable per-machine failure trajectories on the same trace is left
 to future work.</li>
 <li>Alibaba sequence patterns are numerically fewer than Azure ones (2-6
-vs 6-16 surviving the shuffle-null per horizon). Widening min_support
-and using a top-K sequence miner would sharpen the Alibaba
+vs 6-16 surviving the shuffle-null per horizon). A wider min_support
+sweep and top-K sequence mining would sharpen the Alibaba
 sequence-mining slice specifically.</li>
-<li>The min_support sensitivity sweep in §5.7 covers itemset support;
+<li>The min_support sensitivity sweep covers itemset support;
 regularization strength and cross-machine / cross-job leave-one-out are
 the next robustness questions.</li>
-<li>Azure lead times (§5.6) are set by the synthetic data generator and
+<li>Azure lead times are set by the synthetic data generator and
 describe dataset construction rather than real-world warning intervals.
 Alibaba lead times are the operationally-honest number from a real
 trace.</li>
+<li>SCANIA binning uses per-vehicle 90th-percentile deltas; alternative
+binning schemes (per-feature quantile buckets, learned tokenisers) may
+yield different results.</li>
 </ul>
-<h2 data-number="1.9" id="conclusion"><span class="header-section-number">1.9</span> 8 Conclusion</h2>
+<h2 data-number="1.10" id="conclusion"><span class="header-section-number">1.10</span> 9 Conclusion</h2>
 <p>Frequent-pattern mining of discrete operational events surfaces
-interpretable pre-failure signatures on both synthetic and real
-production traces. Sequences add real predictive information beyond
+interpretable pre-failure signatures on two of four traces studied. On
+both winning traces, sequences add real predictive information beyond
 itemsets when window definitions are rich enough for order to be a real
 degree of freedom; at those horizons, combining itemset and sequence
 features improves failure prediction by 5-10 AUROC points over either
-alone. The result replicates across a synthetic per-machine trace and a
-real per-job production trace.</p>
+alone. The result replicates across a synthetic per-machine trace (Azure
+PdM) and a real per-job production trace (Alibaba v2018), and its regime
+of validity is mapped by two additional traces (BGL, SCANIA) where the
+pipeline does not find signal, with a mechanistic explanation for
+each.</p>
 <hr />
-<h2 data-number="1.10" id="what-is-still-missing"><span class="header-section-number">1.10</span> What is still missing</h2>
+<h2 data-number="1.11" id="what-is-still-missing"><span class="header-section-number">1.11</span> What is still missing</h2>
 <ul>
 <li>Regularization sweep and cross-machine / cross-job leave-one-out for
 a fuller Phase 7.</li>
 <li>Optional: per-machine Alibaba analysis with
 <code>batch_instance</code>.</li>
+<li>Prose polish + related-work paragraph expansion (scout
+returning).</li>
 <li>HTML/DOCX build via <code>paper-build</code> skill once prose is
 settled.</li>
-<li>Prose polish + related-work paragraph expansion using the validated
-<code>paper/references.bib</code>.</li>
 </ul>
-<h2 data-number="1.11" id="what-is-verified"><span class="header-section-number">1.11</span> What is verified</h2>
+<h2 data-number="1.12" id="what-is-verified"><span class="header-section-number">1.12</span> What is verified</h2>
 <ul>
-<li>Bibliography: <a href="references.bib">paper/references.bib</a>, 10
-of 12 entries resolved by Crossref/OpenAlex to the intended paper
-(checked by <code>bibtest</code>); the two <code>not_found</code> are
-dataset URLs with no DOI. One mid-session correction:
-<code>ifraz2024sequential</code> had hallucinated authors and was fixed
-to match the DOI’s actual authors.</li>
-<li>Numbers audit: 44 / 44 claims in this skeleton match the underlying
-JSON stats and parquet files. See <a href="numbers_audit.md">numbers_audit.md</a>.</li>
+<li>Bibliography: <a href="references.bib">paper/references.bib</a>,
+currently 12 entries validated by <code>bibtest</code>. Expansion
+pending scout return.</li>
+<li>Numbers audit: 50 / 50 claims in the previous 2-trace skeleton match
+the underlying JSON stats. Re-running after 4-trace and
+boundary-condition additions.</li>
 </ul>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-agrawal1994fast" class="csl-entry" role="listitem">
@@ -742,12 +973,59 @@ Cheng, Yue, Zheng Chai, and Ali Anwar. 2018. <span>“Characterizing
 Co-Located Datacenter Workloads: An Alibaba Case Study.”</span> arXiv.
 <a href="https://arxiv.org/abs/1808.02919">https://arxiv.org/abs/1808.02919</a>.
 </div>
+<div id="ref-costa2016ida" class="csl-entry" role="listitem">
+Costa, Camila Ferreira, and Mario A. Nascimento. 2016.
+<span>“<span>IDA</span> 2016 Industrial Challenge: Using Machine
+Learning for Predicting Failures.”</span> In <em>Advances in Intelligent
+Data Analysis XV (IDA 2016)</em>, 9897:381–86. Lecture Notes in Computer
+Science. Springer. <a href="https://doi.org/10.1007/978-3-319-46349-0_33">https://doi.org/10.1007/978-3-319-46349-0_33</a>.
+</div>
+<div id="ref-du2017deeplog" class="csl-entry" role="listitem">
+Du, Min, Feifei Li, Guineng Zheng, and Vivek Srikumar. 2017.
+<span>“<span>DeepLog</span>: Anomaly Detection and Diagnosis from System
+Logs Through Deep Learning.”</span> In <em>Proceedings of the 2017 ACM
+SIGSAC Conference on Computer and Communications Security (CCS)</em>,
+1285–98. <a href="https://doi.org/10.1145/3133956.3134015">https://doi.org/10.1145/3133956.3134015</a>.
+</div>
+<div id="ref-fournierviger2022patternmining" class="csl-entry" role="listitem">
+Fournier-Viger, Philippe, Wensheng Gan, Youxi Wu, Mourad Nouioua, Wei
+Song, Tin Truong, and Hai Duong. 2022. <span>“Pattern Mining: Current
+Challenges and Opportunities.”</span> In <em>Database Systems for
+Advanced Applications (DASFAA 2022) International Workshops</em>,
+13248:34–49. Lecture Notes in Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-031-11217-1_3">https://doi.org/10.1007/978-3-031-11217-1_3</a>.
+</div>
+<div id="ref-fournierviger2014cmspade" class="csl-entry" role="listitem">
+Fournier-Viger, Philippe, Antonio Gomariz, Manuel Campos, and Rincy
+Thomas. 2014. <span>“Fast Vertical Mining of Sequential Patterns Using
+Co-Occurrence Information.”</span> In <em>Advances in Knowledge
+Discovery and Data Mining (PAKDD 2014)</em>, 8443:40–52. Lecture Notes
+in Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-319-06608-0_4">https://doi.org/10.1007/978-3-319-06608-0_4</a>.
+</div>
 <div id="ref-fournier2016spmf" class="csl-entry" role="listitem">
 Fournier-Viger, Philippe, Jerry Chun-Wei Lin, Antonio Gomariz, Ted
 Gueniche, Azadeh Soltani, Zhihong Deng, and Hoang Thanh Lam. 2016.
 <span>“The <span>SPMF</span> Open-Source Data Mining Library Version
 2.”</span> In <em>Joint European Conference on Machine Learning and
 Knowledge Discovery in Databases (ECML PKDD)</em>, 36–40. <a href="https://doi.org/10.1007/978-3-319-46131-1_8">https://doi.org/10.1007/978-3-319-46131-1_8</a>.
+</div>
+<div id="ref-fournierviger2014vmsp" class="csl-entry" role="listitem">
+Fournier-Viger, Philippe, Cheng-Wei Wu, Antonio Gomariz, and Vincent S.
+Tseng. 2014. <span>“<span>VMSP</span>: Efficient Vertical Mining of
+Maximal Sequential Patterns.”</span> In <em>Advances in Artificial
+Intelligence (Canadian AI 2014)</em>, 8436:83–94. Lecture Notes in
+Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-319-06483-3_8">https://doi.org/10.1007/978-3-319-06483-3_8</a>.
+</div>
+<div id="ref-guo2021logbert" class="csl-entry" role="listitem">
+Guo, Haixuan, Shuhan Yuan, and Xintao Wu. 2021.
+<span>“<span>LogBERT</span>: Log Anomaly Detection via
+<span>BERT</span>.”</span> In <em>2021 International Joint Conference on
+Neural Networks (IJCNN)</em>. <a href="https://doi.org/10.1109/IJCNN52387.2021.9534113">https://doi.org/10.1109/IJCNN52387.2021.9534113</a>.
+</div>
+<div id="ref-guo2024logformer" class="csl-entry" role="listitem">
+Guo, Hongcheng, Jian Yang, Jiaheng Liu, Jiaqi Bai, Boyang Wang, Zhoujun
+Li, Tieqiao Zheng, Bo Zhang, Junran Peng, and Qi Tian. 2024.
+<span>“<span>LogFormer</span>: A Pre-Train and Tuning Pipeline for Log
+Anomaly Detection.”</span> arXiv. <a href="https://arxiv.org/abs/2401.04749">https://arxiv.org/abs/2401.04749</a>.
 </div>
 <div id="ref-han2000mining" class="csl-entry" role="listitem">
 Han, Jiawei, Jian Pei, and Yiwen Yin. 2000. <span>“Mining Frequent
@@ -760,15 +1038,42 @@ Patterns Without Candidate Generation.”</span> In <em>Proceedings of the
 Maintenance and Spare Parts Management with Data Mining Methods: A Case
 Study in Bus Fleet.”</span> <em>The Journal of Supercomputing</em>. <a href="https://doi.org/10.1007/s11227-024-06297-1">https://doi.org/10.1007/s11227-024-06297-1</a>.
 </div>
+<div id="ref-kharazian2025scania" class="csl-entry" role="listitem">
+Kharazian, Zahra, Tony Lindgren, Sindri Magnússon, Olof Steinert, and
+Reza Asadi Khoshkangini. 2025. <span>“<span>SCANIA</span>
+<span>Component X</span> Dataset: A Real-World Multivariate Time Series
+Dataset for Predictive Maintenance.”</span> <em>Scientific Data</em> 12:
+493. <a href="https://doi.org/10.1038/s41597-025-04802-6">https://doi.org/10.1038/s41597-025-04802-6</a>.
+</div>
 <div id="ref-alibaba2018trace" class="csl-entry" role="listitem">
 Lu, Chengzhi, Kejiang Ye, Guoyao Xu, Cheng-Zhong Xu, and Tongxin Bai.
 2017. <span>“Imbalance in the Cloud: An Analysis on Alibaba Cluster
 Trace.”</span> <em>2017 IEEE International Conference on Big Data (Big
 Data)</em>, 2884–92. <a href="https://doi.org/10.1109/BigData.2017.8258257">https://doi.org/10.1109/BigData.2017.8258257</a>.
 </div>
+<div id="ref-luo2021alibaba" class="csl-entry" role="listitem">
+Luo, Shutian, Huanle Xu, Chengzhi Lu, Kejiang Ye, Guoyao Xu, Liping
+Zhang, Yu Ding, Jian He, and Chengzhong Xu. 2021. <span>“Characterizing
+Microservice Dependency and Performance: <span>Alibaba</span> Trace
+Analysis.”</span> In <em>Proceedings of the ACM Symposium on Cloud
+Computing (SoCC)</em>, 412–26. <a href="https://doi.org/10.1145/3472883.3487003">https://doi.org/10.1145/3472883.3487003</a>.
+</div>
+<div id="ref-meng2019loganomaly" class="csl-entry" role="listitem">
+Meng, Weibin, Ying Liu, Yichen Zhu, Shenglin Zhang, Dan Pei, Yuqing Liu,
+Yihao Chen, et al. 2019. <span>“<span>LogAnomaly</span>: Unsupervised
+Detection of Sequential and Quantitative Anomalies in Unstructured
+Logs.”</span> In <em>Proceedings of the 28th International Joint
+Conference on Artificial Intelligence (IJCAI)</em>, 4739–45. <a href="https://doi.org/10.24963/ijcai.2019/658">https://doi.org/10.24963/ijcai.2019/658</a>.
+</div>
 <div id="ref-azurepdm" class="csl-entry" role="listitem">
 Microsoft. 2016. <span>“<span>Azure AI Gallery Predictive Maintenance
 Sample</span>.”</span> Kaggle mirror <a href="https://www.kaggle.com/datasets/arnabbiswas1/microsoft-azure-predictive-maintenance" class="uri">https://www.kaggle.com/datasets/arnabbiswas1/microsoft-azure-predictive-maintenance</a>.
+</div>
+<div id="ref-oliner2007supercomputers" class="csl-entry" role="listitem">
+Oliner, Adam, and Jon Stearley. 2007. <span>“What Supercomputers Say: A
+Study of Five System Logs.”</span> In <em>37th Annual IEEE/IFIP
+International Conference on Dependable Systems and Networks (DSN)</em>,
+575–84. <a href="https://doi.org/10.1109/DSN.2007.103">https://doi.org/10.1109/DSN.2007.103</a>.
 </div>
 <div id="ref-pei2001prefixspan" class="csl-entry" role="listitem">
 Pei, Jian, Jiawei Han, Behzad Mortazavi-Asl, Helen Pinto, Qiming Chen,
@@ -779,9 +1084,9 @@ Engineering (ICDE)</em>, 215–24. <a href="https://doi.org/10.1109/ICDE.2001.91
 </div>
 <div id="ref-raschka2018mlxtend" class="csl-entry" role="listitem">
 Raschka, Sebastian. 2018. <span>“<span>MLxtend</span>: Providing Machine
-Learning and Data Science Utilities and Extensions to
-<span>Python</span>’s Scientific Computing Stack.”</span> <em>Journal of
-Open Source Software</em> 3 (24): 638. <a href="https://doi.org/10.21105/joss.00638">https://doi.org/10.21105/joss.00638</a>.
+Learning and Data Science Utilities and Extensions to Python Scientific
+Computing Stack.”</span> <em>Journal of Open Source Software</em> 3
+(24): 638. <a href="https://doi.org/10.21105/joss.00638">https://doi.org/10.21105/joss.00638</a>.
 </div>
 <div id="ref-ren2020failure" class="csl-entry" role="listitem">
 Ren, Rui, Jinheng Li, Yan Yin, and Shuai Tian. 2021. <span>“Failure
@@ -789,6 +1094,57 @@ Prediction for Large-Scale Clusters Logs via Mining Frequent
 Patterns.”</span> In <em>Future of Information and Communication
 Conference (FICC)</em>. Vol. 1385. Communications in Computer and
 Information Science. Springer. <a href="https://doi.org/10.1007/978-981-16-1160-5_13">https://doi.org/10.1007/978-981-16-1160-5_13</a>.
+</div>
+<div id="ref-saxena2008cmapss" class="csl-entry" role="listitem">
+Saxena, Abhinav, Kai Goebel, Don Simon, and Neil Eklund. 2008.
+<span>“Damage Propagation Modeling for Aircraft Engine Run-to-Failure
+Simulation.”</span> In <em>2008 International Conference on Prognostics
+and Health Management (PHM)</em>. <a href="https://doi.org/10.1109/PHM.2008.4711414">https://doi.org/10.1109/PHM.2008.4711414</a>.
+</div>
+<div id="ref-serradilla2022pdmsurvey" class="csl-entry" role="listitem">
+Serradilla, Oscar, Ekhi Zugasti, Jon Rodriguez, and Urko Zurutuza. 2022.
+<span>“Deep Learning Models for Predictive Maintenance: A Survey,
+Comparison, Challenges and Prospects.”</span> <em>Applied
+Intelligence</em> 52 (10): 10934–64. <a href="https://doi.org/10.1007/s10489-021-03004-y">https://doi.org/10.1007/s10489-021-03004-y</a>.
+</div>
+<div id="ref-srikant1996gsp" class="csl-entry" role="listitem">
+Srikant, Ramakrishnan, and Rakesh Agrawal. 1996. <span>“Mining
+Sequential Patterns: Generalizations and Performance
+Improvements.”</span> In <em>Advances in Database Technology — EDBT
+1996</em>, 1057:1–17. Lecture Notes in Computer Science. Springer. <a href="https://doi.org/10.1007/BFb0014140">https://doi.org/10.1007/BFb0014140</a>.
+</div>
+<div id="ref-yang2021plelog" class="csl-entry" role="listitem">
+Yang, Lin, Junjie Chen, Zan Wang, Weijing Wang, Jiajun Jiang, Xuyuan
+Dong, and Wenbin Zhang. 2021. <span>“Semi-Supervised Log-Based Anomaly
+Detection via Probabilistic Label Estimation.”</span> In <em>Proceedings
+of the 43rd International Conference on Software Engineering
+(ICSE)</em>, 1448–60. <a href="https://doi.org/10.1109/ICSE43902.2021.00130">https://doi.org/10.1109/ICSE43902.2021.00130</a>.
+</div>
+<div id="ref-zaki2001spade" class="csl-entry" role="listitem">
+Zaki, Mohammed J. 2001. <span>“<span>SPADE</span>: An Efficient
+Algorithm for Mining Frequent Sequences.”</span> <em>Machine
+Learning</em> 42 (1/2): 31–60. <a href="https://doi.org/10.1023/A:1007652502315">https://doi.org/10.1023/A:1007652502315</a>.
+</div>
+<div id="ref-zhang2019logrobust" class="csl-entry" role="listitem">
+Zhang, Xu, Yong Xu, Qingwei Lin, Bo Qiao, Hongyu Zhang, Yingnong Dang,
+Chunyu Xie, et al. 2019. <span>“Robust Log-Based Anomaly Detection on
+Unstable Log Data.”</span> In <em>Proceedings of the 27th ACM Joint
+Meeting on European Software Engineering Conference and Symposium on the
+Foundations of Software Engineering (ESEC/FSE)</em>, 807–17. <a href="https://doi.org/10.1145/3338906.3338931">https://doi.org/10.1145/3338906.3338931</a>.
+</div>
+<div id="ref-zhu2023loghub" class="csl-entry" role="listitem">
+Zhu, Jieming, Shilin He, Pinjia He, Jinyang Liu, and Michael R. Lyu.
+2023. <span>“Loghub: A Large Collection of System Log Datasets for
+<span>AI</span>-Driven Log Analytics.”</span> In <em>2023 IEEE 34th
+International Symposium on Software Reliability Engineering
+(ISSRE)</em>. <a href="https://doi.org/10.1109/ISSRE59848.2023.00071">https://doi.org/10.1109/ISSRE59848.2023.00071</a>.
+</div>
+<div id="ref-zhu2019logparsing" class="csl-entry" role="listitem">
+Zhu, Jieming, Shilin He, Jinyang Liu, Pinjia He, Qi Xie, Zibin Zheng,
+and Michael R. Lyu. 2019. <span>“Tools and Benchmarks for Automated Log
+Parsing.”</span> In <em>2019 IEEE/ACM 41st International Conference on
+Software Engineering: Software Engineering in Practice (ICSE-SEIP)</em>,
+121–30. <a href="https://doi.org/10.1109/ICSE-SEIP.2019.00021">https://doi.org/10.1109/ICSE-SEIP.2019.00021</a>.
 </div>
 </div>
 </body>

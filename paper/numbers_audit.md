@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 50. Pass: 50. Mismatch: 0.
+Total claims audited: 58. Pass: 58. Mismatch: 0.
 
 ## Full audit trail
 
@@ -44,6 +44,14 @@ Total claims audited: 50. Pass: 50. Mismatch: 0.
 | 5.3       | Alibaba last5 combined AUPRC = 0.574                       | 0.574      | 0.574      | PASS        |
 | 5.3       | Alibaba last10 combined AUROC = 0.741                      | 0.741      | 0.741      | PASS        |
 | 5.3       | Alibaba last10 combined AUPRC = 0.593                      | 0.593      | 0.593      | PASS        |
+| 5.3       | BGL last20 combined AUROC = 0.512                          | 0.512      | 0.512      | PASS        |
+| 5.3       | BGL last20 combined AUPRC = 0.256                          | 0.256      | 0.256      | PASS        |
+| 5.3       | BGL last20 itemsets_only AUROC = 0.483                     | 0.483      | 0.483      | PASS        |
+| 5.3       | BGL last20 itemsets_only AUPRC = 0.245                     | 0.245      | 0.245      | PASS        |
+| 5.3       | SCANIA last10 combined AUROC = 0.596                       | 0.596      | 0.596      | PASS        |
+| 5.3       | SCANIA last10 combined AUPRC = 0.154                       | 0.154      | 0.154      | PASS        |
+| 5.3       | SCANIA last20 combined AUROC = 0.567                       | 0.567      | 0.567      | PASS        |
+| 5.3       | SCANIA last20 combined AUPRC = 0.132                       | 0.132      | 0.132      | PASS        |
 | 5.5       | Azure 24h itemsets significant: 6/6                        | 6/6        | 6/6        | PASS        |
 | 5.5       | Azure 24h sequences significant: 7/7                       | 7/7        | 7/7        | PASS        |
 | 5.5       | Azure last5 itemsets significant: 53/77                    | 53/77      | 53/77      | PASS        |
