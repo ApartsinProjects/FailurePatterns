@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 61. Pass: 61. Mismatch: 0.
+Total claims audited: 68. Pass: 68. Mismatch: 0.
 
 ## Full audit trail
 
@@ -33,6 +33,13 @@ Total claims audited: 61. Pass: 61. Mismatch: 0.
 | 7.2 (ceiling) | SCANIA LightGBM AUROC on histogram-aware features = 0.60   | 0.60       | 0.6        | PASS        |
 | 7.2 (ceiling) | SCANIA LR AUROC on same features = 0.58                    | 0.58       | 0.58       | PASS        |
 | 7.2 (ceiling) | SCANIA ceiling feature count = 113                         | 113        | 113        | PASS        |
+| 7.2 (APS)     | APS Failure LightGBM AUROC = 0.994                         | 0.994      | 0.994      | PASS        |
+| 7.2 (APS)     | APS Failure LightGBM AUPRC = 0.934                         | 0.934      | 0.934      | PASS        |
+| 7.2 (APS)     | APS Failure LR AUROC = 0.979                               | 0.979      | 0.979      | PASS        |
+| 7.2 (APS)     | APS Failure LR AUPRC = 0.800                               | 0.800      | 0.8        | PASS        |
+| 7.2 (APS)     | APS Failure feature count = 170                            | 170        | 170        | PASS        |
+| 7.2 (APS)     | APS Failure test set size = 16000                          | 16000      | 16000      | PASS        |
+| 7.2 (APS)     | APS Failure train positive rate = 0.0167                   | 0.0167     | 0.0167     | PASS        |
 | 5.3           | Azure 24h combined AUROC = 0.996                           | 0.996      | 0.996      | PASS        |
 | 5.3           | Azure 24h combined AUPRC = 0.988                           | 0.988      | 0.988      | PASS        |
 | 5.3           | Azure last5 combined AUROC = 0.81                          | 0.81       | 0.81       | PASS        |

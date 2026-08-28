@@ -513,6 +513,24 @@ Azure / Alibaba wins (~0.80-1.00) reflects a limit of the readout
 cadence and feature vocabulary, not of the pattern-mining pipeline
 against a richer alternative representation.
 
+**Positive control on same-manufacturer data.** To rule out the
+alternative explanation that SCANIA-family telemetry itself lacks
+predictive signal, we apply the same LightGBM ceiling test to
+SCANIA APS Failure at Scania Trucks [@costa2016ida] (UCI 421, IDA
+2016 industrial challenge). APS Failure uses the same anonymised
+histogram-encoded schema as Component X (7 histogram groups of 10
+bins each + 100 single counters = 170 feature columns) but delivers
+one per-truck cross-sectional readout instead of a longitudinal
+readout stream, with a binary APS-system-failure label at a 1.67%
+positive rate. On the same LightGBM configuration our Component X
+ceiling used, APS Failure reaches AUROC 0.994 / AUPRC 0.934 on the
+canonical held-out test split (16,000 trucks, 375 positives); LR
+alone reaches 0.979 / 0.800. Same manufacturer, same anonymisation
+schema, different readout format, near-perfect predictability. This
+excludes "SCANIA-family data is inherently weak" as an explanation
+for the Component X boundary and localises the limit to the
+sparse longitudinal readout cadence of that specific release.
+
 The method's regime of validity is therefore "trace has a rich
 native discrete event vocabulary AND failure class is not
 self-triggering AND readout-cadence signal capacity exceeds the

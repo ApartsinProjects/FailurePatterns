@@ -46,6 +46,42 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — SCANIA APS Failure positive control: signal-availability boundary confirmed
+
+User asked whether SCANIA APS Failure (IDA 2016 challenge, UCI 421)
+could serve as a positive control on same-manufacturer data. Fetched
+and ran the same LightGBM ceiling test.
+
+**APS Failure structure**: 60,000 training + 16,000 test trucks. One
+CROSS-SECTIONAL row per truck, 170 anonymised features using the same
+histogram schema as Component X (7 histogram groups of 10 bins + 100
+counters). Binary label at 1.67% positive rate.
+
+**Ceiling result** in
+[scripts/scania_aps_ceiling.py](scripts/scania_aps_ceiling.py):
+- **LightGBM AUROC 0.994 / AUPRC 0.934** on canonical held-out test.
+- **LR alone AUROC 0.979 / AUPRC 0.800**.
+- F1 at threshold 0.5 = 0.88, precision 0.93, recall 0.83.
+
+**Interpretation**: same manufacturer, same anonymised-histogram
+schema, DIFFERENT readout format (single cross-sectional snapshot per
+truck vs 43 longitudinal readouts on Component X). Near-perfect
+predictability. This rules out "SCANIA-family telemetry lacks
+predictive signal" as an alternative explanation for Component X's
+0.60 AUROC ceiling. The boundary lives specifically in Component X's
+sparse longitudinal readout cadence.
+
+Paper §7.2 now includes this as a POSITIVE CONTROL paragraph. The
+regime-of-validity claim is now three-way anchored: (i) two wins
+(Azure, Alibaba); (ii) a self-triggering-target boundary (BGL); (iii)
+a signal-availability boundary (Component X) diagnosed via
+histogram-aware ceiling test AND validated against an APS positive
+control on the same-manufacturer data.
+
+Numbers audit: **68 / 68 pass** (up from 61 after adding 7 APS claims).
+Bibliography unchanged (APS already cited via costa2016ida).
+Artifact republished at same URL.
+
 ## 2026-08-29 — SCANIA ceiling diagnostic settles the boundary claim
 
 User asked whether SCANIA could be pushed from boundary to third win.

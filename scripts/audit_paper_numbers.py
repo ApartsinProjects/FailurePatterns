@@ -212,6 +212,30 @@ def main() -> int:
           ceil["n_features"], "113",
           ceil["n_features"] == 113)
 
+    # APS Failure ceiling (positive control on same-manufacturer data)
+    aps = _load_json(TAB / "scania_aps_ceiling_diagnostic.json")
+    check("7.2 (APS)", "APS Failure LightGBM AUROC = 0.994",
+          round(aps["lgbm"]["auroc"], 3), "0.994",
+          approx(aps["lgbm"]["auroc"], 0.994, tol=0.005))
+    check("7.2 (APS)", "APS Failure LightGBM AUPRC = 0.934",
+          round(aps["lgbm"]["auprc"], 3), "0.934",
+          approx(aps["lgbm"]["auprc"], 0.934, tol=0.005))
+    check("7.2 (APS)", "APS Failure LR AUROC = 0.979",
+          round(aps["lr_on_same_features"]["auroc"], 3), "0.979",
+          approx(aps["lr_on_same_features"]["auroc"], 0.979, tol=0.005))
+    check("7.2 (APS)", "APS Failure LR AUPRC = 0.800",
+          round(aps["lr_on_same_features"]["auprc"], 3), "0.800",
+          approx(aps["lr_on_same_features"]["auprc"], 0.800, tol=0.005))
+    check("7.2 (APS)", "APS Failure feature count = 170",
+          aps["n_features"], "170",
+          aps["n_features"] == 170)
+    check("7.2 (APS)", "APS Failure test set size = 16000",
+          aps["n_test"], "16000",
+          aps["n_test"] == 16000)
+    check("7.2 (APS)", "APS Failure train positive rate = 0.0167",
+          round(aps["train_pos_rate"], 4), "0.0167",
+          approx(aps["train_pos_rate"], 0.0167, tol=0.0005))
+
     # 5.3 Predictive table cells
     bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")
     scania_pred = pd.read_parquet(TAB / "scania_predictive.parquet")
