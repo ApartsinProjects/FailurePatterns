@@ -46,6 +46,71 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — SCANIA ceiling diagnostic settles the boundary claim
+
+User asked whether SCANIA could be pushed from boundary to third win.
+Approach: brainstorm with Fable subagent + GPTConsult (ChatGPT with
+context file uploaded), inspect failing datapoints, decide.
+
+**Datapoint inspection finding**: the 105 SCANIA "features" are not
+independent — they are 6 histograms (with 10-36 bins each = 97
+columns) plus 8 single-column counters. The current binning treats
+each histogram bin as an independent surprise event, so a single
+distributional shift explodes into many correlated tokens.
+
+**Fable + GPTConsult both converged on the same ranked ideas**:
+1. Histogram-as-distribution tokenisation (Wasserstein-1, centroid,
+   entropy, tail-mass per histogram).
+2. Persistent drift / trend detection (CUSUM / EWMA against a
+   per-vehicle baseline).
+3. **Diagnostic ceiling first**: run a compact model on structured
+   histogram-aware features to decide if 0.75 is even reachable.
+4. Usage / age matched controls.
+5. Exposure-time windows instead of last-K events.
+
+Both explicitly recommended running the ceiling diagnostic FIRST
+before more mining work, and both said: if the ceiling caps at
+≤0.68, stop forcing SCANIA into "third win" and reframe as boundary.
+
+**Ceiling diagnostic result** in
+[scripts/scania_ceiling_diagnostic.py](scripts/scania_ceiling_diagnostic.py):
+- 113 structured features per vehicle (Wasserstein-1 to per-vehicle
+  baseline, signed centroid shift, entropy shift, tail-mass shift,
+  their slopes, per histogram; last-value + delta-vs-baseline per
+  counter; readout count).
+- Same temporal split as the pattern-mining pipeline (2020-01-01).
+- **LightGBM AUROC: 0.60** (matches pattern-mining pipeline).
+- **LR AUROC on the same features: 0.58** (GBM adds 0.02 over LR).
+- Top features are histogram entropy / EMD / tail-mass shifts, so
+  the representation is not degenerate; the signal simply is not
+  there at this readout cadence.
+
+**Decision** (per both agents' pre-declared rule): SCANIA is a
+signal-availability boundary case, not a representation-loss case.
+Paper §7.2 now carries this diagnostic as empirical support for the
+boundary claim, with the third condition of the regime-of-validity
+made explicit: "readout-cadence signal capacity must exceed the
+target AUROC bar".
+
+This is stronger than "we tried and it didn't work". The paper now
+distinguishes three failure modes with named examples: (1)
+self-triggering target class (BGL), (2) derived-token representation
+loss (would have applied to SCANIA if the ceiling had beaten
+pattern mining, which it did not), (3) signal-availability limit
+(SCANIA at the readout cadence in the release).
+
+Numbers audit: **61 / 61 pass** (up from 58 after adding the
+ceiling-diagnostic claims). Bibliography still 29 validated entries.
+Artifact republished at same URL.
+
+Result of the brainstorm: no representation-only fix was viable, so
+the highest-value action was the ceiling test itself (Fable and
+GPT's shared idea #3/#5). The scientific position went from "we
+report SCANIA as a boundary" to "we empirically show SCANIA is a
+signal-availability boundary via a compact GBM ceiling test", with
+one named future work (finer-grained readout cadence would
+potentially close the gap).
+
 ## 2026-08-29 — Four-trace expansion: BGL + SCANIA folded as boundary conditions
 
 Added two new production traces to the study following the user's

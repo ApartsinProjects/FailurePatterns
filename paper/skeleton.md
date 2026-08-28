@@ -495,8 +495,29 @@ Concretely: on BGL the best combined AUROC across horizons is 0.51
 included in the non-alert stream; on SCANIA the best combined AUROC
 across horizons is 0.60, unchanged when the fleet-wide 90th-percentile
 delta binning is replaced by per-vehicle-normalised 90th-percentile
-binning. The method's regime of validity is "trace has a rich native
-discrete event vocabulary AND failure class is not self-triggering".
+binning.
+
+To determine whether the SCANIA gap is representation-loss (tokens
+destroy signal that is actually in the trace) or signal-absence (no
+representation could recover 0.75), we run a diagnostic ceiling test:
+LightGBM on a compact set of histogram-aware distributional
+descriptors (Wasserstein-1 distance to a per-vehicle baseline,
+signed centroid shift, entropy shift, tail-mass shift, and each
+descriptor's slope over the last 20 readouts) computed on the same
+temporal split. The ceiling model reaches AUROC 0.60 / AUPRC 0.04,
+essentially identical to the pattern-mining pipeline. Logistic
+regression on the same 113 structured features reaches 0.58 / 0.05.
+The GBM-versus-LR gap is 0.02 AUROC, so classifier capacity is not
+the constraint either. The gap between SCANIA (~0.60) and the
+Azure / Alibaba wins (~0.80-1.00) reflects a limit of the readout
+cadence and feature vocabulary, not of the pattern-mining pipeline
+against a richer alternative representation.
+
+The method's regime of validity is therefore "trace has a rich
+native discrete event vocabulary AND failure class is not
+self-triggering AND readout-cadence signal capacity exceeds the
+target AUROC bar". BGL fails the second condition; SCANIA fails the
+third; Azure PdM and Alibaba v2018 satisfy all three.
 
 The two lead-time regimes in §6.5 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
@@ -522,9 +543,14 @@ at all.
   describe dataset construction rather than real-world warning
   intervals. Alibaba lead times are the operationally-honest number
   from a real trace.
-- SCANIA binning uses per-vehicle 90th-percentile deltas; alternative
-  binning schemes (per-feature quantile buckets, learned tokenisers)
-  may yield different results.
+- SCANIA binning uses per-vehicle 90th-percentile deltas; a stronger
+  alternative representation (Wasserstein-1 distance to vehicle
+  baseline, centroid shift, entropy and tail-mass changes per
+  histogram feature) was also tested via a LightGBM ceiling
+  diagnostic and reached the same AUROC 0.60. The signal at this
+  readout cadence is insufficient to reach the 0.75 bar under any
+  representation we tested; scoping SCANIA as a boundary case
+  reflects that finding.
 
 ## 9  Conclusion
 

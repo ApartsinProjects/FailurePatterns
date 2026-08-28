@@ -1,0 +1,34 @@
+{
+  "n_features": 113,
+  "n_train": 21442,
+  "n_test": 2108,
+  "train_rate": 0.1029754687062774,
+  "test_rate": 0.030360531309297913,
+  "lgbm": {
+    "auroc": 0.6001406555772995,
+    "auprc": 0.043116100024955514,
+    "f1_at_0.5": 0.06646525679758308
+  },
+  "lr_on_same_features": {
+    "auroc": 0.5751666462818005,
+    "auprc": 0.05189964464153321,
+    "f1_at_0.5": 0.07309644670050762
+  },
+  "top_features": {
+    "h167_entropy_shift_last": 352,
+    "h291_entropy_shift_last": 340,
+    "n_readouts": 337,
+    "h272_tail_shift_last": 335,
+    "h459_entropy_shift_last": 310,
+    "h272_entropy_shift_last": 308,
+    "h272_tail_shift_slope": 296,
+    "h397_entropy_shift_last": 294,
+    "h158_emd_max": 294,
+    "h459_emd_slope": 285,
+    "h272_emd_last": 283,
+    "h158_emd_last": 277,
+    "h158_entropy_shift_last": 277,
+    "h459_emd_max": 266,
+    "h291_emd_last": 262
+  }
+}

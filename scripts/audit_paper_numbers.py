@@ -200,6 +200,18 @@ def main() -> int:
               round(row["itemset_lift_failure"], 2), "1.37",
               approx(row["itemset_lift_failure"], 1.37, tol=0.01))
 
+    # SCANIA ceiling diagnostic (LightGBM on histogram-aware features)
+    ceil = _load_json(TAB / "scania_ceiling_diagnostic.json")
+    check("7.2 (ceiling)", "SCANIA LightGBM AUROC on histogram-aware features = 0.60",
+          round(ceil["lgbm"]["auroc"], 2), "0.60",
+          approx(ceil["lgbm"]["auroc"], 0.60, tol=0.01))
+    check("7.2 (ceiling)", "SCANIA LR AUROC on same features = 0.58",
+          round(ceil["lr_on_same_features"]["auroc"], 2), "0.58",
+          approx(ceil["lr_on_same_features"]["auroc"], 0.58, tol=0.01))
+    check("7.2 (ceiling)", "SCANIA ceiling feature count = 113",
+          ceil["n_features"], "113",
+          ceil["n_features"] == 113)
+
     # 5.3 Predictive table cells
     bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")
     scania_pred = pd.read_parquet(TAB / "scania_predictive.parquet")

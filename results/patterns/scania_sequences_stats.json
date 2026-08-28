@@ -2,34 +2,34 @@
   "min_support": 0.05,
   "lift_ratio_sanity": 1.5,
   "n_patterns_by_horizon": {
-    "last5": 67,
-    "last10": 470,
-    "last20": 3820
+    "last5": 63,
+    "last10": 573,
+    "last20": 7389
   },
   "max_real_lift_by_horizon": {
-    "last5": 1.6025641025641024,
-    "last10": 1.7674418604651163,
-    "last20": 1.8587360594795541
+    "last5": 1.5757575757575757,
+    "last10": 1.68561872909699,
+    "last20": 1.5888501742160277
   },
   "max_shuffled_lift_by_horizon": {
-    "last5": 1.7083333333333333,
-    "last10": 1.5140664961636827,
-    "last20": 1.6213333333333333
+    "last5": 1.551282051282051,
+    "last10": 1.4670487106017192,
+    "last20": 1.511111111111111
   },
   "mean_top10_real_lift_by_horizon": {
-    "last5": 1.5048519529484445,
-    "last10": 1.6949408526528056,
-    "last20": 1.743233912144174
+    "last5": 1.389362211016087,
+    "last10": 1.5843415879919427,
+    "last20": 1.5599950248297358
   },
   "mean_top10_shuffled_lift_by_horizon": {
-    "last5": 1.4428714321477978,
-    "last10": 1.4602295313732874,
-    "last20": 1.5704740271327062
+    "last5": 1.3046004370130238,
+    "last10": 1.3554521215029198,
+    "last20": 1.3500314403476392
   },
   "n_patterns_above_shuffle_ceiling_by_horizon": {
-    "last5": 0,
-    "last10": 75,
-    "last20": 45
+    "last5": 1,
+    "last10": 12,
+    "last20": 18
   },
   "invariants": {
     "rich_horizon_top10_real_lift_exceeds_shuffled": true,

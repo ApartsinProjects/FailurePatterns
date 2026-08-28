@@ -3,23 +3,23 @@
   "lift_ratio_sanity": 1.5,
   "n_patterns_by_horizon": {
     "last5": 67,
-    "last10": 494,
-    "last20": 11377
+    "last10": 608,
+    "last20": 45492
   },
   "max_real_lift_by_horizon": {
-    "last5": 1.625,
-    "last10": 1.7557251908396947,
-    "last20": 1.8095238095238095
+    "last5": 1.688888888888889,
+    "last10": 1.6862745098039218,
+    "last20": 1.6332179930795847
   },
   "max_permuted_lift_by_horizon": {
-    "last5": 1.2956521739130433,
-    "last10": 1.182844243792325,
-    "last20": 1.1979166666666667
+    "last5": 1.2000000000000002,
+    "last10": 1.2371134020618557,
+    "last20": 1.2613390928725703
   },
   "n_patterns_above_perm_ceiling_by_horizon": {
-    "last5": 22,
-    "last10": 311,
-    "last20": 6766
+    "last5": 18,
+    "last10": 79,
+    "last20": 1031
   },
   "invariants": {
     "real_top_lift_dominates_permuted_top": false,
