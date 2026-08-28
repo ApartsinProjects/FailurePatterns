@@ -1,0 +1,36 @@
+# Data
+data/raw/**
+!data/raw/.gitkeep
+!data/raw/**/.gitkeep
+data/processed/**
+!data/processed/.gitkeep
+
+# Experiment artifacts
+experiments/**/artifacts/
+experiments/**/logs/
+diagnostics/**/dumps/
+
+# Results (keep tables/figures, ignore intermediates)
+results/**/*.tmp
+results/**/*.cache
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Generated scratch (SPMF subprocess I/O)
+_spmf_tmp/
+
+# Fetched binary tool (see scripts/fetch_spmf.sh)
+scripts/spmf.jar

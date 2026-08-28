@@ -1,0 +1,56 @@
+{
+  "dataset": "azure",
+  "alpha": 0.05,
+  "itemsets_by_horizon": {
+    "24h": {
+      "n_patterns": 6,
+      "n_significant": 6,
+      "min_q": 1.028537032110136e-189,
+      "median_q": 1.5539870331805346e-123
+    },
+    "last10": {
+      "n_patterns": 730,
+      "n_significant": 480,
+      "min_q": 1.0120780767790173e-59,
+      "median_q": 0.0033304250621380787
+    },
+    "last5": {
+      "n_patterns": 77,
+      "n_significant": 53,
+      "min_q": 9.758479227403947e-74,
+      "median_q": 1.647837928507013e-05
+    }
+  },
+  "sequences_by_horizon": {
+    "1h": {
+      "n_patterns": 3,
+      "n_significant": 0,
+      "min_q": 0.5782670188930707,
+      "median_q": 0.5782670188930707
+    },
+    "24h": {
+      "n_patterns": 7,
+      "n_significant": 7,
+      "min_q": 1.6188169294873227e-166,
+      "median_q": 3.625969744087914e-123
+    },
+    "6h": {
+      "n_patterns": 5,
+      "n_significant": 0,
+      "min_q": 0.9867935845596442,
+      "median_q": 0.9867935845596442
+    },
+    "last10": {
+      "n_patterns": 657,
+      "n_significant": 562,
+      "min_q": 1.200477342301305e-61,
+      "median_q": 7.183403293406274e-07
+    },
+    "last5": {
+      "n_patterns": 67,
+      "n_significant": 55,
+      "min_q": 1.4146899332433234e-80,
+      "median_q": 9.689267665965576e-13
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "min_support": 0.05,
+  "lift_ratio_sanity": 1.5,
+  "n_patterns_by_horizon": {
+    "last3": 10,
+    "last5": 11,
+    "last10": 11
+  },
+  "max_real_lift_by_horizon": {
+    "last3": 4.0,
+    "last5": 3.971971971971972,
+    "last10": 3.955449482895784
+  },
+  "max_permuted_lift_by_horizon": {
+    "last3": 1.0153953813855843,
+    "last5": 1.0190659811482434,
+    "last10": 1.0066914837737229
+  },
+  "n_patterns_above_perm_ceiling_by_horizon": {
+    "last3": 6,
+    "last5": 5,
+    "last10": 5
+  },
+  "invariants": {
+    "real_top_lift_dominates_permuted_top": true,
+    "at_least_one_horizon_mined": true,
+    "every_mined_horizon_has_survivors": true
+  }
+}

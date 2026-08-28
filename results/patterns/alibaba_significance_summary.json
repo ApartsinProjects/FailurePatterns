@@ -1,0 +1,44 @@
+{
+  "dataset": "alibaba",
+  "alpha": 0.05,
+  "itemsets_by_horizon": {
+    "last10": {
+      "n_patterns": 11,
+      "n_significant": 5,
+      "min_q": 0.0,
+      "median_q": 1.0
+    },
+    "last3": {
+      "n_patterns": 10,
+      "n_significant": 6,
+      "min_q": 0.0,
+      "median_q": 2.279234392871853e-06
+    },
+    "last5": {
+      "n_patterns": 11,
+      "n_significant": 5,
+      "min_q": 0.0,
+      "median_q": 1.0
+    }
+  },
+  "sequences_by_horizon": {
+    "last10": {
+      "n_patterns": 109,
+      "n_significant": 59,
+      "min_q": 0.0,
+      "median_q": 0.00031963413586232086
+    },
+    "last3": {
+      "n_patterns": 16,
+      "n_significant": 9,
+      "min_q": 0.0,
+      "median_q": 1.67585139478278e-07
+    },
+    "last5": {
+      "n_patterns": 29,
+      "n_significant": 12,
+      "min_q": 0.0,
+      "median_q": 1.0
+    }
+  }
+}

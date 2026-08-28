@@ -1,0 +1,39 @@
+{
+  "min_support": 0.05,
+  "lift_ratio_sanity": 1.5,
+  "n_patterns_by_horizon": {
+    "last3": 16,
+    "last5": 29,
+    "last10": 109
+  },
+  "max_real_lift_by_horizon": {
+    "last3": 4.0,
+    "last5": 3.971971971971972,
+    "last10": 3.955449482895784
+  },
+  "max_shuffled_lift_by_horizon": {
+    "last3": 3.976683937823834,
+    "last5": 3.9521094640820977,
+    "last10": 3.951762523191094
+  },
+  "mean_top10_real_lift_by_horizon": {
+    "last3": 2.5662230426737835,
+    "last5": 2.6470270508190734,
+    "last10": 2.7098497555003056
+  },
+  "mean_top10_shuffled_lift_by_horizon": {
+    "last3": 1.6355386137699983,
+    "last5": 1.5228792879898567,
+    "last10": 2.3401037795527455
+  },
+  "n_patterns_above_shuffle_ceiling_by_horizon": {
+    "last3": 3,
+    "last5": 3,
+    "last10": 2
+  },
+  "invariants": {
+    "rich_horizon_top10_real_lift_exceeds_shuffled": true,
+    "at_least_one_horizon_mined": true,
+    "short_horizon_shuffle_negligible": true
+  }
+}

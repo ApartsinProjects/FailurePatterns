@@ -1,0 +1,174 @@
+/* Committed "printed page" identity for a research-paper skeleton.
+   Single-theme by design: a paper reads like a paper on any host ground.
+   Every color is painted explicitly from the token set so the page never
+   silently borrows a dark host's background. */
+
+:root {
+  --paper-bg:   #f9f8f5;
+  --panel-bg:   #ffffff;
+  --code-bg:    #f2f0ec;
+  --ink:        #111111;
+  --muted:      #666666;
+  --border:     #d0cec9;
+  --accent:     #1a4b7a;   /* archival blue */
+  --accent-tint: #eaf0f6;
+}
+
+html, body { background: var(--paper-bg); color: var(--ink); }
+
+body {
+  max-width: 44rem;
+  margin: 2.5rem auto;
+  padding: 0 1.5rem 4rem;
+  font-family: "Times New Roman", "Nimbus Roman", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ---- Headings ------------------------------------------------------ */
+
+h1, h2, h3, h4 {
+  font-family: "Helvetica Neue", "Arial", sans-serif;
+  color: var(--accent);
+  line-height: 1.25;
+  text-wrap: balance;
+  margin-top: 1.8em;
+  margin-bottom: 0.4em;
+}
+h1.title {
+  font-size: 1.9rem;
+  margin: 0 0 0.35rem;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.4rem;
+  color: var(--ink);
+}
+h1 { font-size: 1.7rem; }
+h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.2rem;
+}
+h3 { font-size: 1.08rem; }
+h4 { font-size: 1.0rem; color: var(--muted); }
+
+.date, .author {
+  color: var(--muted);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.92rem;
+  margin: 0.1rem 0;
+}
+
+/* ---- Body text ----------------------------------------------------- */
+
+p { margin: 0.75em 0; }
+strong { color: var(--ink); }
+em { font-style: italic; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- Code + patterns ---------------------------------------------- */
+
+code, pre, kbd, samp {
+  font-family: "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+  font-size: 0.92em;
+}
+code {
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--ink);
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+}
+pre > code { background: transparent; padding: 0; }
+
+/* ---- Tables -------------------------------------------------------- */
+
+table {
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 0.94em;
+  font-variant-numeric: tabular-nums;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.4em 0.8em;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: var(--accent-tint);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* let very wide tables scroll inside their own container */
+.table-wrap, table { max-width: 100%; }
+p:has(> table), table { display: block; overflow-x: auto; }
+
+/* ---- Table of contents -------------------------------------------- */
+
+#TOC {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 0.7rem 1.2rem 0.9rem;
+  margin: 1.5rem 0 2.5rem;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.94rem;
+}
+#TOC ul { padding-left: 1.2rem; margin: 0.2rem 0; }
+#TOC li { margin: 0.15em 0; }
+#TOC a { text-decoration: none; }
+#TOC a:hover { text-decoration: underline; }
+
+/* ---- Blockquote / emphasis lines --------------------------------- */
+
+blockquote {
+  color: var(--muted);
+  border-left: 3px solid var(--border);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+}
+
+/* ---- References list --------------------------------------------- */
+
+#refs {
+  font-size: 0.92em;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 3rem;
+}
+#refs .csl-entry {
+  text-indent: -1.2em;
+  padding-left: 1.2em;
+  margin: 0.55em 0;
+}
+
+/* ---- Section numbers from pandoc --------------------------------- */
+
+.header-section-number {
+  color: var(--muted);
+  font-weight: 500;
+  padding-right: 0.35em;
+}
+
+/* ---- Horizontal rules -------------------------------------------- */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ---- Reduced motion ---------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
