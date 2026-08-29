@@ -1,4 +1,16 @@
-# Mining Frequent Failure Sequences in Operational Event Logs
+---
+title: "Mining and Validating Pre-Failure Signatures in Operational Event Logs"
+author:
+  - Alexander Apartsin
+keywords:
+  - failure prediction
+  - frequent itemset mining
+  - sequential pattern mining
+  - post-selection inference
+  - false discovery rate
+  - predictive maintenance
+  - operational event logs
+---
 
 ## Abstract
 
@@ -33,6 +45,10 @@ arbitrary-dependence FDR; top HR 1.73). BGL is the mapped boundary
 case where no non-alert precursor survives. Mining code, splits,
 matched-hazard outputs, and per-dataset signature tables are released
 as reproducible parquet artefacts.
+
+**Keywords:** failure prediction; frequent itemset mining; sequential
+pattern mining; post-selection inference; false discovery rate;
+predictive maintenance; operational event logs.
 
 ## 1  Introduction
 
@@ -262,51 +278,7 @@ We use six public traces: two wind-farm alarm logs, one synthetic
 industrial-maintenance trace, one production cloud trace, one HPC
 syslog corpus, and one automotive fleet trace.
 
-### 3.1 Azure Predictive Maintenance (synthetic, per-machine)
-
-100 machines, 2015-01-01 to 2016-01-01, hourly telemetry.
-`PdM_errors` (3,919 non-fatal errors, five error codes),
-`PdM_maint` (3,286 maintenance actions, four components), `PdM_failures`
-(761 component replacements). We join `PdM_maint` and `PdM_failures`
-on (machineID, datetime, comp) to distinguish `maintenance` from
-`component_replacement`. Failures at exactly 2015-01-02 03:00 (18
-rows) do not match any `PdM_maint` record; they are a bootstrap seed
-batch planted by the synthetic generator and are excluded from both
-anchors and event streams so they do not contaminate windows for
-subsequent real failures.
-
-Event vocabulary: `software_error`, `maintenance`,
-`component_replacement`, `terminal_failure`, each with a subtype
-(`error1..error5`, `comp1..comp4`). Entity is `machineID`.
-Source: [@azurepdm].
-
-### 3.2 Alibaba cluster-trace-v2018 (production cloud, per-job)
-
-`batch_task.csv` from the public Alibaba trace [@alibaba2018repo;
-@alibaba2018trace], 14,295,731 tasks across 4,201,014 jobs, 8.9 days
-(2018-01-01 through 2018-01-09 by trace clock). 83,207 jobs contain
-at least one `Failed` task. `batch_instance.csv` (21 GB compressed)
-is not used in this pass; the per-job analysis on `batch_task` alone
-is sufficient to answer the ordering question.
-
-Event vocabulary: `task_failure`, `task_success`, `task_waiting`,
-`task_running`, each with subtype = task_name letter prefix
-(`M`, `R`, `J`, `task`, `MergeTask`, `L`). Entity is `job_name`.
-
-### 3.3 LLNL Blue Gene/L syslogs (Loghub, per-rack)
-
-4,747,963 syslog messages from LLNL Blue Gene/L, 214.7 days
-(2005-06-03 to 2006-01-04), from the Loghub archive
-[@zhu2023loghub; @oliner2007supercomputers]. 913,594 messages remain
-after dropping INFO-level
-noise; 348,189 (7.34%) are labelled alerts. Entity is the rack
-(top-level `R##` prefix of the node ID); 64 racks. Event vocabulary:
-`terminal_alert` (labelled alerts with 30+ alert codes such as
-KERNMNTF, APPTO, KERNSTOR), `system_error` (non-alert FATAL / ERROR /
-SEVERE / FAILURE), `system_warning`. Component (RAS, KERNEL, APP,
-MMCS, ...) is used as an additional subtype axis.
-
-### 3.4 Kelmarsh wind-farm alarm logs (production, per-turbine)
+### 3.1 Kelmarsh wind-farm alarm logs (production, per-turbine)
 
 Six Senvion MM92 wind turbines at the Kelmarsh site, released by
 Plumley 2022 [@plumley2022kelmarsh] via Zenodo record 5841834 under
@@ -336,7 +308,7 @@ cascade shape: continuous mechanical wear produces discrete alarm
 codes at intermediate stages, and a specific alarm terminates the
 cascade as a Forced outage.
 
-### 3.5 Penmanshiel wind-farm alarm logs (production, per-turbine)
+### 3.2 Penmanshiel wind-farm alarm logs (production, per-turbine)
 
 Nine of the fourteen Senvion MM82 turbines at the Penmanshiel site
 (Cubico Sustainable Investments; Plumley 2022 [@plumley2022penmanshiel]
@@ -352,6 +324,50 @@ site with different terrain and weather.
 
 Entity is the turbine (`P01`..`P15`, `P03` is not in the release),
 subtype is the numeric fault code.
+
+### 3.3 Azure Predictive Maintenance (synthetic, per-machine)
+
+100 machines, 2015-01-01 to 2016-01-01, hourly telemetry.
+`PdM_errors` (3,919 non-fatal errors, five error codes),
+`PdM_maint` (3,286 maintenance actions, four components), `PdM_failures`
+(761 component replacements). We join `PdM_maint` and `PdM_failures`
+on (machineID, datetime, comp) to distinguish `maintenance` from
+`component_replacement`. Failures at exactly 2015-01-02 03:00 (18
+rows) do not match any `PdM_maint` record; they are a bootstrap seed
+batch planted by the synthetic generator and are excluded from both
+anchors and event streams so they do not contaminate windows for
+subsequent real failures.
+
+Event vocabulary: `software_error`, `maintenance`,
+`component_replacement`, `terminal_failure`, each with a subtype
+(`error1..error5`, `comp1..comp4`). Entity is `machineID`.
+Source: [@azurepdm].
+
+### 3.4 Alibaba cluster-trace-v2018 (production cloud, per-job)
+
+`batch_task.csv` from the public Alibaba trace [@alibaba2018repo;
+@alibaba2018trace], 14,295,731 tasks across 4,201,014 jobs, 8.9 days
+(2018-01-01 through 2018-01-09 by trace clock). 83,207 jobs contain
+at least one `Failed` task. `batch_instance.csv` (21 GB compressed)
+is not used in this pass; the per-job analysis on `batch_task` alone
+is sufficient to answer the ordering question.
+
+Event vocabulary: `task_failure`, `task_success`, `task_waiting`,
+`task_running`, each with subtype = task_name letter prefix
+(`M`, `R`, `J`, `task`, `MergeTask`, `L`). Entity is `job_name`.
+
+### 3.5 LLNL Blue Gene/L syslogs (Loghub, per-rack)
+
+4,747,963 syslog messages from LLNL Blue Gene/L, 214.7 days
+(2005-06-03 to 2006-01-04), from the Loghub archive
+[@zhu2023loghub; @oliner2007supercomputers]. 913,594 messages remain
+after dropping INFO-level
+noise; 348,189 (7.34%) are labelled alerts. Entity is the rack
+(top-level `R##` prefix of the node ID); 64 racks. Event vocabulary:
+`terminal_alert` (labelled alerts with 30+ alert codes such as
+KERNMNTF, APPTO, KERNSTOR), `system_error` (non-alert FATAL / ERROR /
+SEVERE / FAILURE), `system_warning`. Component (RAS, KERNEL, APP,
+MMCS, ...) is used as an additional subtype axis.
 
 ### 3.6 SCANIA Component X (production automotive, per-vehicle)
 
@@ -371,6 +387,15 @@ The failure event is a synthetic `terminal_repair` marker placed at
 the last readout timestamp of each repair-labelled vehicle.
 
 ## 4  Method
+
+The same pipeline is applied to every trace (Figure 1): pre-failure
+windows with matched controls, an entity-disjoint discovery/inference
+split, mining on the discovery half, and post-selection-valid scoring
+with FDR control on the inference half. The right-censored SCANIA
+trace additionally uses risk-set matched sampling and matched
+conditional logistic regression.
+
+![**Figure 1.** The mining and validation pipeline applied uniformly to every trace. Pattern discovery runs on the discovery half; every mined pattern is then scored on the disjoint inference half with an exact hypergeometric test and BH / BY false-discovery control. The count-preserving order null separates ordering from event multiplicity, and the right-censored SCANIA trace branches to risk-set matched sampling with a matched conditional logistic estimator.](../results/figures/pipeline_schematic.png)
 
 ### 4.1 Pre-failure windows and matched controls
 
@@ -575,9 +600,9 @@ empty. Effectively no Azure PdM failure is preceded by an event in
 the same hour. Useful horizons are 24h and the count-based
 (`last5`, `last10`). Even at 24h, failure and control windows
 separate cleanly by raw event count (failure mean 1.58 events,
-control mean 0.077; Figure 1).
+control mean 0.077; Figure 2).
 
-![**Figure 1.** Event coverage of Azure pre-failure windows by horizon: the mean number of events per window grows with horizon length, which sets how much order information each horizon can carry.](../diagnostics/azure_window_horizon_vs_events.png)
+![**Figure 2.** Event coverage of Azure pre-failure windows by horizon: the mean number of events per window grows with horizon length, which sets how much order information each horizon can carry.](../diagnostics/azure_window_horizon_vs_events.png)
 
 ### 5.2 Mining sensitivity to minimum support (Azure)
 
@@ -594,9 +619,9 @@ headline ordering at every operating point:
 | last10  | itemsets_only | 0.578 | 0.643 | 0.686 | 0.674 |
 
 At every minimum support tested, combined dominates itemsets_only by
-at least +4 AUROC points at last5 and at least +5 at last10 (Figure 2).
+at least +4 AUROC points at last5 and at least +5 at last10 (Figure 3).
 
-![**Figure 2.** Predictive AUROC on Azure across the FP-Growth minimum-support sweep. Combined itemset-plus-sequence features lead the itemset-only and event-count baselines at every threshold, by at least 4 AUROC points at `last5` and at least 5 at `last10`.](../results/figures/azure_sensitivity_min_support.png)
+![**Figure 3.** Predictive AUROC on Azure across the FP-Growth minimum-support sweep. Combined itemset-plus-sequence features lead the itemset-only and event-count baselines at every threshold, by at least 4 AUROC points at `last5` and at least 5 at `last10`.](../results/figures/azure_sensitivity_min_support.png)
 
 ## 6  Results
 
@@ -621,13 +646,13 @@ set (order gain +1.49). At `last3`,
 `task_success:M → task_success:M → task_success:M` reaches sequence
 lift 3.06 vs itemset lift 1.37 (order gain +1.69): three consecutive
 Map completions predict a subsequent failure much more strongly than
-the mere presence of Map events would suggest (Figure 3).
+the mere presence of Map events would suggest (Figure 4).
 
-![**Figure 3.** Itemset lift versus sequence lift for Azure patterns. Points above the diagonal are patterns whose ordered form carries more failure signal than their unordered co-occurrence, the effect the count-preserving null of §4.7 isolates.](../results/figures/azure_itemset_vs_sequence_lift.png)
+![**Figure 4.** Itemset lift versus sequence lift for Azure patterns. Points above the diagonal are patterns whose ordered form carries more failure signal than their unordered co-occurrence, the effect the count-preserving null of §4.7 isolates.](../results/figures/azure_itemset_vs_sequence_lift.png)
 
 ### 6.2 Predictive evaluation (four temporally-split traces)
 
-Head-to-head on temporally-held-out test sets (Figure 4; the two wind
+Head-to-head on temporally-held-out test sets (Figure 5; the two wind
 farms are evaluated via the discovery/inference signature protocol of
 §6.4, not this temporal-split predictive table):
 
@@ -654,7 +679,7 @@ null at that configuration, so no sequence feature was available;
 windows with alerts removed from the pre-alert stream. Both boundary
 traces sit near chance for every feature set at every horizon.)_
 
-![**Figure 4.** Held-out predictive AUROC by feature set across the four temporally-split traces (Azure, Alibaba, BGL, SCANIA). The combined feature set leads on Azure and Alibaba; BGL and SCANIA sit at the no-signal boundary.](../results/figures/four_dataset_predictive_comparison.png)
+![**Figure 5.** Held-out predictive AUROC by feature set across the four temporally-split traces (Azure, Alibaba, BGL, SCANIA). The combined feature set leads on Azure and Alibaba; BGL and SCANIA sit at the no-signal boundary.](../results/figures/four_dataset_predictive_comparison.png)
 
 ### 6.3 Order effect under count-preserving null
 
@@ -737,8 +762,10 @@ or `system_warning:2655` fires, before any outage. **Escalation**:
 after a generator-fan Forced outage, treat a second on the same
 turbine as imminent (the repeat-outage family). Both rules have zero
 false alarms over the 699 inference-half control windows at `last5`;
-§6.4b quantifies how much of the escalation signal the last-event
-baseline already captures.
+§6.5 quantifies how much of the escalation signal the last-event
+baseline already captures. Figure 6 shows one such episode.
+
+![**Figure 6.** A real generator-fan overload cascade on Kelmarsh turbine T3. The co-occurring warning codes 2550, 2650, and 2655 (generator fans 1, 2, and 3) fire together twice in the hours before a same-family Forced outage (code 2650), alongside brake and frequency-converter alarms. This co-occurrence is the itemset signature the catalog records; the terminal marker at hour 0 is the outage being predicted.](../results/figures/kelmarsh_cascade_timeline.png)
 
 **Penmanshiel wind turbines (independent replication).** Nine
 Senvion MM82 turbines over 2016-06 to 2016-12. Fresh entity-disjoint
@@ -777,7 +804,7 @@ Use: **safety-9210 warning triggers immediate turbine curtailment,
 regardless of grid conditions**; **freq-converter 3543 informational
 message triggers converter service order within 6h at Penmanshiel**.
 
-#### 6.4b Baseline comparison and closed-signature deduplication
+### 6.5 Baseline comparison and closed-signature deduplication
 
 The lift-4.00 zero-control rows above are benchmarked against three
 baselines, each evaluated on the same entity-disjoint inference half:
@@ -825,7 +852,7 @@ also closed, so no finding is a redundant super-copy of another. The
 operative count is the number of BY-significant closed itemsets on
 the inference half, not the raw miner output.
 
-#### 6.4c Case-control ratio and posterior at the operational base rate
+### 6.6 Case-control ratio and posterior at the operational base rate
 
 Every discovery/inference table above is scored on a matched-control
 sample built at case:control = 1:3, so the pipeline's sample base
@@ -937,13 +964,13 @@ use of pattern mining on this trace is post-hoc cascade taxonomy
 (which alert codes cluster together within an episode) rather than
 prediction.
 
-Sections 6.5 through 6.9 present the aggregate evidence behind these
-signatures: the predictive-vs-frequent-noise separation (§6.5),
-post-selection-valid sequence significance (§6.6), the same-sample
-marginal baseline (§6.7), the SCANIA matched hazard-ratio analysis
-(§6.8), and lead time on true positives (§6.9).
+Sections 6.7 through 6.11 present the aggregate evidence behind these
+signatures: the predictive-vs-frequent-noise separation (§6.7),
+post-selection-valid sequence significance (§6.8), the same-sample
+marginal baseline (§6.9), the SCANIA matched hazard-ratio analysis
+(§6.10), and lead time on true positives (§6.11).
 
-### 6.5 Predictive vs frequent-noise separation across traces
+### 6.7 Predictive vs frequent-noise separation across traces
 
 The paper's central object is the fraction of mined frequent patterns
 that pass the per-pattern statistical significance test on an
@@ -985,12 +1012,12 @@ The Azure and Alibaba results persist in weaker but still substantive
 form (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate "some fraction is
 predictive" claim on this mining threshold and requires the matched
-conditional-logistic analysis in §6.8 instead. On Azure and Alibaba
+conditional-logistic analysis in §6.10 instead. On Azure and Alibaba
 the majority of frequent patterns are also predictive; on BGL and
 SCANIA the majority are frequent-but-noise, and the paper's concrete
 predictive-pattern list is short.
 
-### 6.6 Post-selection-valid sequence significance and closed-sequence compression
+### 6.8 Post-selection-valid sequence significance and closed-sequence compression
 
 We extend the discovery/inference split to sequences: PrefixSpan runs
 on the 50% discovery half, and each mined sequence is scored on the
@@ -1032,13 +1059,13 @@ sequences compress the raw list by up to a factor of two
 15/16). Closed sequences are the input the deployment-facing signature
 catalog uses.
 
-### 6.7 Formal significance (same-sample marginal counts)
+### 6.9 Formal significance (same-sample marginal counts)
 
 The same-sample BH counts (mining and testing on the full training
 sample) quantify the post-selection inflation that the §4.5
 discovery/inference design removes: they are the naive marginal-p
 baseline, and the gap between them and the post-selection-valid
-counts in §6.5 and §6.6 is the size of the selection artefact. At
+counts in §6.7 and §6.8 is the size of the selection artefact. At
 BH q < 0.05: every Azure 24h
 itemset (6/6) and every Azure 24h sequence (7/7) is significant;
 53/77 Azure `last5` itemsets and 55/67 Azure `last5` sequences;
@@ -1047,7 +1074,7 @@ flag zero patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On
 Alibaba: 6/10 `last3` itemsets, 9/16 `last3` sequences, 59/109
 `last10` sequences.
 
-### 6.8 SCANIA risk-set matched patterns (Component X)
+### 6.10 SCANIA risk-set matched patterns (Component X)
 
 Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases x 3 controls each drawn from the risk set at
@@ -1116,7 +1143,7 @@ distinction is important operationally: hazard-ratio-scored patterns
 support cohort-level fleet triage (which trucks warrant closer
 inspection), not next-event alerting.
 
-### 6.9 Lead time on true positives
+### 6.11 Lead time on true positives
 
 - **Alibaba** (operational lead time): median 0 s across horizons,
   IQR 0-2 min. Task boundaries are the practical alarm resolution;
@@ -1222,7 +1249,7 @@ event log.
   safety-system 9000/9210 and frequency-converter 3000 on Penmanshiel)
   fire in inference-half failure windows and never in matched controls
   at `last5`/`last10`, and the mined-itemset rule strictly dominates
-  a most-recent-event baseline (§6.4b). The two farms cross-validate
+  a most-recent-event baseline (§6.5). The two farms cross-validate
   each other: different rotor sizes (MM92 vs MM82), different sites,
   same protocol, same lift-4.00 cascade shape.
 - **Where the method works** (Azure PdM, Alibaba v2018): rich native
@@ -1316,7 +1343,7 @@ group because the cascade is literally physical: a mechanical wear
 process generates the intermediate alarm codes that the mining
 recovers.
 
-The two lead-time regimes in §6.9 speak to deployment. Azure inherits
+The two lead-time regimes in §6.11 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
 be read as a real-world warning interval; Alibaba's median 0-second
 lead time is the honest one, and a per-job classifier there must be
@@ -1364,7 +1391,7 @@ transfer across turbine model and site rather than across alarm
 vocabularies. The Penmanshiel window covers the site's 2016
 commissioning phase, which the safety-system 9000/9210 family
 reflects. The operational base rate of 0.01 used for the calibrated
-PPV in §6.4c is an assumed deployment prior, not a measured fleet
+PPV in §6.6 is an assumed deployment prior, not a measured fleet
 rate, and the PPV scales with it.
 
 ## 9  Reproducibility

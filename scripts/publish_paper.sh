@@ -6,15 +6,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-TITLE="Mining Frequent Failure Sequences in Operational Event Logs"
 TODAY="$(date +%Y-%m-%d)"
+# Title, author, and keywords come from the YAML front matter in skeleton.md.
+# Section numbers are written manually in the headings (so the in-text
+# section cross-references stay stable), so pandoc's --number-sections is
+# intentionally OFF to avoid double numbering.
 
 # --- Standalone HTML (embedded resources) ---
 ( cd paper && pandoc skeleton.md \
     --citeproc \
     --bibliography=references.bib \
-    --standalone --number-sections \
-    --metadata title="$TITLE" \
+    --standalone \
     --metadata date="$TODAY" \
     --css=style.css --embed-resources \
     -o skeleton.html )
@@ -23,8 +25,7 @@ TODAY="$(date +%Y-%m-%d)"
 pandoc paper/skeleton.md \
   --citeproc \
   --bibliography=paper/references.bib \
-  --standalone --number-sections \
-  --metadata title="$TITLE" \
+  --standalone \
   --metadata date="$TODAY" \
   -o paper/skeleton.docx
 
