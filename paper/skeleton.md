@@ -213,9 +213,10 @@ PrefixSpan head-to-head to Alibaba `batch_task` status transitions
 or to Azure PdM `errorID → failure` sequences with the matched-control
 design used here, then evaluates the resulting patterns as binary
 features against event-count and deep-learning-adjacent alternatives
-on a temporally-held-out split. The four-trace regime-of-validity
-study in §7.4 is likewise, to our knowledge, unprecedented in the
-pattern-mining log-analysis literature.
+on a temporally-held-out split. The six-trace regime-of-validity
+study in §7.4, spanning two independent wind farms, is likewise, to
+our knowledge, unprecedented in the pattern-mining log-analysis
+literature.
 
 ## 3  Data
 
@@ -297,7 +298,7 @@ cascade as a Forced outage.
 ### 3.5 Penmanshiel wind-farm alarm logs (production, per-turbine)
 
 Nine of the fourteen Senvion MM82 turbines at the Penmanshiel site
-(Cubico Sustainable Investments; Plumley 2022 [@plumley2022kelmarsh]
+(Cubico Sustainable Investments; Plumley 2022 [@plumley2022penmanshiel]
 Zenodo record 5946808 under CC-BY-4.0), same Greenbyte SCADA schema as
 Kelmarsh. For the second half of 2016 (2016-06 through 2016-12,
 when the site went live) the nine turbines produced 15,388 status
@@ -568,9 +569,11 @@ the mere presence of Map events would suggest.
 
 _Figure:_ [azure_itemset_vs_sequence_lift.png](../results/figures/azure_itemset_vs_sequence_lift.png)
 
-### 6.2 Predictive evaluation (four traces)
+### 6.2 Predictive evaluation (four temporally-split traces)
 
-Head-to-head on temporally-held-out test sets:
+Head-to-head on temporally-held-out test sets (the two wind farms
+are evaluated via the discovery/inference signature protocol of
+§6.4, not this temporal-split predictive table):
 
 | trace   | horizon | event_count | itemsets_only | sequences_only | combined     |
 |---------|---------|-------------|---------------|----------------|--------------|
@@ -631,7 +634,7 @@ Alibaba once multiplicity is controlled for.
 The paper's central deliverable is a catalog of failure-precursor
 signatures. Each signature is a specific mined pattern for which we
 present statistical evidence, a domain-specific interpretation, and
-an intended deployment use. The catalog is built from the four traces' mining output using
+an intended deployment use. The catalog is built from all six traces' mining output using
 the safeguards of §4.5 (post-selection-valid inference on the
 disjoint inference half), §4.6 (matched conditional logistic for the
 right-censored SCANIA trace) and §4.7 (count-preserving comparator
@@ -1122,35 +1125,45 @@ the DAG matters: jobs that make it through a Map-heavy prefix are
 the jobs whose downstream Reduce or Join phases can fail, whereas
 jobs that fail early do so in a different distribution of task types.
 
-### 7.4 Four contrasting case studies
+### 7.4 Six contrasting case studies
 
-Four heterogeneous traces are useful empirical evidence, and they
-inform hypotheses about when pattern mining recovers meaningful
-predictive structure and when it does not. They are not a
-sufficient basis to infer a general "regime of validity" for the
-method: four case studies differ along too many axes (domain,
-event vocabulary, synthetic vs real, entity definition, target
-construction, observation cadence, class prevalence, control
-sampling) to isolate the causal factors that separate the two
-positive traces (Azure PdM, Alibaba v2018) from the two boundary
-traces (BGL, SCANIA Component X). We describe the pattern rather
-than claim it as a rule.
+Six heterogeneous traces inform when pattern mining recovers
+meaningful predictive structure and when it does not. They differ
+along many axes (domain, event vocabulary, synthetic vs real, entity
+definition, target construction, observation cadence, class
+prevalence, control sampling), so we describe the pattern rather
+than claim a causal rule. The strongest positive evidence is the
+two-farm wind cascade: two independent Senvion fleets at different
+sites produce the same lift-4.00 zero-control cascade signatures
+under one protocol, which is the closest the survey comes to a
+controlled replication.
 
-The four-trace survey resolves an obvious follow-up question:
-does the sequences+itemsets combined-feature-set advantage transfer
-to any operational event log? It does not.
+The survey resolves an obvious follow-up question: does the
+combined-feature-set advantage transfer to any operational event
+log? It does not.
 
+- **Where the method works cleanest** (Kelmarsh, Penmanshiel wind
+  farms): a genuine physical cascade. Continuous mechanical wear
+  produces discrete vendor alarm codes at intermediate stages, and a
+  specific alarm terminates the cascade as a Forced outage. The
+  precursor codes (generator-fan overload 2550/2650/2655 on Kelmarsh;
+  safety-system 9000/9210 and frequency-converter 3000 on Penmanshiel)
+  fire in inference-half failure windows and never in matched controls
+  at `last5`/`last10`, and the mined-itemset rule strictly dominates
+  a most-recent-event baseline (§6.4b). The two farms cross-validate
+  each other: different rotor sizes (MM92 vs MM82), different sites,
+  same protocol, same lift-4.00 cascade shape.
 - **Where the method works** (Azure PdM, Alibaba v2018): rich native
   discrete event vocabularies (5 error codes × 4 component types on
   Azure; 4 task statuses × 6 task roles on Alibaba). Failure-window
   content differs discriminably from control-window content, and
   order carries information beyond the itemset.
-- **Where the method does not work** (BGL, SCANIA): the target class
-  is self-triggering (BGL alerts follow other alerts, and non-alert
-  log lines carry no discriminable precursor signal), or the discrete
-  event stream must be derived from continuous counters (SCANIA
-  requires binning per-vehicle deltas, and a defensible 90th-percentile
-  surprise binning produces only marginal AUROC).
+- **Where the method does not work** (BGL, SCANIA Component X): the
+  target class is self-triggering (BGL alerts follow other alerts, and
+  non-alert log lines carry no discriminable precursor signal), or the
+  discrete event stream must be derived from continuous counters
+  (SCANIA requires binning per-vehicle deltas, and a defensible
+  90th-percentile surprise binning produces only marginal AUROC).
 
 Concretely: on BGL the best combined AUROC across horizons is 0.51
 (chance) even when INFO-level messages and component granularity are
@@ -1209,22 +1222,27 @@ built on them cannot see it, because there is no pre-failure event
 ordering to catch; the discriminative information is spread across
 the truck's entire operating history.
 
-This gives a sharper three-way regime-of-validity: (i) two wins
-(Azure PdM, Alibaba v2018), where target failure is preceded by a
-discriminable ordered event trajectory; (ii) BGL, where the target
-class is self-triggering with no discriminable non-alert precursor;
-(iii) Component X, where the target has strong per-truck signal in aggregate
-features but no last-K-events trajectory signal, so pattern mining
-on windows attains the temporal-split ceiling but not the
-transductive per-vehicle ceiling. The APS positive control confirms
-that (iii) is a target-shape distinction, not a manufacturer or
-schema deficiency.
+This gives a sharper three-way regime-of-validity: (i) four wins
+(Kelmarsh, Penmanshiel, Azure PdM, Alibaba v2018), where target
+failure is preceded by a discriminable ordered event trajectory,
+with the two wind farms the cleanest physical-cascade instances;
+(ii) BGL, where the target class is self-triggering with no
+discriminable non-alert precursor; (iii) Component X, where the
+target has strong per-truck signal in aggregate features but no
+last-K-events trajectory signal, so pattern mining on windows attains
+the temporal-split ceiling but not the transductive per-vehicle
+ceiling. The APS positive control confirms that (iii) is a
+target-shape distinction, not a manufacturer or schema deficiency.
 
 The method's regime of validity is therefore "trace has a rich
 native discrete event vocabulary AND failure class is not
 self-triggering AND readout-cadence signal capacity exceeds the
 target AUROC bar". BGL fails the second condition; SCANIA fails the
-third; Azure PdM and Alibaba v2018 satisfy all three.
+third; the two wind farms, Azure PdM, and Alibaba v2018 satisfy all
+three. The wind farms are the strongest members of the positive
+group because the cascade is literally physical: a mechanical wear
+process generates the intermediate alarm codes that the mining
+recovers.
 
 The two lead-time regimes in §6.7 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
@@ -1270,8 +1288,11 @@ https://apartsinprojects.github.io/FailurePatterns/. The repository
 carries: (i) per-dataset ingest scripts referencing the exact public
 sources for Azure PdM (Kaggle mirror), Alibaba cluster-trace-v2018
 (Alibaba OSS `batch_task.tar.gz`, ~130 MB), BGL (Loghub Zenodo
-`8196385/BGL.zip`, ~55 MB), and SCANIA Component X (Swedish National
-Data Service DOI `10.5878/jvb5-d390`, CC-BY-4.0); (ii) window
+`8196385/BGL.zip`, ~55 MB), SCANIA Component X (Swedish National
+Data Service DOI `10.5878/jvb5-d390`, CC-BY-4.0), Kelmarsh
+(Zenodo `10.5281/zenodo.5841834`, CC-BY-4.0) and Penmanshiel
+(Zenodo `10.5281/zenodo.5946808`, CC-BY-4.0) SCADA status logs;
+(ii) window
 construction, mining (mlxtend FP-Growth 0.25.0 for itemsets, SPMF
 2.64 via subprocess for PrefixSpan sequences), scoring, discovery/
 inference splitting, and matched conditional-logistic scripts;
@@ -1301,16 +1322,23 @@ initial window construction are one-time steps documented in the
 ## 10  Conclusion
 
 Frequent-pattern mining of discrete operational events surfaces
-interpretable pre-failure signatures on two of four traces studied.
-On both winning traces, sequences add real predictive information
-beyond itemsets when window definitions are rich enough for order
-to be a real degree of freedom; at those horizons, combining
-itemset and sequence features improves failure prediction by 5-10
-AUROC points over either alone. The result replicates across a
-synthetic per-machine trace (Azure PdM) and a real per-job
-production trace (Alibaba v2018), and its regime of validity is
-mapped by two additional traces (BGL, SCANIA) where the pipeline
-does not find signal, with a mechanistic explanation for each.
+interpretable pre-failure signatures on four of six traces studied.
+The cleanest evidence is a physical cascade replicated across two
+independent Senvion wind farms: on Kelmarsh and Penmanshiel, mining
+recovers zero-control cascade signatures at inference-half lift 4.00,
+where a mechanical wear process generates the intermediate alarm
+codes that terminate as Forced outages, and the mined-itemset rule
+strictly dominates a most-recent-event baseline. On the two cloud /
+maintenance traces (Azure PdM, Alibaba v2018), sequences add real
+predictive information beyond itemsets when window definitions are
+rich enough for order to be a real degree of freedom; at those
+horizons, combining itemset and sequence features improves failure
+prediction by 5-10 AUROC points over either alone. The method's
+regime of validity is mapped by two boundary traces (BGL, SCANIA)
+where the pipeline does not find last-K-events signal, with a
+mechanistic explanation for each, and by a matched conditional-
+logistic analysis that recovers interpretable per-truck hazard
+ratios on SCANIA under right censoring.
 
 ---
 
