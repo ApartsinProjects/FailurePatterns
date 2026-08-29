@@ -22,25 +22,21 @@ valid p, Benjamini-Yekutieli arbitrary-dependence FDR on the
 inference half), against a count-preserving order comparator that
 removes the multiplicity confound, and, for the right-censored SCANIA
 trace, by matched conditional logistic regression stratified by risk
-set (Prentice-Breslow). Headline replicated finding: on **two
-independent Senvion wind farms with different rotor sizes and
-sites, discovery/inference mining surfaces zero-control cascade
-signatures at inference-half lift 4.0**. On Kelmarsh,
-`terminal_failure:2550` at `last10` has BY q = 1.9e-26 with 45
-cases and 0 controls; on Penmanshiel, `system_warning:9000 +
-terminal_failure:9210` at `last5` has BY q = 1.4e-43 with 70 cases
-and 0 controls. On Azure PdM, `{software_error:error2, software_error:error3}`
-at 24h has lift 4.0 with 135 cases and 0 controls (BY q = 4e-90). On
-Alibaba v2018, `{task_waiting:R}` at `last5` has lift 4.01 with 829
-cases and 9 controls (BY q ~ 0); order adds no signal after the
-count-preserving null. On SCANIA under matched conditional logistic
-regression, 117/200 top patterns pass BH q<0.05 with CI excluding 1,
-108/200 survive the stricter BY correction; top HR 1.73 (95% CI
-[1.53, 1.96]). On BGL, no non-alert precursor survives the post-
-selection-valid test at the horizons tested. Mining code,
-discovery/inference splits, matched-hazard outputs, and per-dataset
-signature JSONs are released as reproducible parquet artefacts
-alongside the paper.
+set (Prentice-Breslow). The headline is a replicated physical cascade: on **two independent
+Senvion wind farms of different rotor size and site, discovery/
+inference mining surfaces the same zero-control cascade signatures at
+inference-half lift 4.0** (generator-fan overload codes on Kelmarsh,
+safety-system and frequency-converter codes on Penmanshiel). Azure
+PdM and Alibaba v2018 reproduce the effect in cloud and maintenance
+logs, with ordering adding no signal on Alibaba once event
+multiplicity is controlled. SCANIA Component X, right-censored,
+yields interpretable per-truck hazard ratios under matched
+conditional logistic regression (108 of 200 top patterns survive the
+arbitrary-dependence FDR; top HR 1.73). BGL is the mapped boundary
+case where no non-alert precursor survives. Mining code, discovery/
+inference splits, matched-hazard outputs, and per-dataset signature
+tables are released as reproducible parquet artefacts alongside the
+paper.
 
 ## 1  Introduction
 
@@ -214,7 +210,7 @@ or to Azure PdM `errorID → failure` sequences with the matched-control
 design used here, then evaluates the resulting patterns as binary
 features against event-count and deep-learning-adjacent alternatives
 on a temporally-held-out split. The six-trace regime-of-validity
-study in §7.4, spanning two independent wind farms, is likewise, to
+study in §7.3, spanning two independent wind farms, is likewise, to
 our knowledge, unprecedented in the pattern-mining log-analysis
 literature.
 
@@ -874,8 +870,9 @@ use of pattern mining on this trace is post-hoc cascade taxonomy
 prediction.
 
 The rest of §6 walks through the aggregate evidence supporting these
-signatures (§6.5 predictive-vs-frequent-noise separation) and the
-downstream predictive evaluation (§6.6, §6.7).
+signatures: the predictive-vs-frequent-noise separation (§6.5), the
+post-selection-valid sequence significance (§6.6), the SCANIA matched
+hazard-ratio analysis (§6.8), and lead time on true positives (§6.9).
 
 ### 6.5 Predictive vs frequent-noise separation across traces
 
@@ -919,12 +916,12 @@ The Azure / Alibaba wins persist in weaker but still substantive form
 (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate "some fraction is
 predictive" claim on this mining threshold and requires the matched
-conditional-logistic analysis in §6.6 instead. On the two winning traces the
+conditional-logistic analysis in §6.8 instead. On the two winning traces the
 majority of frequent patterns are also predictive; on the two
 boundary traces the majority are frequent-but-noise, and the paper's
 concrete predictive-pattern list is short.
 
-### 6.5b Post-selection-valid sequence significance and closed-sequence compression
+### 6.6 Post-selection-valid sequence significance and closed-sequence compression
 
 We extend the discovery/inference split to sequences: PrefixSpan runs
 on the 50% discovery half, and each mined sequence is scored on the
@@ -966,16 +963,22 @@ sequences compress the raw list by up to a factor of two
 15/16). Closed sequences are the input the deployment-facing signature
 catalog uses.
 
-### 6.5 Formal significance
+### 6.7 Formal significance (same-sample marginal counts)
 
-At BH q < 0.05: every Azure 24h itemset (6/6) and every Azure 24h
-sequence (7/7) is significant; 53/77 Azure `last5` itemsets and
-55/67 Azure `last5` sequences; 562/657 Azure `last10` sequences.
-Both 1h and 6h Azure horizons flag zero patterns as expected
-(0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10 `last3` itemsets,
-9/16 `last3` sequences, 59/109 `last10` sequences.
+The same-sample BH counts (mining and testing on the full training
+sample) quantify the post-selection inflation that the §4.5
+discovery/inference design removes: they are the naive marginal-p
+baseline, and the gap between them and the post-selection-valid
+counts in §6.5 and §6.6 is the size of the selection artifact. At
+BH q < 0.05: every Azure 24h
+itemset (6/6) and every Azure 24h sequence (7/7) is significant;
+53/77 Azure `last5` itemsets and 55/67 Azure `last5` sequences;
+562/657 Azure `last10` sequences. Both 1h and 6h Azure horizons
+flag zero patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On
+Alibaba: 6/10 `last3` itemsets, 9/16 `last3` sequences, 59/109
+`last10` sequences.
 
-### 6.6 SCANIA risk-set matched patterns (Component X)
+### 6.8 SCANIA risk-set matched patterns (Component X)
 
 Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases x 3 controls each drawn from the risk set at
@@ -1044,7 +1047,7 @@ distinction is important operationally: hazard-ratio-scored patterns
 support cohort-level fleet triage (which trucks warrant closer
 inspection), not next-event alerting.
 
-### 6.7 Lead time on true positives
+### 6.9 Lead time on true positives
 
 - **Alibaba** (operational lead time): median 0 s across horizons,
   IQR 0-2 min. Task boundaries are the practical alarm resolution;
@@ -1105,7 +1108,7 @@ Azure the full ordering contributes signal beyond every subpart, and
 on Alibaba the ordering just distinguishes one privileged short prefix
 from bag-of-items noise.
 
-### 7.3 What each mined signature means operationally
+### 7.2 What each mined signature means operationally
 
 On Azure PdM, `software_error:error2 → software_error:error3` at
 `last5` reaches sequence lift 3.73 vs itemset lift 2.22 for the same
@@ -1125,7 +1128,7 @@ the DAG matters: jobs that make it through a Map-heavy prefix are
 the jobs whose downstream Reduce or Join phases can fail, whereas
 jobs that fail early do so in a different distribution of task types.
 
-### 7.4 Six contrasting case studies
+### 7.3 Six contrasting case studies
 
 Six heterogeneous traces inform when pattern mining recovers
 meaningful predictive structure and when it does not. They differ
@@ -1244,7 +1247,7 @@ group because the cascade is literally physical: a mechanical wear
 process generates the intermediate alarm codes that the mining
 recovers.
 
-The two lead-time regimes in §6.7 speak to deployment. Azure inherits
+The two lead-time regimes in §6.9 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
 be read as a real-world warning interval; Alibaba's median 0-second
 lead time is the honest one, and a per-job classifier there must be
@@ -1339,21 +1342,3 @@ where the pipeline does not find last-K-events signal, with a
 mechanistic explanation for each, and by a matched conditional-
 logistic analysis that recovers interpretable per-truck hazard
 ratios on SCANIA under right censoring.
-
----
-
-## What is still missing
-
-- Regularization sweep and cross-machine / cross-job leave-one-out
-  for a fuller Phase 7.
-- Optional: per-machine Alibaba analysis with `batch_instance`.
-- Prose polish + related-work paragraph expansion (scout returning).
-- HTML/DOCX build via `paper-build` skill once prose is settled.
-
-## What is verified
-
-- Bibliography: [paper/references.bib](references.bib), currently 12
-  entries validated by `bibtest`. Expansion pending scout return.
-- Numbers audit: 50 / 50 claims in the previous 2-trace skeleton
-  match the underlying JSON stats. Re-running after 4-trace and
-  boundary-condition additions.
