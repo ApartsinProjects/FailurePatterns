@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 68. Pass: 68. Mismatch: 0.
+Total claims audited: 73. Pass: 73. Mismatch: 0.
 
 ## Full audit trail
 
@@ -40,6 +40,11 @@ Total claims audited: 68. Pass: 68. Mismatch: 0.
 | 7.2 (APS)     | APS Failure feature count = 170                            | 170        | 170        | PASS        |
 | 7.2 (APS)     | APS Failure test set size = 16000                          | 16000      | 16000      | PASS        |
 | 7.2 (APS)     | APS Failure train positive rate = 0.0167                   | 0.0167     | 0.0167     | PASS        |
+| 6.5           | SCANIA risk-set mined 42,453 candidate itemsets            | 42453      | 42453      | PASS        |
+| 6.5           | SCANIA risk-set 4,829 significant patterns (CI excludes 1) | 4829       | 4829       | PASS        |
+| 6.5           | SCANIA risk-set top pattern MH-OR = 2.72                   | 2.72       | 2.72       | PASS        |
+| 6.5           | SCANIA risk-set top pattern CI low = 2.10                  | 2.10       | 2.1        | PASS        |
+| 6.5           | SCANIA risk-set top pattern CI high = 3.51                 | 3.51       | 3.51       | PASS        |
 | 5.3           | Azure 24h combined AUROC = 0.996                           | 0.996      | 0.996      | PASS        |
 | 5.3           | Azure 24h combined AUPRC = 0.988                           | 0.988      | 0.988      | PASS        |
 | 5.3           | Azure last5 combined AUROC = 0.81                          | 0.81       | 0.81       | PASS        |

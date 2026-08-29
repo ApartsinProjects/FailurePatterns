@@ -236,6 +236,24 @@ def main() -> int:
           round(aps["train_pos_rate"], 4), "0.0167",
           approx(aps["train_pos_rate"], 0.0167, tol=0.0005))
 
+    # 6.5 SCANIA risk-set matched patterns
+    rs = _load_json(PATT / "scania_riskset_summary.json")
+    check("6.5", "SCANIA risk-set mined 42,453 candidate itemsets",
+          rs["n_patterns_mined"], "42453",
+          rs["n_patterns_mined"] == 42453)
+    check("6.5", "SCANIA risk-set 4,829 significant patterns (CI excludes 1)",
+          rs["n_significant_at_95"], "4829",
+          rs["n_significant_at_95"] == 4829)
+    check("6.5", "SCANIA risk-set top pattern MH-OR = 2.72",
+          round(rs["top10_mh_or"][0]["mh_or"], 2), "2.72",
+          approx(rs["top10_mh_or"][0]["mh_or"], 2.72, tol=0.02))
+    check("6.5", "SCANIA risk-set top pattern CI low = 2.10",
+          round(rs["top10_mh_or"][0]["mh_or_ci_low"], 2), "2.10",
+          approx(rs["top10_mh_or"][0]["mh_or_ci_low"], 2.10, tol=0.02))
+    check("6.5", "SCANIA risk-set top pattern CI high = 3.51",
+          round(rs["top10_mh_or"][0]["mh_or_ci_high"], 2), "3.51",
+          approx(rs["top10_mh_or"][0]["mh_or_ci_high"], 3.51, tol=0.02))
+
     # 5.3 Predictive table cells
     bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")
     scania_pred = pd.read_parquet(TAB / "scania_predictive.parquet")

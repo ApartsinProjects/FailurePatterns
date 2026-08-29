@@ -46,6 +46,67 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — Main claim reframed; risk-set matched sampling implemented
+
+User proposed a stronger reframing of the paper's central claim:
+"some (not all) frequent event patterns are good predictors of
+failure; most are just common cascades". This shifts the paper's
+scientific object from the AUROC-race to the separation of
+predictive patterns from frequent-but-uninformative noise, and
+handles SCANIA cleanly as a real contribution rather than a boundary
+confession.
+
+**Implementation** in
+[src/eval/windows_scania_riskset.py](src/eval/windows_scania_riskset.py):
+risk-set matched sampling (Fable Idea 3): for each SCANIA case at
+its length_of_study time T_f, controls come from the risk set at T_f
+(trucks still under observation at that lifetime index), with windows
+aligned to T_f. Mantel-Haenszel odds-ratio scoring with Woolf-Haldane
+95% CI gives per-pattern hazard-ratio estimates.
+
+Debugging story: initial implementation returned identical MH-OR
+across all patterns because I matched patterns against
+`event_subtype_seq` (raw subtypes) but the mined itemsets use
+`event_type:event_subtype` tokens; case_in and ctrl_in were always
+zero, producing the same continuity-corrected 3.0 OR. Fixed by
+reconstructing items per window from both event_type and
+event_subtype columns.
+
+**SCANIA risk-set results:**
+- 42,453 candidate itemsets mined at min-support 0.05
+- **4,829 patterns (11.4%) significant** at 95% CI excluding 1
+- Top pattern MH-OR = 2.72, CI [2.10, 3.51], n_case=114 n_ctrl=130
+- Top single-histogram pattern: 4 bins of feature 397 together
+- Top cross-feature pattern: `158_9 + 309_0` (MH-OR 2.37)
+
+**Cross-trace predictive-fraction table** (paper §6.4):
+- Azure 24h itemsets: 6/6 significant (100%)
+- Azure last10 sequences: 562/657 (86%)
+- Alibaba last3 itemsets: 6/10 (60%)
+- BGL any horizon: ≤ 1 significant across mined patterns (~0%)
+- SCANIA risk-set matched: 4,829/42,453 (11.4%)
+
+**Root-cause finding on SCANIA** (also folded into §7.2):
+5-fold CV LightGBM on length-residualized 420 aggregated features
+reaches AUROC 0.826 ± 0.005, but the same features under a temporal
+split reach only 0.60. Component X signal is a per-truck static
+usage profile, not a temporal degradation trajectory the last-K
+window can catch. SCANIA supports COHORT-LEVEL fleet triage (which
+trucks warrant inspection) but not next-event alerting.
+
+**Paper updates:**
+- Abstract completely rewritten around the new claim.
+- §1 Introduction: 4 contributions restructured (predictive-vs-noise
+  separation is #1, risk-set generalisation is #2).
+- §4.4 (new): risk-set matched sampling methodology.
+- §6.4 (new): per-trace predictive-fraction table.
+- §6.5 (new): SCANIA risk-set concrete predictive signatures.
+- §7.2: rewritten with the trajectory-vs-static-signal boundary
+  interpretation and CV-vs-temporal AUROC contrast.
+
+Numbers audit: **73 / 73 pass** (up from 68 after adding 5 risk-set
+claims). Bibliography unchanged at 29 entries. Artifact republished.
+
 ## 2026-08-29 — SCANIA APS Failure positive control: signal-availability boundary confirmed
 
 User asked whether SCANIA APS Failure (IDA 2016 challenge, UCI 421)

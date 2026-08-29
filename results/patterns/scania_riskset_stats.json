@@ -1,0 +1,12 @@
+{
+  "n_cases": 2272,
+  "n_controls_per_case": 3,
+  "n_cases_with_empty_risk_set": 0,
+  "n_cases_dropped_no_history": 0,
+  "mean_risk_set_size": 13627.033450704226,
+  "invariants": {
+    "at_least_1000_matched_cases": true,
+    "no_repair_in_windows": true,
+    "each_case_has_at_least_one_control": true
+  }
+}
