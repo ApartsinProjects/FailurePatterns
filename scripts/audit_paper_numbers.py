@@ -281,6 +281,31 @@ def main() -> int:
           ali_l10["fraction_full_dominant"], "0.295",
           approx(ali_l10["fraction_full_dominant"], 0.295, tol=0.01))
 
+    # 6.4 Kelmarsh signatures (cleanest physical-cascade)
+    km = json.loads((PATT / "kelmarsh_signatures.json").read_text(encoding="utf-8"))
+    km_l5 = km.get("last5", {})
+    check("6.4 (Kelmarsh)",
+          "Kelmarsh last5: 31 BH-sig / 39 mined",
+          f"{km_l5['n_sig_bh']}/{km_l5['n_mined']}", "31/39",
+          km_l5["n_sig_bh"] == 31 and km_l5["n_mined"] == 39)
+    check("6.4 (Kelmarsh)",
+          "Kelmarsh last5: 30 BY-sig / 39 mined",
+          f"{km_l5['n_sig_by']}/{km_l5['n_mined']}", "30/39",
+          km_l5["n_sig_by"] == 30 and km_l5["n_mined"] == 39)
+    check("6.4 (Kelmarsh)",
+          "Kelmarsh last10: 159 BH-sig",
+          km["last10"]["n_sig_bh"], "159",
+          km["last10"]["n_sig_bh"] == 159)
+    load_km = _load_json(PROC / "kelmarsh_load_stats.json")
+    check("3.4 (Kelmarsh)",
+          "Kelmarsh 2016: 306 forced outages",
+          load_km["n_forced_outages"], "306",
+          load_km["n_forced_outages"] == 306)
+    check("3.4 (Kelmarsh)",
+          "Kelmarsh 2016: 6 turbines",
+          load_km["n_turbines"], "6",
+          load_km["n_turbines"] == 6)
+
     # 6.4 Signature catalog (data-supported hypotheses)
     cat = _load_json(TAB / "signature_catalog.json")
     # Azure {error2, error3} at 24h: 135 cases, 0 controls, lift 4.00

@@ -290,24 +290,33 @@ missing.</em></p>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,
 PrefixSpan) surfaces recurrent gapped event patterns in these logs. This
-paper pivots from the “how much is predictive” question to the concrete
-question: <strong>what specific patterns does the data support, what do
-they mean operationally, and how would one deploy them?</strong> We
-produce a catalog of failure-precursor signatures mined on four
-operational traces (synthetic per-machine Azure PdM, real per-job
-Alibaba v2018, real per-rack LLNL Blue Gene/L syslogs, real per-truck
-SCANIA Component X), each entry carrying statistical evidence, a
-domain-specific interpretation, and an intended deployment rule. Every
-signature is validated by an entity-disjoint discovery/inference split
-(post-selection-valid p and BY q on the inference half), a
-count-preserving order comparator (multiplicity- free ordering effect),
-and, for the right-censored SCANIA trace, matched conditional logistic
-regression stratified by risk set (Prentice-Breslow). Headline
-signatures include: on Azure PdM,
+paper’s central hypothesis is that pattern mining recovers
+physical-cascade precursor signatures on real industrial telemetry when
+the underlying process actually cascades through discrete stages. To
+test it we produce a catalog of failure-precursor signatures mined on
+five operational traces: real per-turbine wind- farm alarm logs
+(Kelmarsh 6 x Senvion MM92, 306 forced outages in one year), synthetic
+per-machine Azure PdM, real per-job Alibaba v2018, real per-rack LLNL
+Blue Gene/L syslogs, and real per-truck SCANIA Component X, each entry
+carrying statistical evidence, a domain-specific interpretation, and an
+intended deployment rule. Every signature is validated by an
+entity-disjoint discovery/inference split (post-selection-valid p and BY
+q on the inference half), a count-preserving order comparator
+(multiplicity- free ordering effect), and, for the right-censored SCANIA
+trace, matched conditional logistic regression stratified by risk set
+(Prentice-Breslow). Headline signatures include: <strong>on Kelmarsh
+wind turbines, <code>system_warning:2550</code> (Overload generator fan
+1) at <code>last5</code> horizon has inference-half lift 4.0 with 22
+case hits and zero control hits (BY q = 1.3e-12), supporting a “schedule
+generator-cooling inspection” alarm rule the moment the warning
+fires</strong>; the two-code cascade
+<code>system_warning:2650 + system_warning:2655</code> (Overload
+generator fans 2 and 3 concurrently) reaches lift 4.0 with 11 cases vs 0
+controls. On Azure PdM,
 <code>{software_error:error2, software_error:error3}</code> at 24h
-horizon has inference-half lift 4.0 with <strong>zero occurrences in
-6,800 control windows</strong> (BY q = 4e-90), supporting a “raise
-component-replacement work order” alarm rule; on Alibaba v2018,
+horizon has inference-half lift 4.0 with zero occurrences in the
+inference control windows (BY q = 4e-90), supporting a “raise component-
+replacement work order” alarm rule; on Alibaba v2018,
 <code>task_waiting:R</code> at last3 horizon has lift 4.01 (BY q ≈ 0),
 n_case = 829 vs n_control = 9, supporting a real-time Reduce-task-retry
 / preemptive-reschedule rule (longer Alibaba patterns add no signal once
@@ -533,7 +542,37 @@ oliner2007bgl]. 913,594 messages remain after dropping INFO-level noise;
 KERNMNTF, APPTO, KERNSTOR), <code>system_error</code> (non-alert FATAL /
 ERROR / SEVERE / FAILURE), <code>system_warning</code>. Component (RAS,
 KERNEL, APP, MMCS, …) is used as an additional subtype axis.</p>
-<h3 data-number="1.4.4" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.4</span> 3.4 SCANIA Component X
+<h3 data-number="1.4.4" id="kelmarsh-wind-farm-alarm-logs-production-per-turbine"><span class="header-section-number">1.4.4</span> 3.4 Kelmarsh wind-farm alarm
+logs (production, per-turbine)</h3>
+<p>Six Senvion MM92 wind turbines at the Kelmarsh site, released by
+Plumley 2022 <span class="citation" data-cites="plumley2022kelmarsh">(Plumley 2022)</span> via Zenodo record
+5841834 under CC-BY-4.0. Each turbine’s status log carries every
+alarm/event that the SCADA emitted over the year, together with an IEC
+category (<code>Full Performance</code>, <code>Forced outage</code>,
+<code>Out of Environmental Specification</code>, …).</p>
+<p>For 2016 the six turbines produced 14,325 status events, of which 306
+were tagged <code>Forced outage</code> (real physical failures:
+generator- fan overloads, frequency-converter faults, safety-chain
+openings). Top forced-outage codes across the fleet: <code>2550</code>
+Overload generator fan 1 (42), <code>2650</code> Overload generator fan
+2 (38), <code>2655</code> Overload generator fan 3 (38),
+<code>3000</code> Frequency converter not ready (27), <code>100</code>
+Safety chain open (14). Non-forced-outage codes that appear as warnings
+or stops are the natural precursor candidates: <code>5720</code> Brake
+accumulator defect (96 warnings), <code>2125</code> Timeout brake closed
+(74), <code>2550/2650/2655</code> overload-fan warnings that precede the
+same-code forced outages.</p>
+<p>Event vocabulary: <code>system_stop</code>,
+<code>system_warning</code>, <code>system_info</code>,
+<code>system_comm</code>, <code>terminal_failure</code>. Entity is the
+turbine (<code>T1</code>..<code>T6</code>), subtype is the numeric fault
+code. Failure event = <code>terminal_failure</code> placed at each
+Forced-outage timestamp.</p>
+<p>This trace is the paper’s cleanest realisation of the physical-
+cascade shape: continuous mechanical wear produces discrete alarm codes
+at intermediate stages, and a specific alarm terminates the cascade as a
+Forced outage.</p>
+<h3 data-number="1.4.5" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.5</span> 3.5 SCANIA Component X
 (production automotive, per-vehicle)</h3>
 <p>Real fleet telematics dataset released 2025 [TODO:cite
 kharazian2025], 23,550 trucks over 1.5 years (2019-01 through 2020-05 in
@@ -1027,6 +1066,96 @@ logistic for the right-censored SCANIA trace) and §4.7 (count-preserving
 comparator for order effect). Every signature is a specific pattern
 grounded in its trace, not a cross-trace generalisation. The remainder
 of §6 walks through the catalog by trace.</p>
+<p><strong>Kelmarsh wind turbines.</strong> The strongest cascade
+signatures the paper records. All top signatures have zero control hits
+on the inference half. Each fault code names a specific mechanical /
+electrical precursor of the same-family Forced-outage event.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>horizon</th>
+<th>pattern (code:message)</th>
+<th>inf-half lift</th>
+<th>BY q</th>
+<th>n_case</th>
+<th>n_ctrl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>last5</td>
+<td><code>system_warning:2550</code> (Overload gen fan 1)</td>
+<td>4.00</td>
+<td>1.3e-12</td>
+<td>22</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>last5</td>
+<td><code>system_warning:2655</code> (Overload gen fan 3)</td>
+<td>4.00</td>
+<td>1.9e-12</td>
+<td>21</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>last5</td>
+<td><code>system_warning:2650 + system_warning:2655</code></td>
+<td>4.00</td>
+<td>1.6e-6</td>
+<td>11</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>last10</td>
+<td><code>system_warning:2125 + system_warning:2655</code> (Brake
+timeout + fan 3)</td>
+<td>4.00</td>
+<td>3.4e-10</td>
+<td>17</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>last10</td>
+<td><code>system_warning:2125 + system_warning:2650 + system_warning:2655</code></td>
+<td>4.00</td>
+<td>1.3e-9</td>
+<td>16</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>6h</td>
+<td>Long code chain terminating in fan 1/2/3 overload</td>
+<td>4.00</td>
+<td>9.6e-10</td>
+<td>16</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation: <strong>generator-fan overload warning codes (2550,
+2650, 2655) are near-decision-rule strength precursors of the
+same-family Forced-outage events</strong>. The two- and three-code
+chains such as <code>2125 + 2655</code> (Brake-close timeout combined
+with generator-fan overload) extend the same story: a specific
+mechanical stressor at the brake subsystem accompanies the terminal
+generator-fan overload. This is the paper’s central hypothesis in its
+clearest form: a physical wear process cascades through discrete alarm
+codes at intermediate stages before a specific alarm terminates the
+cascade.</p>
+<p>Use: <strong>schedule generator cooling / bearing inspection the
+moment any of the codes 2550, 2650, 2655 fires as a warning</strong>.
+Recall on the 2016 data is 22/(22 + missed) at the inference half;
+false-alarm rate is zero over 918 control windows at
+<code>last5</code>.</p>
 <p><strong>Azure PdM.</strong></p>
 <table style="width:100%;">
 <colgroup>
@@ -2012,6 +2141,9 @@ Umeshwar Dayal, and Mei-Chun Hsu. 2001. <span>“<span>PrefixSpan</span>:
 Mining Sequential Patterns Efficiently by Prefix-Projected Pattern
 Growth.”</span> In <em>Proceedings 17th International Conference on Data
 Engineering (ICDE)</em>, 215–24. <a href="https://doi.org/10.1109/ICDE.2001.914830">https://doi.org/10.1109/ICDE.2001.914830</a>.
+</div>
+<div id="ref-plumley2022kelmarsh" class="csl-entry" role="listitem">
+Plumley, Charlie. 2022. <span>“Kelmarsh Wind Farm Data.”</span> <a href="https://zenodo.org/records/5841834" class="uri">https://zenodo.org/records/5841834</a>; Zenodo. <a href="https://doi.org/10.5281/zenodo.5841834">https://doi.org/10.5281/zenodo.5841834</a>.
 </div>
 <div id="ref-prentice1978retrospective" class="csl-entry" role="listitem">
 Prentice, Ross L., and Norman E. Breslow. 1978. <span>“Retrospective
