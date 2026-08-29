@@ -199,7 +199,7 @@ or to Azure PdM `errorID → failure` sequences with the matched-control
 design used here, then evaluates the resulting patterns as binary
 features against event-count and deep-learning-adjacent alternatives
 on a temporally-held-out split. The four-trace regime-of-validity
-study in §7.2 is likewise, to our knowledge, unprecedented in the
+study in §7.4 is likewise, to our knowledge, unprecedented in the
 pattern-mining log-analysis literature.
 
 ## 3  Data
@@ -581,7 +581,51 @@ Lead-time detail: [results/tables/{azure,alibaba}_leadtime.md](../results/tables
 
 ## 7  Discussion
 
-### 7.1 What each mined signature means operationally
+### 7.1 Is the predictor in the entire sequence or in a subpart?
+
+Given a mined sequence S with lift L(S), we ask: does any proper
+subsequence S' ⊂ S in the mined set already reach lift(S)? If so, the
+predictor lives in the subpart and S is redundant; if no proper
+subsequence matches, the FULL ordered sequence is the minimal
+predictor. Formally, S is "full-sequence-dominant" iff
+lift(S) > lift(S') + 0.05 for every proper subsequence S' the miner
+also produced.
+
+Top-200 sequences per horizon:
+
+| trace   | horizon | full-seq dominant | subpart dominant | fraction full |
+|---------|---------|------------------:|-----------------:|--------------:|
+| Azure   | last5   |                41 |               11 | 79%           |
+| Azure   | last10  |               191 |                9 | **96%**       |
+| Alibaba | last3   |                 2 |               10 | 17%           |
+| Alibaba | last5   |                 5 |               20 | 20%           |
+| Alibaba | last10  |                31 |               74 | 30%           |
+
+The finding is trace-dependent:
+
+- **Azure PdM: predictor IS in the entire sequence.** On `last10`, 96% of
+  top-200 predictive sequences are full-dominant, meaning no proper
+  subsequence they contain reaches their lift. Concretely,
+  `maintenance:comp4 → software_error:error2 → software_error:error3`
+  reaches lift 3.73; the best proper subseq
+  `software_error:error2 → software_error:error3` has lift 2.55 (delta
+  +1.18). The full ordered chain adds real signal beyond any of its
+  parts. Operationally, an alarm should be keyed on the full ordered
+  sequence, not on any two-event fragment of it.
+- **Alibaba v2018: predictor lives in a shorter subpart.** Only 17-30%
+  of top sequences are full-dominant. Most are dominated by a short
+  leading subsequence, often just `task_waiting:R` alone (lift ~3.98).
+  Once a Waiting task appears in a job, the failure risk is set;
+  adding subsequent Success events to the pattern does not lift it
+  further. Operationally, the useful alarm is short.
+
+This resolves an ambiguity the raw order-gain distribution left open.
+Order helps on both traces (§6.3), but for different reasons: on
+Azure the full ordering contributes signal beyond every subpart, and
+on Alibaba the ordering just distinguishes one privileged short prefix
+from bag-of-items noise.
+
+### 7.3 What each mined signature means operationally
 
 On Azure PdM, `software_error:error2 → software_error:error3` at
 `last5` reaches sequence lift 3.73 vs itemset lift 2.22 for the same
@@ -601,7 +645,7 @@ the DAG matters: jobs that make it through a Map-heavy prefix are
 the jobs whose downstream Reduce or Join phases can fail, whereas
 jobs that fail early do so in a different distribution of task types.
 
-### 7.2 Regime of validity
+### 7.4 Regime of validity
 
 The four-trace survey resolves an obvious follow-up question:
 does the sequences+itemsets combined-feature-set advantage transfer

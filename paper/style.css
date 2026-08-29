@@ -1,174 +1,301 @@
-/* Committed "printed page" identity for a research-paper skeleton.
-   Single-theme by design: a paper reads like a paper on any host ground.
-   Every color is painted explicitly from the token set so the page never
-   silently borrows a dark host's background. */
+/* Scientific-paper typography, single-column, committed to a light
+   "printed-page" theme. Painted backgrounds so the page holds on any
+   host ground. Cleaned typographic rhythm, numbered figure/table
+   captions via CSS counters, Chicago-adjacent hanging-indent
+   bibliography, top-mid-bottom table rules (no verticals). */
 
 :root {
-  --paper-bg:   #f9f8f5;
-  --panel-bg:   #ffffff;
-  --code-bg:    #f2f0ec;
-  --ink:        #111111;
-  --muted:      #666666;
-  --border:     #d0cec9;
-  --accent:     #1a4b7a;   /* archival blue */
+  --paper-bg:    #f9f8f5;
+  --panel-bg:    #ffffff;
+  --code-bg:     #f1efea;
+  --ink:         #171717;
+  --muted:       #5a5a5a;
+  --hair:        #cfccc4;
+  --rule:        #2b2b2b;
+  --accent:      #1a4b7a;   /* archival blue */
   --accent-tint: #eaf0f6;
 }
+
+* { box-sizing: border-box; }
 
 html, body { background: var(--paper-bg); color: var(--ink); }
 
 body {
-  max-width: 44rem;
-  margin: 2.5rem auto;
-  padding: 0 1.5rem 4rem;
-  font-family: "Times New Roman", "Nimbus Roman", Georgia, serif;
-  font-size: 16px;
-  line-height: 1.6;
+  max-width: 46rem;
+  margin: 2.75rem auto 5rem;
+  padding: 0 1.75rem;
+  font-family: "Charter", "Iowan Old Style", "Palatino Linotype",
+               "Times New Roman", Georgia, serif;
+  font-size: 16.5px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum", "clig";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ---- Headings ------------------------------------------------------ */
 
-h1, h2, h3, h4 {
-  font-family: "Helvetica Neue", "Arial", sans-serif;
-  color: var(--accent);
-  line-height: 1.25;
-  text-wrap: balance;
-  margin-top: 1.8em;
-  margin-bottom: 0.4em;
-}
-h1.title {
-  font-size: 1.9rem;
-  margin: 0 0 0.35rem;
-  border-bottom: 2px solid var(--accent);
-  padding-bottom: 0.4rem;
+h1, h2, h3, h4, h5 {
+  font-family: "Inter", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
   color: var(--ink);
+  line-height: 1.2;
+  text-wrap: balance;
+  font-weight: 600;
+  margin: 2em 0 0.55em;
 }
-h1 { font-size: 1.7rem; }
-h2 {
-  font-size: 1.3rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.2rem;
+
+h1.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+  letter-spacing: -0.005em;
 }
-h3 { font-size: 1.08rem; }
-h4 { font-size: 1.0rem; color: var(--muted); }
 
 .date, .author {
   color: var(--muted);
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.92rem;
-  margin: 0.1rem 0;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.86rem;
+  margin: 0.05rem 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
-/* ---- Body text ----------------------------------------------------- */
+h1 {
+  font-size: 1.5rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3rem;
+  margin-top: 2.2em;
+}
+h2 {
+  font-size: 1.22rem;
+  color: var(--accent);
+  border-bottom: 1px solid var(--hair);
+  padding-bottom: 0.18rem;
+}
+h3 { font-size: 1.05rem; color: var(--ink); }
+h4 { font-size: 0.98rem; color: var(--muted); font-style: italic; font-weight: 500; }
 
-p { margin: 0.75em 0; }
-strong { color: var(--ink); }
-em { font-style: italic; }
-a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
+/* Pandoc numbered sections: subdued section numbers */
+.header-section-number {
+  color: var(--muted);
+  font-weight: 500;
+  padding-right: 0.4em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Body text ---------------------------------------------------- */
+
+p { margin: 0.75em 0; text-align: justify; hyphens: auto; }
+p:first-of-type { margin-top: 0.5em; }
+
+strong { color: var(--ink); font-weight: 700; }
+em     { font-style: italic; }
+
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
 a:hover { text-decoration-thickness: 2px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
-/* ---- Code + patterns ---------------------------------------------- */
+/* ---- Code and inline tokens -------------------------------------- */
 
 code, pre, kbd, samp {
-  font-family: "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
-  font-size: 0.92em;
+  font-family: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+  font-feature-settings: "kern", "liga";
 }
 code {
   background: var(--code-bg);
   padding: 1px 5px;
   border-radius: 3px;
   color: var(--ink);
+  white-space: nowrap;
 }
 pre {
   background: var(--code-bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--hair);
   border-radius: 4px;
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1.1rem;
   overflow-x: auto;
+  line-height: 1.5;
+  margin: 1em 0;
 }
-pre > code { background: transparent; padding: 0; }
+pre > code { background: transparent; padding: 0; white-space: pre; }
 
-/* ---- Tables -------------------------------------------------------- */
+/* ---- Tables with paper-style top-mid-bottom rules (no verticals) --- */
 
 table {
   border-collapse: collapse;
-  margin: 1.2em 0;
-  font-size: 0.94em;
+  margin: 1.4em auto;
+  font-size: 0.95em;
   font-variant-numeric: tabular-nums;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  border-top: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule);
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
 }
-th, td {
-  border: 1px solid var(--border);
-  padding: 0.4em 0.8em;
+thead th {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.45em 1em;
   text-align: left;
-  vertical-align: top;
+  font-weight: 600;
+  background: transparent;
+  color: var(--ink);
 }
-th {
-  background: var(--accent-tint);
-  font-family: "Helvetica Neue", Arial, sans-serif;
+td {
+  padding: 0.4em 1em;
+  vertical-align: top;
+  border: none;
+}
+tbody tr:last-child td { padding-bottom: 0.55em; }
+
+/* ---- Figure and Table captions with automatic numbering ---------- */
+
+body { counter-reset: fig-counter tab-counter; }
+
+figure { margin: 1.4em 0; text-align: center; }
+figure img { max-width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 3px; }
+figure figcaption::before {
+  counter-increment: fig-counter;
+  content: "Figure " counter(fig-counter) ". ";
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   font-weight: 600;
   color: var(--ink);
 }
-/* let very wide tables scroll inside their own container */
-.table-wrap, table { max-width: 100%; }
-p:has(> table), table { display: block; overflow-x: auto; }
-
-/* ---- Table of contents -------------------------------------------- */
-
-#TOC {
-  background: var(--panel-bg);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  padding: 0.7rem 1.2rem 0.9rem;
-  margin: 1.5rem 0 2.5rem;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.94rem;
+figure figcaption {
+  font-size: 0.9em;
+  color: var(--muted);
+  margin-top: 0.55em;
+  text-align: center;
+  padding: 0 1.5em;
 }
-#TOC ul { padding-left: 1.2rem; margin: 0.2rem 0; }
-#TOC li { margin: 0.15em 0; }
-#TOC a { text-decoration: none; }
-#TOC a:hover { text-decoration: underline; }
 
-/* ---- Blockquote / emphasis lines --------------------------------- */
+table caption::before {
+  counter-increment: tab-counter;
+  content: "Table " counter(tab-counter) ". ";
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+}
+table caption {
+  caption-side: top;
+  font-size: 0.9em;
+  color: var(--muted);
+  padding-bottom: 0.5em;
+  text-align: left;
+}
+
+/* ---- Blockquotes -------------------------------------------------- */
 
 blockquote {
   color: var(--muted);
-  border-left: 3px solid var(--border);
-  margin: 1em 0;
-  padding: 0.2em 1em;
+  border-left: 3px solid var(--accent);
+  margin: 1.1em 0;
+  padding: 0.25em 1.1em;
+  font-style: italic;
 }
 
-/* ---- References list --------------------------------------------- */
+/* ---- Table of contents (Pandoc #TOC) ----------------------------- */
+
+#TOC {
+  background: var(--panel-bg);
+  border: 1px solid var(--hair);
+  border-left: 3px solid var(--accent);
+  padding: 0.9rem 1.4rem 1.05rem;
+  margin: 1.8rem 0 2.7rem;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+#TOC::before {
+  content: "Contents";
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+#TOC ul { padding-left: 1.25rem; margin: 0.2rem 0; list-style: none; }
+#TOC > ul { padding-left: 0; }
+#TOC li { margin: 0.12em 0; }
+#TOC a { color: var(--ink); text-decoration: none; }
+#TOC a:hover { color: var(--accent); text-decoration: underline; }
+#TOC ul ul { font-size: 0.94em; color: var(--muted); }
+
+/* ---- References list (Pandoc #refs / CSL) ------------------------ */
 
 #refs {
-  font-size: 0.92em;
-  border-top: 1px solid var(--border);
-  padding-top: 1rem;
-  margin-top: 3rem;
+  font-size: 0.9em;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.1rem;
+  margin-top: 3.2rem;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+#refs::before {
+  content: "References";
+  display: block;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  color: var(--accent);
+  font-size: 1.22rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--hair);
+  padding-bottom: 0.18rem;
+  margin: 0 0 1rem;
 }
 #refs .csl-entry {
-  text-indent: -1.2em;
-  padding-left: 1.2em;
-  margin: 0.55em 0;
+  text-indent: -1.35em;
+  padding-left: 1.35em;
+  margin: 0.5em 0;
+  line-height: 1.5;
+}
+#refs a { color: var(--ink); text-decoration: none; }
+#refs a:hover { text-decoration: underline; }
+
+/* ---- Abstract styling (first section labeled Abstract) ----------- */
+
+h2#abstract + p,
+h2:first-of-type + p {
+  font-size: 1.0rem;
+  padding: 0.85rem 1.15rem;
+  background: var(--accent-tint);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  margin-top: 0.4rem;
 }
 
-/* ---- Section numbers from pandoc --------------------------------- */
-
-.header-section-number {
-  color: var(--muted);
-  font-weight: 500;
-  padding-right: 0.35em;
-}
-
-/* ---- Horizontal rules -------------------------------------------- */
+/* ---- Horizontal rule --------------------------------------------- */
 
 hr {
   border: none;
-  border-top: 1px solid var(--border);
-  margin: 2rem 0;
+  border-top: 1px solid var(--hair);
+  margin: 2.5rem 0;
 }
 
-/* ---- Reduced motion ---------------------------------------------- */
+/* ---- Reduced motion --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+}
+
+/* ---- Print refinements ------------------------------------------- */
+
+@media print {
+  body { font-size: 10pt; max-width: none; margin: 0; padding: 1.4cm; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, figure, pre { page-break-inside: avoid; }
+  a { color: var(--ink); text-decoration: none; }
+  #TOC { break-after: page; }
+}
+
+/* ---- Narrow-screen responsiveness -------------------------------- */
+
+@media (max-width: 640px) {
+  body { padding: 0 0.9rem; font-size: 15.5px; }
+  h1 { font-size: 1.32rem; }
+  h2 { font-size: 1.1rem; }
+  table { font-size: 0.86em; }
 }

@@ -5,14 +5,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-pandoc paper/skeleton.md \
-  --citeproc \
-  --bibliography=paper/references.bib \
-  --standalone --toc --number-sections \
-  --metadata title="Mining Frequent Failure Sequences in Operational Event Logs" \
-  --metadata date="$(date +%Y-%m-%d)" \
-  --css=style.css --embed-resources \
-  -o paper/skeleton.html
+( cd paper && pandoc skeleton.md \
+    --citeproc \
+    --bibliography=references.bib \
+    --standalone --toc --number-sections \
+    --metadata title="Mining Frequent Failure Sequences in Operational Event Logs" \
+    --metadata date="$(date +%Y-%m-%d)" \
+    --css=style.css --embed-resources \
+    -o skeleton.html )
 
 pandoc paper/skeleton.md \
   --citeproc \

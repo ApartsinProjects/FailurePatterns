@@ -46,148 +46,260 @@ margin-left: 2em;
 :root {
 --paper-bg: #f9f8f5;
 --panel-bg: #ffffff;
---code-bg: #f2f0ec;
---ink: #111111;
---muted: #666666;
---border: #d0cec9;
+--code-bg: #f1efea;
+--ink: #171717;
+--muted: #5a5a5a;
+--hair: #cfccc4;
+--rule: #2b2b2b;
 --accent: #1a4b7a; 
 --accent-tint: #eaf0f6;
 }
+* { box-sizing: border-box; }
 html, body { background: var(--paper-bg); color: var(--ink); }
 body {
-max-width: 44rem;
-margin: 2.5rem auto;
-padding: 0 1.5rem 4rem;
-font-family: "Times New Roman", "Nimbus Roman", Georgia, serif;
-font-size: 16px;
-line-height: 1.6;
+max-width: 46rem;
+margin: 2.75rem auto 5rem;
+padding: 0 1.75rem;
+font-family: "Charter", "Iowan Old Style", "Palatino Linotype",
+"Times New Roman", Georgia, serif;
+font-size: 16.5px;
+line-height: 1.62;
+font-feature-settings: "kern", "liga", "onum", "clig";
+text-rendering: optimizeLegibility;
+-webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
-font-family: "Helvetica Neue", "Arial", sans-serif;
-color: var(--accent);
-line-height: 1.25;
+h1, h2, h3, h4, h5 {
+font-family: "Inter", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+color: var(--ink);
+line-height: 1.2;
 text-wrap: balance;
-margin-top: 1.8em;
-margin-bottom: 0.4em;
+font-weight: 600;
+margin: 2em 0 0.55em;
 }
 h1.title {
-font-size: 1.9rem;
-margin: 0 0 0.35rem;
-border-bottom: 2px solid var(--accent);
-padding-bottom: 0.4rem;
+font-size: 1.75rem;
+font-weight: 700;
+margin: 0 0 0.5rem;
 color: var(--ink);
+letter-spacing: -0.005em;
 }
-h1 { font-size: 1.7rem; }
-h2 {
-font-size: 1.3rem;
-border-bottom: 1px solid var(--border);
-padding-bottom: 0.2rem;
-}
-h3 { font-size: 1.08rem; }
-h4 { font-size: 1.0rem; color: var(--muted); }
 .date, .author {
 color: var(--muted);
-font-family: "Helvetica Neue", Arial, sans-serif;
-font-size: 0.92rem;
-margin: 0.1rem 0;
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+font-size: 0.86rem;
+margin: 0.05rem 0;
+letter-spacing: 0.02em;
+text-transform: uppercase;
+}
+h1 {
+font-size: 1.5rem;
+color: var(--accent);
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3rem;
+margin-top: 2.2em;
+}
+h2 {
+font-size: 1.22rem;
+color: var(--accent);
+border-bottom: 1px solid var(--hair);
+padding-bottom: 0.18rem;
+}
+h3 { font-size: 1.05rem; color: var(--ink); }
+h4 { font-size: 0.98rem; color: var(--muted); font-style: italic; font-weight: 500; }
+
+.header-section-number {
+color: var(--muted);
+font-weight: 500;
+padding-right: 0.4em;
+font-variant-numeric: tabular-nums;
 }
 
-p { margin: 0.75em 0; }
-strong { color: var(--ink); }
+p { margin: 0.75em 0; text-align: justify; hyphens: auto; }
+p:first-of-type { margin-top: 0.5em; }
+strong { color: var(--ink); font-weight: 700; }
 em { font-style: italic; }
-a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
 a:hover { text-decoration-thickness: 2px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
 code, pre, kbd, samp {
-font-family: "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
-font-size: 0.92em;
+font-family: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+font-size: 0.9em;
+font-feature-settings: "kern", "liga";
 }
 code {
 background: var(--code-bg);
 padding: 1px 5px;
 border-radius: 3px;
 color: var(--ink);
+white-space: nowrap;
 }
 pre {
 background: var(--code-bg);
-border: 1px solid var(--border);
+border: 1px solid var(--hair);
 border-radius: 4px;
-padding: 0.8rem 1rem;
+padding: 0.85rem 1.1rem;
 overflow-x: auto;
+line-height: 1.5;
+margin: 1em 0;
 }
-pre > code { background: transparent; padding: 0; }
+pre > code { background: transparent; padding: 0; white-space: pre; }
 
 table {
 border-collapse: collapse;
-margin: 1.2em 0;
-font-size: 0.94em;
+margin: 1.4em auto;
+font-size: 0.95em;
 font-variant-numeric: tabular-nums;
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+border-top: 1.5px solid var(--rule);
+border-bottom: 1.5px solid var(--rule);
+max-width: 100%;
+display: block;
+overflow-x: auto;
 }
-th, td {
-border: 1px solid var(--border);
-padding: 0.4em 0.8em;
+thead th {
+border-bottom: 1px solid var(--rule);
+padding: 0.45em 1em;
 text-align: left;
-vertical-align: top;
+font-weight: 600;
+background: transparent;
+color: var(--ink);
 }
-th {
-background: var(--accent-tint);
-font-family: "Helvetica Neue", Arial, sans-serif;
+td {
+padding: 0.4em 1em;
+vertical-align: top;
+border: none;
+}
+tbody tr:last-child td { padding-bottom: 0.55em; }
+
+body { counter-reset: fig-counter tab-counter; }
+figure { margin: 1.4em 0; text-align: center; }
+figure img { max-width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 3px; }
+figure figcaption::before {
+counter-increment: fig-counter;
+content: "Figure " counter(fig-counter) ". ";
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
 font-weight: 600;
 color: var(--ink);
 }
-
-.table-wrap, table { max-width: 100%; }
-p:has(> table), table { display: block; overflow-x: auto; }
-
-#TOC {
-background: var(--panel-bg);
-border: 1px solid var(--border);
-border-left: 3px solid var(--accent);
-padding: 0.7rem 1.2rem 0.9rem;
-margin: 1.5rem 0 2.5rem;
-font-family: "Helvetica Neue", Arial, sans-serif;
-font-size: 0.94rem;
+figure figcaption {
+font-size: 0.9em;
+color: var(--muted);
+margin-top: 0.55em;
+text-align: center;
+padding: 0 1.5em;
 }
-#TOC ul { padding-left: 1.2rem; margin: 0.2rem 0; }
-#TOC li { margin: 0.15em 0; }
-#TOC a { text-decoration: none; }
-#TOC a:hover { text-decoration: underline; }
+table caption::before {
+counter-increment: tab-counter;
+content: "Table " counter(tab-counter) ". ";
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+font-weight: 600;
+color: var(--ink);
+}
+table caption {
+caption-side: top;
+font-size: 0.9em;
+color: var(--muted);
+padding-bottom: 0.5em;
+text-align: left;
+}
 
 blockquote {
 color: var(--muted);
-border-left: 3px solid var(--border);
-margin: 1em 0;
-padding: 0.2em 1em;
+border-left: 3px solid var(--accent);
+margin: 1.1em 0;
+padding: 0.25em 1.1em;
+font-style: italic;
 }
+
+#TOC {
+background: var(--panel-bg);
+border: 1px solid var(--hair);
+border-left: 3px solid var(--accent);
+padding: 0.9rem 1.4rem 1.05rem;
+margin: 1.8rem 0 2.7rem;
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+font-size: 0.93rem;
+line-height: 1.5;
+}
+#TOC::before {
+content: "Contents";
+display: block;
+font-size: 0.78rem;
+font-weight: 600;
+color: var(--accent);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+margin-bottom: 0.5rem;
+}
+#TOC ul { padding-left: 1.25rem; margin: 0.2rem 0; list-style: none; }
+#TOC > ul { padding-left: 0; }
+#TOC li { margin: 0.12em 0; }
+#TOC a { color: var(--ink); text-decoration: none; }
+#TOC a:hover { color: var(--accent); text-decoration: underline; }
+#TOC ul ul { font-size: 0.94em; color: var(--muted); }
 
 #refs {
-font-size: 0.92em;
-border-top: 1px solid var(--border);
-padding-top: 1rem;
-margin-top: 3rem;
+font-size: 0.9em;
+border-top: 1px solid var(--rule);
+padding-top: 1.1rem;
+margin-top: 3.2rem;
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+#refs::before {
+content: "References";
+display: block;
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+color: var(--accent);
+font-size: 1.22rem;
+font-weight: 600;
+border-bottom: 1px solid var(--hair);
+padding-bottom: 0.18rem;
+margin: 0 0 1rem;
 }
 #refs .csl-entry {
-text-indent: -1.2em;
-padding-left: 1.2em;
-margin: 0.55em 0;
+text-indent: -1.35em;
+padding-left: 1.35em;
+margin: 0.5em 0;
+line-height: 1.5;
 }
+#refs a { color: var(--ink); text-decoration: none; }
+#refs a:hover { text-decoration: underline; }
 
-.header-section-number {
-color: var(--muted);
-font-weight: 500;
-padding-right: 0.35em;
+h2#abstract + p,
+h2:first-of-type + p {
+font-size: 1.0rem;
+padding: 0.85rem 1.15rem;
+background: var(--accent-tint);
+border-left: 3px solid var(--accent);
+border-radius: 3px;
+margin-top: 0.4rem;
 }
 
 hr {
 border: none;
-border-top: 1px solid var(--border);
-margin: 2rem 0;
+border-top: 1px solid var(--hair);
+margin: 2.5rem 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
 * { transition: none !important; animation: none !important; }
+}
+
+@media print {
+body { font-size: 10pt; max-width: none; margin: 0; padding: 1.4cm; }
+h1, h2, h3 { page-break-after: avoid; }
+table, figure, pre { page-break-inside: avoid; }
+a { color: var(--ink); text-decoration: none; }
+#TOC { break-after: page; }
+}
+
+@media (max-width: 640px) {
+body { padding: 0 0.9rem; font-size: 15.5px; }
+h1 { font-size: 1.32rem; }
+h2 { font-size: 1.1rem; }
+table { font-size: 0.86em; }
 }
 </style>
 </head>
@@ -266,9 +378,11 @@ positives</a></li>
 </ul></li>
 <li><a href="#discussion" id="toc-discussion"><span class="toc-section-number">1.8</span> 7 Discussion</a>
 <ul>
-<li><a href="#what-each-mined-signature-means-operationally" id="toc-what-each-mined-signature-means-operationally"><span class="toc-section-number">1.8.1</span> 7.1 What each mined signature
+<li><a href="#is-the-predictor-in-the-entire-sequence-or-in-a-subpart" id="toc-is-the-predictor-in-the-entire-sequence-or-in-a-subpart"><span class="toc-section-number">1.8.1</span> 7.1 Is the predictor in the
+entire sequence or in a subpart?</a></li>
+<li><a href="#what-each-mined-signature-means-operationally" id="toc-what-each-mined-signature-means-operationally"><span class="toc-section-number">1.8.2</span> 7.3 What each mined signature
 means operationally</a></li>
-<li><a href="#regime-of-validity" id="toc-regime-of-validity"><span class="toc-section-number">1.8.2</span> 7.2 Regime of validity</a></li>
+<li><a href="#regime-of-validity" id="toc-regime-of-validity"><span class="toc-section-number">1.8.3</span> 7.4 Regime of validity</a></li>
 </ul></li>
 <li><a href="#limitations" id="toc-limitations"><span class="toc-section-number">1.9</span> 8 Limitations</a></li>
 <li><a href="#conclusion" id="toc-conclusion"><span class="toc-section-number">1.10</span> 9 Conclusion</a></li>
@@ -466,7 +580,7 @@ transitions or to Azure PdM <code>errorID → failure</code> sequences
 with the matched-control design used here, then evaluates the resulting
 patterns as binary features against event-count and
 deep-learning-adjacent alternatives on a temporally-held-out split. The
-four-trace regime-of-validity study in §7.2 is likewise, to our
+four-trace regime-of-validity study in §7.4 is likewise, to our
 knowledge, unprecedented in the pattern-mining log-analysis
 literature.</p>
 <h2 data-number="1.4" id="data"><span class="header-section-number">1.4</span> 3 Data</h2>
@@ -1111,7 +1225,96 @@ capacity.</li>
 </ul>
 <p>Lead-time detail: <a href="../results/tables/">results/tables/{azure,alibaba}_leadtime.md</a>.</p>
 <h2 data-number="1.8" id="discussion"><span class="header-section-number">1.8</span> 7 Discussion</h2>
-<h3 data-number="1.8.1" id="what-each-mined-signature-means-operationally"><span class="header-section-number">1.8.1</span> 7.1 What each mined signature
+<h3 data-number="1.8.1" id="is-the-predictor-in-the-entire-sequence-or-in-a-subpart"><span class="header-section-number">1.8.1</span> 7.1 Is the predictor in the
+entire sequence or in a subpart?</h3>
+<p>Given a mined sequence S with lift L(S), we ask: does any proper
+subsequence S’ ⊂ S in the mined set already reach lift(S)? If so, the
+predictor lives in the subpart and S is redundant; if no proper
+subsequence matches, the FULL ordered sequence is the minimal predictor.
+Formally, S is “full-sequence-dominant” iff lift(S) &gt; lift(S’) + 0.05
+for every proper subsequence S’ the miner also produced.</p>
+<p>Top-200 sequences per horizon:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 27%" />
+<col style="width: 25%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th style="text-align: right;">full-seq dominant</th>
+<th style="text-align: right;">subpart dominant</th>
+<th style="text-align: right;">fraction full</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Azure</td>
+<td>last5</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">79%</td>
+</tr>
+<tr class="even">
+<td>Azure</td>
+<td>last10</td>
+<td style="text-align: right;">191</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;"><strong>96%</strong></td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">17%</td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">20%</td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last10</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">30%</td>
+</tr>
+</tbody>
+</table>
+<p>The finding is trace-dependent:</p>
+<ul>
+<li><strong>Azure PdM: predictor IS in the entire sequence.</strong> On
+<code>last10</code>, 96% of top-200 predictive sequences are
+full-dominant, meaning no proper subsequence they contain reaches their
+lift. Concretely,
+<code>maintenance:comp4 → software_error:error2 → software_error:error3</code>
+reaches lift 3.73; the best proper subseq
+<code>software_error:error2 → software_error:error3</code> has lift 2.55
+(delta +1.18). The full ordered chain adds real signal beyond any of its
+parts. Operationally, an alarm should be keyed on the full ordered
+sequence, not on any two-event fragment of it.</li>
+<li><strong>Alibaba v2018: predictor lives in a shorter
+subpart.</strong> Only 17-30% of top sequences are full-dominant. Most
+are dominated by a short leading subsequence, often just
+<code>task_waiting:R</code> alone (lift ~3.98). Once a Waiting task
+appears in a job, the failure risk is set; adding subsequent Success
+events to the pattern does not lift it further. Operationally, the
+useful alarm is short.</li>
+</ul>
+<p>This resolves an ambiguity the raw order-gain distribution left open.
+Order helps on both traces (§6.3), but for different reasons: on Azure
+the full ordering contributes signal beyond every subpart, and on
+Alibaba the ordering just distinguishes one privileged short prefix from
+bag-of-items noise.</p>
+<h3 data-number="1.8.2" id="what-each-mined-signature-means-operationally"><span class="header-section-number">1.8.2</span> 7.3 What each mined signature
 means operationally</h3>
 <p>On Azure PdM,
 <code>software_error:error2 → software_error:error3</code> at
@@ -1131,7 +1334,7 @@ The operational reading is that the position of the failure inside the
 DAG matters: jobs that make it through a Map-heavy prefix are the jobs
 whose downstream Reduce or Join phases can fail, whereas jobs that fail
 early do so in a different distribution of task types.</p>
-<h3 data-number="1.8.2" id="regime-of-validity"><span class="header-section-number">1.8.2</span> 7.2 Regime of validity</h3>
+<h3 data-number="1.8.3" id="regime-of-validity"><span class="header-section-number">1.8.3</span> 7.4 Regime of validity</h3>
 <p>The four-trace survey resolves an obvious follow-up question: does
 the sequences+itemsets combined-feature-set advantage transfer to any
 operational event log? It does not.</p>

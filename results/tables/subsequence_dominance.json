@@ -1,0 +1,491 @@
+[
+  {
+    "trace": "Azure",
+    "horizon": "last5",
+    "n_multi_item_sequences_analyzed": 52,
+    "subpart_dominant": 11,
+    "full_sequence_dominant": 41,
+    "fraction_full_dominant": 0.788,
+    "examples": [
+      {
+        "sequence": [
+          "maintenance:comp4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.726,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 1.177,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.714,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 1.166,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error2",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.644,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 1.096,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "maintenance:comp1",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.549,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 1.001,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error3",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.522,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 0.973,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error1",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.514,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.549,
+        "delta": 0.965,
+        "verdict": "full sequence dominates"
+      }
+    ]
+  },
+  {
+    "trace": "Azure",
+    "horizon": "last10",
+    "n_multi_item_sequences_analyzed": 200,
+    "subpart_dominant": 9,
+    "full_sequence_dominant": 191,
+    "fraction_full_dominant": 0.955,
+    "examples": [
+      {
+        "sequence": [
+          "maintenance:comp1",
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.226,
+        "best_proper_subseq": [
+          "maintenance:comp1",
+          "software_error:error4",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.344,
+        "delta": 0.882,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error1",
+          "maintenance:comp4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.2,
+        "best_proper_subseq": [
+          "maintenance:comp4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.348,
+        "delta": 0.852,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error4",
+          "software_error:error3",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.051,
+        "best_proper_subseq": [
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.254,
+        "delta": 0.797,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error3",
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.045,
+        "best_proper_subseq": [
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.254,
+        "delta": 0.791,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "maintenance:comp3",
+          "software_error:error1",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.038,
+        "best_proper_subseq": [
+          "maintenance:comp3",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.345,
+        "delta": 0.693,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "lift": 3.027,
+        "best_proper_subseq": [
+          "software_error:error2",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "best_subseq_lift": 2.269,
+        "delta": 0.758,
+        "verdict": "full sequence dominates"
+      }
+    ]
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last3",
+    "n_multi_item_sequences_analyzed": 12,
+    "subpart_dominant": 10,
+    "full_sequence_dominant": 2,
+    "fraction_full_dominant": 0.167,
+    "examples": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "lift": 4.0,
+        "dominant_subseq": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "subseq_lift": 4.0,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "lift": 4.0,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.977,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "lift": 3.984,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.977,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 3.06,
+        "best_proper_subseq": [
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.646,
+        "delta": 1.414,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 1.646,
+        "best_proper_subseq": [
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.37,
+        "delta": 0.276,
+        "verdict": "full sequence dominates"
+      }
+    ]
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last5",
+    "n_multi_item_sequences_analyzed": 25,
+    "subpart_dominant": 20,
+    "full_sequence_dominant": 5,
+    "fraction_full_dominant": 0.2,
+    "examples": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "lift": 3.972,
+        "dominant_subseq": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "subseq_lift": 3.972,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "lift": 3.972,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.952,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "lift": 3.953,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.952,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:R",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 2.429,
+        "best_proper_subseq": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.838,
+        "delta": 0.591,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 2.053,
+        "best_proper_subseq": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.838,
+        "delta": 0.215,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 1.838,
+        "best_proper_subseq": [
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.222,
+        "delta": 0.616,
+        "verdict": "full sequence dominates"
+      }
+    ]
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last10",
+    "n_multi_item_sequences_analyzed": 105,
+    "subpart_dominant": 74,
+    "full_sequence_dominant": 31,
+    "fraction_full_dominant": 0.295,
+    "examples": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "lift": 3.955,
+        "dominant_subseq": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "subseq_lift": 3.955,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "lift": 3.955,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.94,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "lift": 3.938,
+        "dominant_subseq": [
+          "task_waiting:R"
+        ],
+        "subseq_lift": 3.94,
+        "verdict": "subpart dominates"
+      },
+      {
+        "sequence": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 1.974,
+        "best_proper_subseq": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.554,
+        "delta": 0.42,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:R",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 1.946,
+        "best_proper_subseq": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.554,
+        "delta": 0.392,
+        "verdict": "full sequence dominates"
+      },
+      {
+        "sequence": [
+          "task_success:R",
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "lift": 1.858,
+        "best_proper_subseq": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "best_subseq_lift": 1.554,
+        "delta": 0.304,
+        "verdict": "full sequence dominates"
+      }
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 76. Pass: 76. Mismatch: 0.
+Total claims audited: 81. Pass: 81. Mismatch: 0.
 
 ## Full audit trail
 
@@ -45,6 +45,11 @@ Total claims audited: 76. Pass: 76. Mismatch: 0.
 | 6.5           | SCANIA risk-set top pattern MH-OR = 2.72                   | 2.72       | 2.72       | PASS        |
 | 6.5           | SCANIA risk-set top pattern CI low = 2.10                  | 2.10       | 2.1        | PASS        |
 | 6.6           | SCANIA risk-set top pattern CI high = 3.51                 | 3.51       | 3.51       | PASS        |
+| 7.1           | Azure last10 full-sequence-dominant fraction = 0.955       | 0.955      | 0.955      | PASS        |
+| 7.1           | Azure last10 full-dominant count = 191 / 200               | 191        | 191        | PASS        |
+| 7.1           | Azure last5 full-sequence-dominant fraction = 0.788        | 0.788      | 0.788      | PASS        |
+| 7.1           | Alibaba last3 full-dominant fraction = 0.167               | 0.167      | 0.167      | PASS        |
+| 7.1           | Alibaba last10 full-dominant fraction = 0.295              | 0.295      | 0.295      | PASS        |
 | 6.6           | SCANIA closed itemsets = 42,172                            | 42172      | 42172      | PASS        |
 | 6.6           | SCANIA BH-corrected significant = 3,516                    | 3516       | 3516       | PASS        |
 | 6.6           | SCANIA BY-corrected significant = 2,560                    | 2560       | 2560       | PASS        |

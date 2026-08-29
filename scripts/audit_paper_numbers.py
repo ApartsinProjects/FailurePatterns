@@ -254,6 +254,33 @@ def main() -> int:
           round(rs["top10_mh_or"][0]["mh_or_ci_high"], 2), "3.51",
           approx(rs["top10_mh_or"][0]["mh_or_ci_high"], 3.51, tol=0.02))
 
+    # 7.1 Subsequence dominance (predictor location)
+    sd = json.loads((TAB / "subsequence_dominance.json").read_text(encoding="utf-8"))
+    def _sd_lookup(trace, horizon):
+        for r in sd:
+            if r["trace"] == trace and r["horizon"] == horizon:
+                return r
+        return None
+    az_l10 = _sd_lookup("Azure", "last10")
+    check("7.1", "Azure last10 full-sequence-dominant fraction = 0.955",
+          az_l10["fraction_full_dominant"], "0.955",
+          approx(az_l10["fraction_full_dominant"], 0.955, tol=0.01))
+    check("7.1", "Azure last10 full-dominant count = 191 / 200",
+          az_l10["full_sequence_dominant"], "191",
+          az_l10["full_sequence_dominant"] == 191)
+    az_l5 = _sd_lookup("Azure", "last5")
+    check("7.1", "Azure last5 full-sequence-dominant fraction = 0.788",
+          az_l5["fraction_full_dominant"], "0.788",
+          approx(az_l5["fraction_full_dominant"], 0.788, tol=0.01))
+    ali_l3 = _sd_lookup("Alibaba", "last3")
+    check("7.1", "Alibaba last3 full-dominant fraction = 0.167",
+          ali_l3["fraction_full_dominant"], "0.167",
+          approx(ali_l3["fraction_full_dominant"], 0.167, tol=0.01))
+    ali_l10 = _sd_lookup("Alibaba", "last10")
+    check("7.1", "Alibaba last10 full-dominant fraction = 0.295",
+          ali_l10["fraction_full_dominant"], "0.295",
+          approx(ali_l10["fraction_full_dominant"], 0.295, tol=0.01))
+
     # 6.6 post-correction significance (closed + BH + BY)
     closed = _load_json(PATT / "scania_closed_by_summary.json")
     check("6.6", "SCANIA closed itemsets = 42,172",
