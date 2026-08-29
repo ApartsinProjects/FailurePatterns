@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 ( cd paper && pandoc skeleton.md \
     --citeproc \
     --bibliography=references.bib \
-    --standalone --toc --number-sections \
+    --standalone --number-sections \
     --metadata title="Mining Frequent Failure Sequences in Operational Event Logs" \
     --metadata date="$(date +%Y-%m-%d)" \
     --css=style.css --embed-resources \
@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 pandoc paper/skeleton.md \
   --citeproc \
   --bibliography=paper/references.bib \
-  --standalone --toc --number-sections \
+  --standalone --number-sections \
   --metadata title="Mining Frequent Failure Sequences in Operational Event Logs" \
   --metadata date="$(date +%Y-%m-%d)" \
   -o paper/skeleton.docx

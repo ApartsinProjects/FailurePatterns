@@ -213,33 +213,6 @@ padding: 0.25em 1.1em;
 font-style: italic;
 }
 
-#TOC {
-background: var(--panel-bg);
-border: 1px solid var(--hair);
-border-left: 3px solid var(--accent);
-padding: 0.9rem 1.4rem 1.05rem;
-margin: 1.8rem 0 2.7rem;
-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-font-size: 0.93rem;
-line-height: 1.5;
-}
-#TOC::before {
-content: "Contents";
-display: block;
-font-size: 0.78rem;
-font-weight: 600;
-color: var(--accent);
-letter-spacing: 0.08em;
-text-transform: uppercase;
-margin-bottom: 0.5rem;
-}
-#TOC ul { padding-left: 1.25rem; margin: 0.2rem 0; list-style: none; }
-#TOC > ul { padding-left: 0; }
-#TOC li { margin: 0.12em 0; }
-#TOC a { color: var(--ink); text-decoration: none; }
-#TOC a:hover { color: var(--accent); text-decoration: underline; }
-#TOC ul ul { font-size: 0.94em; color: var(--muted); }
-
 #refs {
 font-size: 0.9em;
 border-top: 1px solid var(--rule);
@@ -292,7 +265,6 @@ body { font-size: 10pt; max-width: none; margin: 0; padding: 1.4cm; }
 h1, h2, h3 { page-break-after: avoid; }
 table, figure, pre { page-break-inside: avoid; }
 a { color: var(--ink); text-decoration: none; }
-#TOC { break-after: page; }
 }
 
 @media (max-width: 640px) {
@@ -309,88 +281,6 @@ table { font-size: 0.86em; }
 Logs</h1>
 <p class="date">2026-08-29</p>
 </header>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#mining-frequent-failure-sequences-in-operational-event-logs" id="toc-mining-frequent-failure-sequences-in-operational-event-logs"><span class="toc-section-number">1</span> Mining Frequent Failure Sequences in
-Operational Event Logs</a>
-<ul>
-<li><a href="#abstract" id="toc-abstract"><span class="toc-section-number">1.1</span> Abstract</a></li>
-<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1.2</span> 1 Introduction</a></li>
-<li><a href="#background-and-related-work" id="toc-background-and-related-work"><span class="toc-section-number">1.3</span> 2 Background and related work</a>
-<ul>
-<li><a href="#frequent-itemset-and-sequential-pattern-mining" id="toc-frequent-itemset-and-sequential-pattern-mining"><span class="toc-section-number">1.3.1</span> 2.1 Frequent itemset and
-sequential pattern mining</a></li>
-<li><a href="#failure-prediction-from-operational-event-logs" id="toc-failure-prediction-from-operational-event-logs"><span class="toc-section-number">1.3.2</span> 2.2 Failure prediction from
-operational event logs</a></li>
-<li><a href="#log-parsing-infrastructure" id="toc-log-parsing-infrastructure"><span class="toc-section-number">1.3.3</span> 2.3 Log-parsing
-infrastructure</a></li>
-<li><a href="#failure-characterisation-on-alibaba-and-bgl" id="toc-failure-characterisation-on-alibaba-and-bgl"><span class="toc-section-number">1.3.4</span> 2.4 Failure characterisation on
-Alibaba and BGL</a></li>
-<li><a href="#predictive-maintenance-beyond-system-logs" id="toc-predictive-maintenance-beyond-system-logs"><span class="toc-section-number">1.3.5</span> 2.5 Predictive maintenance
-beyond system logs</a></li>
-<li><a href="#statistical-significance" id="toc-statistical-significance"><span class="toc-section-number">1.3.6</span> 2.6 Statistical
-significance</a></li>
-<li><a href="#positioning" id="toc-positioning"><span class="toc-section-number">1.3.7</span> 2.7 Positioning</a></li>
-</ul></li>
-<li><a href="#data" id="toc-data"><span class="toc-section-number">1.4</span> 3 Data</a>
-<ul>
-<li><a href="#azure-predictive-maintenance-synthetic-per-machine" id="toc-azure-predictive-maintenance-synthetic-per-machine"><span class="toc-section-number">1.4.1</span> 3.1 Azure Predictive Maintenance
-(synthetic, per-machine)</a></li>
-<li><a href="#alibaba-cluster-trace-v2018-production-cloud-per-job" id="toc-alibaba-cluster-trace-v2018-production-cloud-per-job"><span class="toc-section-number">1.4.2</span> 3.2 Alibaba cluster-trace-v2018
-(production cloud, per-job)</a></li>
-<li><a href="#llnl-blue-genel-syslogs-loghub-per-rack" id="toc-llnl-blue-genel-syslogs-loghub-per-rack"><span class="toc-section-number">1.4.3</span> 3.3 LLNL Blue Gene/L syslogs
-(Loghub, per-rack)</a></li>
-<li><a href="#scania-component-x-production-automotive-per-vehicle" id="toc-scania-component-x-production-automotive-per-vehicle"><span class="toc-section-number">1.4.4</span> 3.4 SCANIA Component X
-(production automotive, per-vehicle)</a></li>
-</ul></li>
-<li><a href="#method" id="toc-method"><span class="toc-section-number">1.5</span> 4 Method</a>
-<ul>
-<li><a href="#pre-failure-windows-and-matched-controls" id="toc-pre-failure-windows-and-matched-controls"><span class="toc-section-number">1.5.1</span> 4.1 Pre-failure windows and
-matched controls</a></li>
-<li><a href="#mining" id="toc-mining"><span class="toc-section-number">1.5.2</span> 4.2 Mining</a></li>
-<li><a href="#sanity-invariants" id="toc-sanity-invariants"><span class="toc-section-number">1.5.3</span> 4.3 Sanity invariants</a></li>
-<li><a href="#risk-set-matched-sampling-for-right-censored-data" id="toc-risk-set-matched-sampling-for-right-censored-data"><span class="toc-section-number">1.5.4</span> 4.4 Risk-set matched sampling
-for right-censored data</a></li>
-<li><a href="#statistical-significance-1" id="toc-statistical-significance-1"><span class="toc-section-number">1.5.5</span> 4.5 Statistical
-significance</a></li>
-</ul></li>
-<li><a href="#experiments" id="toc-experiments"><span class="toc-section-number">1.6</span> 5 Experiments</a>
-<ul>
-<li><a href="#coverage-per-horizon-azure" id="toc-coverage-per-horizon-azure"><span class="toc-section-number">1.6.1</span> 5.1 Coverage per horizon
-(Azure)</a></li>
-<li><a href="#mining-sensitivity-to-min_support-azure" id="toc-mining-sensitivity-to-min_support-azure"><span class="toc-section-number">1.6.2</span> 5.2 Mining sensitivity to
-min_support (Azure)</a></li>
-</ul></li>
-<li><a href="#results" id="toc-results"><span class="toc-section-number">1.7</span> 6 Results</a>
-<ul>
-<li><a href="#mined-patterns-azure-and-alibaba" id="toc-mined-patterns-azure-and-alibaba"><span class="toc-section-number">1.7.1</span> 6.1 Mined patterns (Azure and
-Alibaba)</a></li>
-<li><a href="#predictive-evaluation-four-traces" id="toc-predictive-evaluation-four-traces"><span class="toc-section-number">1.7.2</span> 6.2 Predictive evaluation (four
-traces)</a></li>
-<li><a href="#order-gain" id="toc-order-gain"><span class="toc-section-number">1.7.3</span> 6.3 Order gain</a></li>
-<li><a href="#predictive-vs-frequent-noise-separation-across-traces" id="toc-predictive-vs-frequent-noise-separation-across-traces"><span class="toc-section-number">1.7.4</span> 6.4 Predictive vs frequent-noise
-separation across traces</a></li>
-<li><a href="#formal-significance" id="toc-formal-significance"><span class="toc-section-number">1.7.5</span> 6.5 Formal significance</a></li>
-<li><a href="#scania-risk-set-matched-patterns-component-x" id="toc-scania-risk-set-matched-patterns-component-x"><span class="toc-section-number">1.7.6</span> 6.6 SCANIA risk-set matched
-patterns (Component X)</a></li>
-<li><a href="#lead-time-on-true-positives" id="toc-lead-time-on-true-positives"><span class="toc-section-number">1.7.7</span> 6.7 Lead time on true
-positives</a></li>
-</ul></li>
-<li><a href="#discussion" id="toc-discussion"><span class="toc-section-number">1.8</span> 7 Discussion</a>
-<ul>
-<li><a href="#is-the-predictor-in-the-entire-sequence-or-in-a-subpart" id="toc-is-the-predictor-in-the-entire-sequence-or-in-a-subpart"><span class="toc-section-number">1.8.1</span> 7.1 Is the predictor in the
-entire sequence or in a subpart?</a></li>
-<li><a href="#what-each-mined-signature-means-operationally" id="toc-what-each-mined-signature-means-operationally"><span class="toc-section-number">1.8.2</span> 7.3 What each mined signature
-means operationally</a></li>
-<li><a href="#regime-of-validity" id="toc-regime-of-validity"><span class="toc-section-number">1.8.3</span> 7.4 Regime of validity</a></li>
-</ul></li>
-<li><a href="#limitations" id="toc-limitations"><span class="toc-section-number">1.9</span> 8 Limitations</a></li>
-<li><a href="#conclusion" id="toc-conclusion"><span class="toc-section-number">1.10</span> 9 Conclusion</a></li>
-<li><a href="#what-is-still-missing" id="toc-what-is-still-missing"><span class="toc-section-number">1.11</span> What is still missing</a></li>
-<li><a href="#what-is-verified" id="toc-what-is-verified"><span class="toc-section-number">1.12</span> What is verified</a></li>
-</ul></li>
-</ul>
-</nav>
 <h1 data-number="1" id="mining-frequent-failure-sequences-in-operational-event-logs"><span class="header-section-number">1</span> Mining Frequent Failure Sequences
 in Operational Event Logs</h1>
 <p><em>Restructured draft. Numbers are current best estimates from the

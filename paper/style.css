@@ -197,35 +197,6 @@ blockquote {
   font-style: italic;
 }
 
-/* ---- Table of contents (Pandoc #TOC) ----------------------------- */
-
-#TOC {
-  background: var(--panel-bg);
-  border: 1px solid var(--hair);
-  border-left: 3px solid var(--accent);
-  padding: 0.9rem 1.4rem 1.05rem;
-  margin: 1.8rem 0 2.7rem;
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.93rem;
-  line-height: 1.5;
-}
-#TOC::before {
-  content: "Contents";
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-#TOC ul { padding-left: 1.25rem; margin: 0.2rem 0; list-style: none; }
-#TOC > ul { padding-left: 0; }
-#TOC li { margin: 0.12em 0; }
-#TOC a { color: var(--ink); text-decoration: none; }
-#TOC a:hover { color: var(--accent); text-decoration: underline; }
-#TOC ul ul { font-size: 0.94em; color: var(--muted); }
-
 /* ---- References list (Pandoc #refs / CSL) ------------------------ */
 
 #refs {
@@ -288,7 +259,6 @@ hr {
   h1, h2, h3 { page-break-after: avoid; }
   table, figure, pre { page-break-inside: avoid; }
   a { color: var(--ink); text-decoration: none; }
-  #TOC { break-after: page; }
 }
 
 /* ---- Narrow-screen responsiveness -------------------------------- */
