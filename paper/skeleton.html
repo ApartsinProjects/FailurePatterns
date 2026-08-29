@@ -283,53 +283,54 @@ Logs</h1>
 </header>
 <h1 data-number="1" id="mining-frequent-failure-sequences-in-operational-event-logs"><span class="header-section-number">1</span> Mining Frequent Failure Sequences
 in Operational Event Logs</h1>
-<p><em>Restructured draft. Numbers are current best estimates from the
-pipeline as of 2026-08-28. TODO markers name what is still
-missing.</em></p>
 <h2 data-number="1.1" id="abstract"><span class="header-section-number">1.1</span> Abstract</h2>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,
 PrefixSpan) surfaces recurrent gapped patterns in these logs. We test
 whether pattern mining recovers physical-cascade precursor signatures on
-real industrial telemetry when the underlying process actually cascades
-through discrete stages, and report a signature catalog mined on six
+real industrial telemetry when the underlying process cascades through
+discrete stages. The result is a signature catalog mined from six
 operational traces: two independent wind-farm alarm logs (Kelmarsh 6 x
 Senvion MM92, 482 forced outages over 2016-2017; Penmanshiel 9 x Senvion
 MM82, 790 forced outages in 2016), Azure PdM (synthetic), Alibaba v2018
 (production cloud), LLNL Blue Gene/L syslogs (HPC), and SCANIA Component
 X (production automotive). Every signature is validated on an
-entity-disjoint 50/50 discovery/inference split (Fithian-Sun-Taylor
-post-selection- valid p, Benjamini-Yekutieli arbitrary-dependence FDR on
-the inference half), against a count-preserving order comparator that
-removes the multiplicity confound, and, for the right-censored SCANIA
-trace, by matched conditional logistic regression stratified by risk set
-(Prentice-Breslow). The headline is a replicated physical cascade: on
-<strong>two independent Senvion wind farms of different rotor size and
-site, discovery/ inference mining surfaces the same zero-control cascade
-signatures at inference-half lift 4.0</strong> (generator-fan overload
-codes on Kelmarsh, safety-system and frequency-converter codes on
-Penmanshiel). Azure PdM and Alibaba v2018 reproduce the effect in cloud
-and maintenance logs, with ordering adding no signal on Alibaba once
-event multiplicity is controlled. SCANIA Component X, right-censored,
-yields interpretable per-truck hazard ratios under matched conditional
-logistic regression (108 of 200 top patterns survive the
-arbitrary-dependence FDR; top HR 1.73). BGL is the mapped boundary case
-where no non-alert precursor survives. Mining code, discovery/ inference
-splits, matched-hazard outputs, and per-dataset signature tables are
-released as reproducible parquet artefacts alongside the paper.</p>
+entity-disjoint 50/50 discovery/ inference split, with
+post-selection-valid p-values (Fithian-Sun- Taylor) and
+Benjamini-Yekutieli FDR control on the inference half. A
+count-preserving order comparator removes the multiplicity confound, and
+the right-censored SCANIA trace is scored by matched conditional
+logistic regression stratified by risk set (Prentice-Breslow). The
+central result is a replicated physical cascade: on <strong>two
+independent Senvion wind farms of different rotor size and site,
+discovery/inference mining surfaces zero-control cascade signatures of
+the same form at inference-half lift 4.0</strong> (generator-fan
+overload codes on Kelmarsh, safety-system and frequency-converter codes
+on Penmanshiel). Azure PdM and Alibaba v2018 reproduce the effect in
+cloud and maintenance logs, with ordering adding no signal on Alibaba
+once event multiplicity is controlled. SCANIA Component X,
+right-censored, yields interpretable per-truck hazard ratios under
+matched conditional logistic regression (108 of 200 top patterns survive
+the arbitrary-dependence FDR; top HR 1.73). BGL is the mapped boundary
+case where no non-alert precursor survives. Mining code, splits,
+matched-hazard outputs, and per-dataset signature tables are released as
+reproducible parquet artefacts.</p>
 <h2 data-number="1.2" id="introduction"><span class="header-section-number">1.2</span> 1 Introduction</h2>
 <p>Operational logs from datacenters, industrial fleets, and cloud
 platforms carry a rich stream of discrete events: software errors, task
 failures, retries, eviction notices, maintenance actions, component
 replacements. These events are usually consumed one at a time by
 alerting systems and dashboards. We ask a different question: do
-RECURRENT ORDERED SEQUENCES of these events precede failures
+<em>recurrent ordered sequences</em> of these events precede failures
 systematically enough to serve as early-warning signatures?</p>
 <p>Two mining families answer this shape of question. Frequent itemset
 mining (Apriori, FP-Growth) treats each pre-failure window as an
 unordered set of events. Sequential pattern mining (PrefixSpan, SPADE,
-GSP) preserves temporal order. The paper’s central question is whether
-the second family finds anything the first does not.</p>
+GSP) preserves temporal order. One methodological question runs through
+the paper: does the second family find anything the first does not? Its
+central deliverable is a catalog of validated pre-failure signatures,
+anchored by a physical cascade replicated across two independent wind
+farms.</p>
 <p>We contribute:</p>
 <ol type="1">
 <li>A <strong>matched-control frequent-pattern pipeline that separates
@@ -349,15 +350,20 @@ failure (Component X).</li>
 temporally-held-out split that compares four feature sets (event-count
 baseline, itemsets, sequences, combined) built from patterns that
 survived training-set significance, under logistic regression.</li>
-<li><strong>Cross-dataset characterisation</strong> on four public
-event-log traces spanning three domains: synthetic industrial
-per-machine (Azure PdM), real cloud per-job (Alibaba
+<li><strong>Cross-dataset characterisation</strong> on six public
+traces: two production wind farms (Kelmarsh, Penmanshiel), synthetic
+industrial per-machine (Azure PdM), real cloud per-job (Alibaba
 cluster-trace-v2018), real HPC per-rack (LLNL Blue Gene/L syslogs), and
 real automotive per-vehicle (SCANIA Component X). We report the fraction
 of mined patterns that pass significance on each trace, the strongest
 predictive signatures, and the mechanistic reason why the fraction
 varies from ~85% (Azure last5 sequences) to 0% (BGL) to 6% (SCANIA
 risk-set matched, BY-corrected).</li>
+<li>A <strong>validated signature catalog anchored by a replicated
+physical cascade</strong>: two independent Senvion wind farms (Kelmarsh,
+Penmanshiel) produce zero-control cascade signatures at inference-half
+lift 4.0 under one mining protocol (§6.4), the closest the study comes
+to a controlled cross-site replication.</li>
 </ol>
 <h2 data-number="1.3" id="background-and-related-work"><span class="header-section-number">1.3</span> 2 Background and related
 work</h2>
@@ -496,7 +502,7 @@ challenge <span class="citation" data-cites="costa2016ida">(Costa and
 Nascimento 2016)</span>); the SCANIA Component X release <span class="citation" data-cites="kharazian2025scania">(Kharazian et al.
 2025)</span> we adopt extends this to a per-vehicle longitudinal readout
 stream. Our work sits between these traditions: we take discrete-event
-traces where possible, and derive discrete tokens (per §3.4) where we
+traces where possible, and derive discrete tokens (per §3.6) where we
 must.</p>
 <h3 data-number="1.3.6" id="statistical-significance"><span class="header-section-number">1.3.6</span> 2.6 Statistical
 significance</h3>
@@ -511,17 +517,19 @@ framework <span class="citation" data-cites="prentice1978retrospective">(Prentic
 1996)</span> motivate the matched conditional logistic estimator we use
 for SCANIA (§4.6).</p>
 <h3 data-number="1.3.7" id="positioning"><span class="header-section-number">1.3.7</span> 2.7 Positioning</h3>
-<p>To our knowledge no peer-reviewed study applies FP-Growth and
+<p>To our knowledge, no peer-reviewed study applies FP-Growth and
 PrefixSpan head-to-head to Alibaba <code>batch_task</code> status
 transitions or to Azure PdM <code>errorID → failure</code> sequences
-with the matched-control design used here, then evaluates the resulting
+under a matched-control design. None then evaluates the resulting
 patterns as binary features against event-count and
 deep-learning-adjacent alternatives on a temporally-held-out split. The
 six-trace regime-of-validity study in §7.3, spanning two independent
 wind farms, is likewise, to our knowledge, unprecedented in the
 pattern-mining log-analysis literature.</p>
 <h2 data-number="1.4" id="data"><span class="header-section-number">1.4</span> 3 Data</h2>
-<p>We use four public event-log traces covering three domains.</p>
+<p>We use six public traces: two wind-farm alarm logs, one synthetic
+industrial-maintenance trace, one production cloud trace, one HPC syslog
+corpus, and one automotive fleet trace.</p>
 <h3 data-number="1.4.1" id="azure-predictive-maintenance-synthetic-per-machine"><span class="header-section-number">1.4.1</span> 3.1 Azure Predictive
 Maintenance (synthetic, per-machine)</h3>
 <p>100 machines, 2015-01-01 to 2016-01-01, hourly telemetry.
@@ -533,7 +541,7 @@ datetime, comp) to distinguish <code>maintenance</code> from
 <code>component_replacement</code>. Failures at exactly 2015-01-02 03:00
 (18 rows) do not match any <code>PdM_maint</code> record; they are a
 bootstrap seed batch planted by the synthetic generator and are excluded
-from BOTH anchors and event streams so they do not contaminate windows
+from both anchors and event streams so they do not contaminate windows
 for subsequent real failures.</p>
 <p>Event vocabulary: <code>software_error</code>,
 <code>maintenance</code>, <code>component_replacement</code>,
@@ -558,14 +566,15 @@ sufficient to answer the ordering question.</p>
 <h3 data-number="1.4.3" id="llnl-blue-genel-syslogs-loghub-per-rack"><span class="header-section-number">1.4.3</span> 3.3 LLNL Blue Gene/L syslogs
 (Loghub, per-rack)</h3>
 <p>4,747,963 syslog messages from LLNL Blue Gene/L, 214.7 days
-(2005-06-03 to 2006-01-04), from the Loghub archive [TODO:cite
-oliner2007bgl]. 913,594 messages remain after dropping INFO-level noise;
-348,189 (7.34%) are labeled alerts. Entity is the rack (top-level
-<code>R##</code> prefix of the node ID); 64 racks. Event vocabulary:
-<code>terminal_alert</code> (labeled alerts with 30+ alert codes such as
-KERNMNTF, APPTO, KERNSTOR), <code>system_error</code> (non-alert FATAL /
-ERROR / SEVERE / FAILURE), <code>system_warning</code>. Component (RAS,
-KERNEL, APP, MMCS, …) is used as an additional subtype axis.</p>
+(2005-06-03 to 2006-01-04), from the Loghub archive <span class="citation" data-cites="zhu2023loghub oliner2007supercomputers">(Zhu et al. 2023;
+Oliner and Stearley 2007)</span>. 913,594 messages remain after dropping
+INFO-level noise; 348,189 (7.34%) are labeled alerts. Entity is the rack
+(top-level <code>R##</code> prefix of the node ID); 64 racks. Event
+vocabulary: <code>terminal_alert</code> (labeled alerts with 30+ alert
+codes such as KERNMNTF, APPTO, KERNSTOR), <code>system_error</code>
+(non-alert FATAL / ERROR / SEVERE / FAILURE),
+<code>system_warning</code>. Component (RAS, KERNEL, APP, MMCS, …) is
+used as an additional subtype axis.</p>
 <h3 data-number="1.4.4" id="kelmarsh-wind-farm-alarm-logs-production-per-turbine"><span class="header-section-number">1.4.4</span> 3.4 Kelmarsh wind-farm alarm
 logs (production, per-turbine)</h3>
 <p>Six Senvion MM92 wind turbines at the Kelmarsh site, released by
@@ -613,14 +622,13 @@ weather.</p>
 code.</p>
 <h3 data-number="1.4.6" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.6</span> 3.6 SCANIA Component X
 (production automotive, per-vehicle)</h3>
-<p>Real fleet telematics dataset released 2025 [TODO:cite
-kharazian2025], 23,550 trucks over 1.5 years (2019-01 through 2020-05 in
-study clock), 1,122,452 readouts of 105 numeric counter and histogram
-features. 2,272 vehicles (9.65%) undergo a component X repair during the
-study.</p>
+<p>Real fleet telematics dataset released 2025 <span class="citation" data-cites="kharazian2025scania">(Kharazian et al. 2025)</span>, 23,550
+trucks over 1.5 years (2019-01 through 2020-05 in study clock),
+1,122,452 readouts of 105 numeric counter and histogram features. 2,272
+vehicles (9.65%) undergo a component X repair during the study.</p>
 <p>Because features are numeric counters rather than native discrete
 events, we derive tokens: for each (vehicle, feature) we compute
-inter-readout DELTAS and emit a <code>counter_surprise</code> token per
+inter-readout deltas and emit a <code>counter_surprise</code> token per
 readout whenever the absolute delta exceeds the vehicle’s own
 90th-percentile threshold for that feature. Per-vehicle normalisation
 controls for baseline usage variation across the fleet. Entity is
@@ -665,7 +673,7 @@ subprocess) mines frequent ordered sequences at the same support.</p>
 (support_failure), support in control windows (support_control), lift =
 support_failure / pooled_support(P), and relative risk = P(failure | P)
 / P(failure | ¬P). Every mined sequence is also scored against the
-ITEMSET COUNTERPART of the same event set; the difference
+itemset counterpart of the same event set; the difference
 <code>order_gain = sequence_lift - itemset_lift</code> quantifies how
 much preserving order contributes above co-occurrence.</p>
 <h3 data-number="1.5.3" id="sanity-invariants"><span class="header-section-number">1.5.3</span> 4.3 Sanity invariants</h3>
@@ -677,9 +685,9 @@ leakage or an over-sensitive support threshold. Sequence mining checks
 that a within-window random order permutation preserves top itemset lift
 (unchanged, by construction) but strictly reduces top sequence lift on
 rich horizons (windows with &gt;= 3 events on average). Both invariants
-pass on the two traces where the method yields wins; the boundary traces
-are diagnosed via these invariants rather than by post-hoc
-justification.</p>
+pass on the two positive traces; on the boundary traces the same
+invariants localise where the signal fails, rather than requiring
+post-hoc justification.</p>
 <h3 data-number="1.5.4" id="risk-set-matched-sampling-for-right-censored-data"><span class="header-section-number">1.5.4</span> 4.4 Risk-set matched sampling
 for right-censored data</h3>
 <p>The matched-control design in §4.1 assumes we can define a
@@ -687,7 +695,7 @@ for right-censored data</h3>
 time. For right-censored survival-style data (traces where entities exit
 observation upon repair or dropout), naive matching biases scoring
 because “did we observe a failure” becomes entangled with “how long did
-we observe the truck”. Component X in §3.4 has exactly this problem:
+we observe the truck”. Component X in §3.6 has exactly this problem:
 short-observation trucks have 12% failure rate; long-observation trucks
 have 5%.</p>
 <p>Following the epidemiological literature on incidence-density
@@ -735,10 +743,11 @@ inference. On Alibaba specifically the entity unit is the batch job:
 each job contributes exactly three windows, one per horizon
 (<code>last3</code>, <code>last5</code>, <code>last10</code>), and each
 job is either a case (job that subsequently failed) or a control, never
-both; the 64,948 unique jobs give 3:1 case-to-control balance by design.
-Splitting on <code>entity_id</code> (job id) therefore produces truly
-disjoint discovery and inference halves at both the entity and the
-window level.</p>
+both; the 64,948 unique jobs give a 1:3 case-to-control balance by
+design (16,237 failed jobs, 48,711 controls). Splitting on
+<code>entity_id</code> (job id) therefore produces truly disjoint
+discovery and inference halves at both the entity and the window
+level.</p>
 <h3 data-number="1.5.6" id="matched-conditional-logistic-for-risk-set-traces"><span class="header-section-number">1.5.6</span> 4.6 Matched conditional
 logistic for risk-set traces</h3>
 <p>The pooled 2x2 odds ratio previously used to score risk-set-matched
@@ -762,9 +771,9 @@ comparator</h3>
 compares a sequence like <code>M → M → M</code> against its itemset
 counterpart <code>{M}</code>, which collapses three occurrences to one
 presence. That conflates temporal order with event multiplicity. Our
-count-preserving comparator (§4.7) shuffles the ordering within each
-window while preserving the exact event multiset per window, then
-rescores the sequence’s support on the shuffled corpus. The residual
+count-preserving comparator shuffles the ordering within each window
+while preserving the exact event multiset per window, then rescores the
+sequence’s support on the shuffled corpus. The residual
 <code>order_effect = real_lift − mean(count-preserving-shuffle_lift)</code>
 isolates the pure ordering contribution.</p>
 <h3 data-number="1.5.8" id="statistical-significance-summary"><span class="header-section-number">1.5.8</span> 4.8 Statistical significance
@@ -773,7 +782,7 @@ summary</h3>
 p-value on the observed failure-hit count against the label-permutation
 null with the pattern hit-set fixed. Under H0 the number of hits landing
 in the failure class is Hypergeom(N_F+N_C, hit_F+hit_C, N_F); the
-upper-tail probability of the observed hit count IS the
+upper-tail probability of the observed hit count <em>is</em> the
 label-permutation p-value, so we compute it in closed form.
 Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
 1995)</span> is applied per (horizon × pattern class) to give
@@ -791,7 +800,8 @@ window</li>
 itemset surviving its permutation null</li>
 <li><strong>sequences_only</strong>: binary presence of each train-mined
 sequence surviving its shuffle null</li>
-<li><strong>combined</strong>: union of A, B, C</li>
+<li><strong>combined</strong>: union of the event-count, itemset, and
+sequence feature sets above</li>
 </ul>
 <p>For each configuration we report AUROC, AUPRC, F1 / precision /
 recall at threshold 0.5, and lead time (anchor − last_event_ts) on
@@ -1029,15 +1039,10 @@ horizon.)</em></p>
 <p><em>Figure:</em> <a href="../results/figures/four_dataset_predictive_comparison.png">four_dataset_predictive_comparison.png</a></p>
 <h3 data-number="1.7.3" id="order-effect-under-count-preserving-null"><span class="header-section-number">1.7.3</span> 6.3 Order effect under
 count-preserving null</h3>
-<p>The naive <code>sequence_lift − itemset_lift</code> metric confounds
-ordering with event multiplicity: comparing <code>M → M → M</code> to
-its itemset <code>{M}</code> compares “three occurrences” to “presence
-of one M”. Our count- preserving comparator (§4.7) shuffles the ordering
-within each window while preserving its exact event multiset, then
-rescores the sequence’s support on the shuffled corpora. The residual
-<code>order effect = real_lift − mean(count-preserving-shuffle_lift)</code>
-isolates the pure ordering contribution.</p>
-<p>Top-20 sequences per horizon:</p>
+<p>The count-preserving comparator of §4.7 isolates the pure ordering
+contribution as
+<code>order effect = real_lift − mean(count-preserving-shuffle_lift)</code>.
+Top-20 sequences per horizon:</p>
 <table>
 <colgroup>
 <col style="width: 12%" />
@@ -1096,7 +1101,7 @@ isolates the pure ordering contribution.</p>
 <p>Reading these against the naive <code>order_gain</code> values (up to
 +1.69 on Alibaba <code>last3</code>), the count-preserving comparator
 shows that essentially all of the reported Alibaba “order gain” was a
-multiplicity effect: the same event multiset in ANY order carries
+multiplicity effect: the same event multiset in any order carries
 approximately the same lift as the specific ordered sequence. Azure
 <code>error2 → error3</code>-terminating sequences retain a genuine
 ordering effect of +0.5 to +1.1 lift units above the count-preserving
@@ -1114,10 +1119,11 @@ logistic for the right-censored SCANIA trace) and §4.7 (count-preserving
 comparator for order effect). Every signature is a specific pattern
 grounded in its trace, not a cross-trace generalisation. The remainder
 of §6 walks through the catalog by trace.</p>
-<p><strong>Kelmarsh wind turbines.</strong> The strongest cascade
-signatures the paper records. All top signatures have zero control hits
-on the inference half. Each fault code names a specific mechanical /
-electrical precursor of the same-family Forced-outage event.</p>
+<p><strong>Kelmarsh wind turbines.</strong> Kelmarsh yields the
+strongest cascade signatures in the catalog. All top signatures have
+zero control hits on the inference half, and each fault code names a
+specific mechanical or electrical precursor of the same-family
+Forced-outage event.</p>
 <p>Mining on the discovery half at 5% min-support then scoring on the
 inference half of the 2016-2017 fleet (233 fail / 699 ctrl windows at
 <code>last5</code>, same at <code>last10</code>), 30/35
@@ -1221,11 +1227,10 @@ clearest form: a physical wear process cascades through discrete alarm
 codes at intermediate stages before a specific alarm terminates the
 cascade.</p>
 <p>Use: <strong>schedule generator cooling / bearing inspection the
-moment any of the codes 2550, 2650, 2655 fires as a warning</strong>.
-Recall on the 2016-2017 data is 32/(32 + missed) at the inference half
-for <code>terminal_failure:2550</code> in <code>last5</code>;
-false-alarm rate is zero over 699 control windows at
-<code>last5</code>.</p>
+moment any of the codes 2550, 2650, 2655 fires as a warning</strong>. On
+the 2016-2017 inference half, <code>terminal_failure:2550</code> at
+<code>last5</code> fires in 32 forced-outage windows with zero hits
+across 699 control windows.</p>
 <p><strong>Penmanshiel wind turbines (independent replication).</strong>
 Nine Senvion MM82 turbines over 2016-06 to 2016-12. Fresh
 entity-disjoint split: 448 fail / 1,344 ctrl windows at
@@ -1330,9 +1335,9 @@ curtailment, regardless of grid conditions</strong>;
 service order within 6h at Penmanshiel</strong>.</p>
 <h4 data-number="1.7.4.1" id="b-baseline-comparison-and-closed-signature-deduplication"><span class="header-section-number">1.7.4.1</span> 6.4b Baseline comparison
 and closed-signature deduplication</h4>
-<p>The zero-control lift of 4.00 numbers above sit against three
-concrete baselines evaluated on the same entity-disjoint inference half
-at horizon <code>last5</code>:</p>
+<p>The lift-4.00 zero-control rows above are benchmarked against three
+baselines, each evaluated on the same entity-disjoint inference
+half:</p>
 <ol type="a">
 <li><strong>most-recent-event indicator</strong>: raise an alarm
 whenever the last event on the entity is one of the top-5 fail-anchoring
@@ -1467,22 +1472,19 @@ rule strictly dominates both baselines in F1. On Kelmarsh the advantage
 is a factor of ~2 over the strongest baseline (last-event indicator); on
 Penmanshiel it is smaller (~1.3x) because the last- event baseline
 already captures a substantial fraction of the safety-9000/9210 chain’s
-terminal event. This is the substantive test that DAMI review blocker W7
-asked for: a mined signature carries information the most-obvious
-pattern-free rule does not.</p>
-<p><strong>Closed itemsets vs mined itemsets (redundancy audit for
-W6).</strong> The Kelmarsh <code>last10</code> mining run returns 136
-itemsets, of which many are sub- or supersets of the same underlying
-cascade. Applying the LCM closed-itemset filter (support-strict
-maximality) reduces this to the closed subset used for the deployable
-catalog rows above; the signature table only cites patterns that are
-also closed, so no finding is a redundant super-copy of another. The
-paper’s central count is the count of BY-significant CLOSED itemsets on
-the inference half, not the raw miner output, so the “99.3% pass”
-observation the DAMI reviewer questioned is not the same number as the
-count on the deployable-signature axis.</p>
-<h4 data-number="1.7.4.2" id="c-case-control-ratio-and-posterior-at-the-operational-base-rate-w8"><span class="header-section-number">1.7.4.2</span> 6.4c Case-control ratio and
-posterior at the operational base rate (W8)</h4>
+terminal event. The comparison establishes that a mined signature
+carries information the strongest pattern-free rule does not.</p>
+<p><strong>Closed itemsets and redundancy.</strong> The Kelmarsh
+<code>last10</code> mining run returns 136 itemsets, many of them sub-
+or supersets of the same underlying cascade. The LCM closed-itemset
+filter (support-strict maximality) reduces this to the closed subset
+used for the deployable catalog rows above; the signature table cites
+only patterns that are also closed, so no finding is a redundant
+super-copy of another. The operative count is the number of
+BY-significant closed itemsets on the inference half, not the raw miner
+output.</p>
+<h4 data-number="1.7.4.2" id="c-case-control-ratio-and-posterior-at-the-operational-base-rate"><span class="header-section-number">1.7.4.2</span> 6.4c Case-control ratio and
+posterior at the operational base rate</h4>
 <p>Every discovery/inference table above is scored on a matched-control
 sample built at case:control = 1:3, so the pipeline’s sample base rate
 is P(fail) = 0.25 by construction, and the precision numbers in the
@@ -1547,8 +1549,8 @@ the next five events</strong> at an operational P(fail) = 0.01 base
 rate, a 20x lift over blind sampling. Penmanshiel’s operational PPV is
 much smaller (~1.5%, a ~1.5x lift): the safety-9000/9210 cascade fires
 often but is not as specific as the Kelmarsh generator-fan chain. The
-deployment call is dataset-specific and neither the sample-precision
-0.89 nor the operational 0.20 alone tell the full story.</p>
+deployment decision is dataset-specific; neither the sample precision of
+0.89 nor the operational PPV of 0.20 suffices alone.</p>
 <p><strong>Azure PdM.</strong></p>
 <table style="width:100%;">
 <colgroup>
@@ -1746,16 +1748,16 @@ self-triggering</strong>. The non-alert stream
 (<code>system_error</code>, <code>system_warning</code>,
 <code>system_info</code>) carries no predictive information about the
 first alert of the next cascade.</p>
-<p>Use: <strong>negative recommendation</strong>. Do NOT deploy this
+<p>Use: <strong>negative recommendation</strong>. do not deploy this
 pipeline on HPC-syslog data as an alert-cascade early-warning system. A
 better use of pattern mining on this trace is post-hoc cascade taxonomy
 (which alert codes cluster together within an episode) rather than
 prediction.</p>
-<p>The rest of §6 walks through the aggregate evidence supporting these
-signatures: the predictive-vs-frequent-noise separation (§6.5), the
-post-selection-valid sequence significance (§6.6), the SCANIA matched
-hazard-ratio analysis (§6.8), and lead time on true positives
-(§6.9).</p>
+<p>Sections 6.5 through 6.9 present the aggregate evidence behind these
+signatures: the predictive-vs-frequent-noise separation (§6.5),
+post-selection-valid sequence significance (§6.6), the same-sample
+marginal baseline (§6.7), the SCANIA matched hazard-ratio analysis
+(§6.8), and lead time on true positives (§6.9).</p>
 <h3 data-number="1.7.5" id="predictive-vs-frequent-noise-separation-across-traces"><span class="header-section-number">1.7.5</span> 6.5 Predictive vs
 frequent-noise separation across traces</h3>
 <p>The paper’s central object is the fraction of mined frequent patterns
@@ -1886,19 +1888,19 @@ hypergeometric p-values and BH / BY correction).</p>
 </tr>
 </tbody>
 </table>
-<p>Two consequences of post-selection-valid inference. First, the Azure
-<code>last10</code> fraction drops from 86% (naive) to 30% (BY-corrected
-on inference half); the extra patterns were selection artefacts. Second,
-the SCANIA <code>last20</code> fraction drops from 6.0% (naive) to 0%
-(post- selection valid): the 42,000-pattern mining run at min-support
-0.05 does not survive an honest inference test. Both direction and
-magnitude of these shifts match the pre-registered concern about
-mining-and-testing on the same sample.</p>
+<p>Post-selection-valid inference has two visible consequences. First,
+the Azure <code>last10</code> fraction drops from 86% (naive) to 30%
+(BY-corrected on inference half); the extra patterns were selection
+artefacts. Second, the SCANIA <code>last20</code> fraction drops from
+6.0% (naive) to 0% (post- selection valid): the 42,000-pattern mining
+run at min-support 0.05 does not survive an honest inference test. Both
+direction and magnitude of these shifts match the pre-registered concern
+about mining-and-testing on the same sample.</p>
 <p>The Azure / Alibaba wins persist in weaker but still substantive form
 (46-100% at rich horizons); SCANIA under post-selection-valid inference
 no longer supports an aggregate “some fraction is predictive” claim on
 this mining threshold and requires the matched conditional-logistic
-analysis in §6.8 instead. On the two winning traces the majority of
+analysis in §6.8 instead. On the two positive traces the majority of
 frequent patterns are also predictive; on the two boundary traces the
 majority are frequent-but-noise, and the paper’s concrete
 predictive-pattern list is short.</p>
@@ -2041,13 +2043,13 @@ sequences tested at each horizon.</p>
 </tr>
 </tbody>
 </table>
-<p>The sequence result restates the itemset finding for the same-split
-inference regime: on Azure sequences carry a large post-selection-valid
-signal (77% BH-significant at <code>last10</code>, 66% BY), on Alibaba a
-moderate one (48% BH at <code>last10</code>), and on BGL and SCANIA the
-fraction collapses as horizon length expands the candidate space faster
-than the signal grows. On SCANIA <code>last20</code> the same
-6,262-sequence mining run reduces to 3 BY-significant sequences: a
+<p>The sequence result mirrors the itemset finding under the same split:
+sequences carry a large post-selection-valid signal on Azure (77%
+BH-significant at <code>last10</code>, 66% BY) and a moderate one on
+Alibaba (48% BH at <code>last10</code>). On BGL and SCANIA the
+significant fraction collapses as longer horizons expand the candidate
+space faster than the signal grows. On SCANIA <code>last20</code> the
+same 6,262-sequence mining run reduces to 3 BY-significant sequences, a
 strong post-selection-inflation warning that mirrors the itemset
 case.</p>
 <p>To measure the redundancy in the raw PrefixSpan output we also run
@@ -2227,11 +2229,11 @@ awareness of this underlying feature-set concentration.</p>
 </tbody>
 </table>
 <p>The top signatures are concentrated in bin combinations of the same
-histogram feature (397), consistent with the §3.4 note that Component X
-features encode 6 histograms. The <code>158_9 + 309_0</code>
-cross-feature signature is an example of a two-feature interaction that
-pattern mining surfaces without needing a black-box classifier. Despite
-these interpretable hazard-ratio-scored patterns, none of them lift a
+histogram feature (397), consistent with the histogram-encoded feature
+set described in §3.6. The <code>158_9 + 309_0</code> cross-feature
+signature is an example of a two-feature interaction that pattern mining
+surfaces without needing a black-box classifier. Despite these
+interpretable hazard-ratio-scored patterns, none of them lift a
 temporally-held-out logistic regression beyond AUROC 0.60 (per §6.2):
 the patterns are per-truck static discriminators, not temporal
 precursors that a next-K-event alarm can act on. The distinction is
@@ -2374,9 +2376,9 @@ rule. The strongest positive evidence is the two-farm wind cascade: two
 independent Senvion fleets at different sites produce the same lift-4.00
 zero-control cascade signatures under one protocol, which is the closest
 the survey comes to a controlled replication.</p>
-<p>The survey resolves an obvious follow-up question: does the
-combined-feature-set advantage transfer to any operational event log? It
-does not.</p>
+<p>The case studies answer a natural follow-up question: the
+combined-feature-set advantage does not transfer to every operational
+event log.</p>
 <ul>
 <li><strong>Where the method works cleanest</strong> (Kelmarsh,
 Penmanshiel wind farms): a genuine physical cascade. Continuous
@@ -2451,17 +2453,17 @@ than a temporal degradation trajectory. Last-K-events windows and the
 ordered-pattern mining built on them cannot see it, because there is no
 pre-failure event ordering to catch; the discriminative information is
 spread across the truck’s entire operating history.</p>
-<p>This gives a sharper three-way regime-of-validity: (i) four wins
-(Kelmarsh, Penmanshiel, Azure PdM, Alibaba v2018), where target failure
-is preceded by a discriminable ordered event trajectory, with the two
-wind farms the cleanest physical-cascade instances; (ii) BGL, where the
-target class is self-triggering with no discriminable non-alert
-precursor; (iii) Component X, where the target has strong per-truck
-signal in aggregate features but no last-K-events trajectory signal, so
-pattern mining on windows attains the temporal-split ceiling but not the
-transductive per-vehicle ceiling. The APS positive control confirms that
-(iii) is a target-shape distinction, not a manufacturer or schema
-deficiency.</p>
+<p>This gives a sharper three-way regime-of-validity: (i) four positive
+traces (Kelmarsh, Penmanshiel, Azure PdM, Alibaba v2018), where target
+failure is preceded by a discriminable ordered event trajectory, with
+the two wind farms the cleanest physical-cascade instances; (ii) BGL,
+where the target class is self-triggering with no discriminable
+non-alert precursor; (iii) Component X, where the target has strong
+per-truck signal in aggregate features but no last-K-events trajectory
+signal, so pattern mining on windows attains the temporal-split ceiling
+but not the transductive per-vehicle ceiling. The APS positive control
+confirms that (iii) is a target-shape distinction, not a manufacturer or
+schema deficiency.</p>
 <p>The method’s regime of validity is therefore “trace has a rich native
 discrete event vocabulary AND failure class is not self-triggering AND
 readout-cadence signal capacity exceeds the target AUROC bar”. BGL fails
