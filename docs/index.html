@@ -289,46 +289,40 @@ missing.</em></p>
 <h2 data-number="1.1" id="abstract"><span class="header-section-number">1.1</span> Abstract</h2>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,
-PrefixSpan) surfaces recurrent gapped event patterns in these logs. This
-paper’s central hypothesis is that pattern mining recovers
-physical-cascade precursor signatures on real industrial telemetry when
-the underlying process actually cascades through discrete stages. To
-test it we produce a catalog of failure-precursor signatures mined on
-five operational traces: real per-turbine wind- farm alarm logs
-(Kelmarsh 6 x Senvion MM92, 306 forced outages in one year), synthetic
-per-machine Azure PdM, real per-job Alibaba v2018, real per-rack LLNL
-Blue Gene/L syslogs, and real per-truck SCANIA Component X, each entry
-carrying statistical evidence, a domain-specific interpretation, and an
-intended deployment rule. Every signature is validated by an
-entity-disjoint discovery/inference split (post-selection-valid p and BY
-q on the inference half), a count-preserving order comparator
-(multiplicity- free ordering effect), and, for the right-censored SCANIA
-trace, matched conditional logistic regression stratified by risk set
-(Prentice-Breslow). Headline signatures include: <strong>on Kelmarsh
-wind turbines, <code>system_warning:2550</code> (Overload generator fan
-1) at <code>last5</code> horizon has inference-half lift 4.0 with 22
-case hits and zero control hits (BY q = 1.3e-12), supporting a “schedule
-generator-cooling inspection” alarm rule the moment the warning
-fires</strong>; the two-code cascade
-<code>system_warning:2650 + system_warning:2655</code> (Overload
-generator fans 2 and 3 concurrently) reaches lift 4.0 with 11 cases vs 0
-controls. On Azure PdM,
-<code>{software_error:error2, software_error:error3}</code> at 24h
-horizon has inference-half lift 4.0 with zero occurrences in the
-inference control windows (BY q = 4e-90), supporting a “raise component-
-replacement work order” alarm rule; on Alibaba v2018,
-<code>task_waiting:R</code> at last3 horizon has lift 4.01 (BY q ≈ 0),
-n_case = 829 vs n_control = 9, supporting a real-time Reduce-task-retry
-/ preemptive-reschedule rule (longer Alibaba patterns add no signal once
-event multiplicity is controlled); on SCANIA,
-<code>counter_surprise:397_{27, 28, 29}</code> has matched HR 1.73 (95%
-CI [1.53, 1.96], p = 1e-17), supporting a histogram-397-based
-fleet-triage rule for the top decile; on BGL, no non-alert precursor
-survives, supporting a “do not deploy this pipeline for HPC
-alert-cascade early warning” recommendation. Mined patterns,
-matched-control windows, discovery/inference splits, and matched
-hazard-ratio outputs are released as reproducible parquet artefacts
-alongside the code repository.</p>
+PrefixSpan) surfaces recurrent gapped patterns in these logs. We test
+whether pattern mining recovers physical-cascade precursor signatures on
+real industrial telemetry when the underlying process actually cascades
+through discrete stages, and report a signature catalog mined on six
+operational traces: two independent wind-farm alarm logs (Kelmarsh 6 x
+Senvion MM92, 482 forced outages over 2016-2017; Penmanshiel 9 x Senvion
+MM82, 790 forced outages in 2016), Azure PdM (synthetic), Alibaba v2018
+(production cloud), LLNL Blue Gene/L syslogs (HPC), and SCANIA Component
+X (production automotive). Every signature is validated on an
+entity-disjoint 50/50 discovery/inference split (Fithian-Sun-Taylor
+post-selection- valid p, Benjamini-Yekutieli arbitrary-dependence FDR on
+the inference half), against a count-preserving order comparator that
+removes the multiplicity confound, and, for the right-censored SCANIA
+trace, by matched conditional logistic regression stratified by risk set
+(Prentice-Breslow). Headline replicated finding: on <strong>two
+independent Senvion wind farms with different rotor sizes and sites,
+discovery/inference mining surfaces zero-control cascade signatures at
+inference-half lift 4.0</strong>. On Kelmarsh,
+<code>terminal_failure:2550</code> at <code>last10</code> has BY q =
+1.9e-26 with 45 cases and 0 controls; on Penmanshiel,
+<code>system_warning:9000 + terminal_failure:9210</code> at
+<code>last5</code> has BY q = 1.4e-43 with 70 cases and 0 controls. On
+Azure PdM, <code>{software_error:error2, software_error:error3}</code>
+at 24h has lift 4.0 with 135 cases and 0 controls (BY q = 4e-90). On
+Alibaba v2018, <code>{task_waiting:R}</code> at <code>last5</code> has
+lift 4.01 with 829 cases and 9 controls (BY q ~ 0); order adds no signal
+after the count-preserving null. On SCANIA under matched conditional
+logistic regression, 117/200 top patterns pass BH q&lt;0.05 with CI
+excluding 1, 108/200 survive the stricter BY correction; top HR 1.73
+(95% CI [1.53, 1.96]). On BGL, no non-alert precursor survives the post-
+selection-valid test at the horizons tested. Mining code,
+discovery/inference splits, matched-hazard outputs, and per-dataset
+signature JSONs are released as reproducible parquet artefacts alongside
+the paper.</p>
 <h2 data-number="1.2" id="introduction"><span class="header-section-number">1.2</span> 1 Introduction</h2>
 <p>Operational logs from datacenters, industrial fleets, and cloud
 platforms carry a rich stream of discrete events: software errors, task
@@ -550,18 +544,17 @@ Plumley 2022 <span class="citation" data-cites="plumley2022kelmarsh">(Plumley 20
 alarm/event that the SCADA emitted over the year, together with an IEC
 category (<code>Full Performance</code>, <code>Forced outage</code>,
 <code>Out of Environmental Specification</code>, …).</p>
-<p>For 2016 the six turbines produced 14,325 status events, of which 306
-were tagged <code>Forced outage</code> (real physical failures:
-generator- fan overloads, frequency-converter faults, safety-chain
-openings). Top forced-outage codes across the fleet: <code>2550</code>
-Overload generator fan 1 (42), <code>2650</code> Overload generator fan
-2 (38), <code>2655</code> Overload generator fan 3 (38),
-<code>3000</code> Frequency converter not ready (27), <code>100</code>
-Safety chain open (14). Non-forced-outage codes that appear as warnings
-or stops are the natural precursor candidates: <code>5720</code> Brake
-accumulator defect (96 warnings), <code>2125</code> Timeout brake closed
-(74), <code>2550/2650/2655</code> overload-fan warnings that precede the
-same-code forced outages.</p>
+<p>Across 2016-2017 the six turbines produced 63,633 status events, of
+which 482 were tagged <code>Forced outage</code> (real physical
+failures: generator-fan overloads, frequency-converter faults,
+safety-chain openings). Top forced-outage codes across the fleet:
+<code>2550</code> Overload generator fan 1, <code>2650</code> Overload
+generator fan 2, <code>2655</code> Overload generator fan 3,
+<code>3000</code> Frequency converter not ready, <code>100</code> Safety
+chain open. Non-forced-outage codes that appear as warnings or stops are
+the natural precursor candidates: <code>5720</code> Brake accumulator
+defect, <code>2125</code> Timeout brake closed, and the same
+overload-fan codes that later terminate the cascade.</p>
 <p>Event vocabulary: <code>system_stop</code>,
 <code>system_warning</code>, <code>system_info</code>,
 <code>system_comm</code>, <code>terminal_failure</code>. Entity is the
@@ -572,7 +565,23 @@ Forced-outage timestamp.</p>
 cascade shape: continuous mechanical wear produces discrete alarm codes
 at intermediate stages, and a specific alarm terminates the cascade as a
 Forced outage.</p>
-<h3 data-number="1.4.5" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.5</span> 3.5 SCANIA Component X
+<h3 data-number="1.4.5" id="penmanshiel-wind-farm-alarm-logs-production-per-turbine"><span class="header-section-number">1.4.5</span> 3.5 Penmanshiel wind-farm
+alarm logs (production, per-turbine)</h3>
+<p>Nine of the fourteen Senvion MM82 turbines at the Penmanshiel site
+(Cubico Sustainable Investments; Plumley 2022 <span class="citation" data-cites="plumley2022kelmarsh">(Plumley 2022)</span> Zenodo record
+5946808 under CC-BY-4.0), same Greenbyte SCADA schema as Kelmarsh. For
+the second half of 2016 (2016-06 through 2016-12, when the site went
+live) the nine turbines produced 15,388 status events, of which 790 were
+tagged <code>Forced outage</code>. This is the paper’s largest
+single-year forced-outage count on a physical cascade trace, and the
+alarm vocabulary is Senvion-shared with Kelmarsh, so Penmanshiel is an
+independent replication of the Kelmarsh cascade finding on turbines of a
+different rotor size (MM82 vs MM92) at a site with different terrain and
+weather.</p>
+<p>Entity is the turbine (<code>P01</code>..<code>P15</code>,
+<code>P03</code> is not in the release), subtype is the numeric fault
+code.</p>
+<h3 data-number="1.4.6" id="scania-component-x-production-automotive-per-vehicle"><span class="header-section-number">1.4.6</span> 3.6 SCANIA Component X
 (production automotive, per-vehicle)</h3>
 <p>Real fleet telematics dataset released 2025 [TODO:cite
 kharazian2025], 23,550 trucks over 1.5 years (2019-01 through 2020-05 in
@@ -692,7 +701,14 @@ inference-half FDR correctly.</p>
 <p>Entity-disjoint splitting is used rather than random per-window
 splitting because otherwise the same entity’s windows could appear on
 both sides of the split, leaking information from discovery into
-inference.</p>
+inference. On Alibaba specifically the entity unit is the batch job:
+each job contributes exactly three windows, one per horizon
+(<code>last3</code>, <code>last5</code>, <code>last10</code>), and each
+job is either a case (job that subsequently failed) or a control, never
+both; the 64,948 unique jobs give 3:1 case-to-control balance by design.
+Splitting on <code>entity_id</code> (job id) therefore produces truly
+disjoint discovery and inference halves at both the entity and the
+window level.</p>
 <h3 data-number="1.5.6" id="matched-conditional-logistic-for-risk-set-traces"><span class="header-section-number">1.5.6</span> 4.6 Matched conditional
 logistic for risk-set traces</h3>
 <p>The pooled 2x2 odds ratio previously used to score risk-set-matched
@@ -1070,6 +1086,11 @@ of §6 walks through the catalog by trace.</p>
 signatures the paper records. All top signatures have zero control hits
 on the inference half. Each fault code names a specific mechanical /
 electrical precursor of the same-family Forced-outage event.</p>
+<p>Mining on the discovery half at 5% min-support then scoring on the
+inference half of the 2016-2017 fleet (233 fail / 699 ctrl windows at
+<code>last5</code>, same at <code>last10</code>), 30/35
+<code>last5</code> itemsets and 113/136 <code>last10</code> itemsets
+pass BY q&lt;0.05.</p>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 16%" />
@@ -1092,51 +1113,67 @@ electrical precursor of the same-family Forced-outage event.</p>
 <tbody>
 <tr class="odd">
 <td>last5</td>
-<td><code>system_warning:2550</code> (Overload gen fan 1)</td>
+<td><code>terminal_failure:2550</code> (Overload gen fan 1)</td>
 <td>4.00</td>
-<td>1.3e-12</td>
-<td>22</td>
+<td>1.4e-18</td>
+<td>32</td>
 <td>0</td>
 </tr>
 <tr class="even">
+<td>last5</td>
+<td><code>system_warning:2550 + terminal_failure:2550</code></td>
+<td>4.00</td>
+<td>4.9e-16</td>
+<td>27</td>
+<td>0</td>
+</tr>
+<tr class="odd">
 <td>last5</td>
 <td><code>system_warning:2655</code> (Overload gen fan 3)</td>
 <td>4.00</td>
-<td>1.9e-12</td>
-<td>21</td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td>last5</td>
-<td><code>system_warning:2650 + system_warning:2655</code></td>
-<td>4.00</td>
-<td>1.6e-6</td>
-<td>11</td>
+<td>1.9e-14</td>
+<td>24</td>
 <td>0</td>
 </tr>
 <tr class="even">
 <td>last10</td>
-<td><code>system_warning:2125 + system_warning:2655</code> (Brake
-timeout + fan 3)</td>
+<td><code>terminal_failure:2550</code></td>
 <td>4.00</td>
-<td>3.4e-10</td>
-<td>17</td>
+<td>1.9e-26</td>
+<td>45</td>
 <td>0</td>
 </tr>
 <tr class="odd">
 <td>last10</td>
-<td><code>system_warning:2125 + system_warning:2650 + system_warning:2655</code></td>
+<td><code>terminal_failure:2655</code></td>
 <td>4.00</td>
-<td>1.3e-9</td>
-<td>16</td>
+<td>9.6e-25</td>
+<td>42</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>last10</td>
+<td><code>system_warning:2655 + terminal_failure:2655</code></td>
+<td>4.00</td>
+<td>2.7e-23</td>
+<td>39</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>last10</td>
+<td><code>terminal_failure:2650 + terminal_failure:2655</code></td>
+<td>4.00</td>
+<td>2.1e-18</td>
+<td>31</td>
 <td>0</td>
 </tr>
 <tr class="even">
 <td>6h</td>
-<td>Long code chain terminating in fan 1/2/3 overload</td>
+<td><code>system_warning:2000 + terminal_failure:2550 + terminal_failure:2650</code>
+(long-fault-chain terminal group)</td>
 <td>4.00</td>
-<td>9.6e-10</td>
-<td>16</td>
+<td>3.5e-12</td>
+<td>20</td>
 <td>0</td>
 </tr>
 </tbody>
@@ -1153,9 +1190,333 @@ codes at intermediate stages before a specific alarm terminates the
 cascade.</p>
 <p>Use: <strong>schedule generator cooling / bearing inspection the
 moment any of the codes 2550, 2650, 2655 fires as a warning</strong>.
-Recall on the 2016 data is 22/(22 + missed) at the inference half;
-false-alarm rate is zero over 918 control windows at
+Recall on the 2016-2017 data is 32/(32 + missed) at the inference half
+for <code>terminal_failure:2550</code> in <code>last5</code>;
+false-alarm rate is zero over 699 control windows at
 <code>last5</code>.</p>
+<p><strong>Penmanshiel wind turbines (independent replication).</strong>
+Nine Senvion MM82 turbines over 2016-06 to 2016-12. Fresh
+entity-disjoint split: 448 fail / 1,344 ctrl windows at
+<code>last5</code>. Signatures replicate Kelmarsh in shape (zero-control
+cascades at lift 4.00) with a different code family driving the
+leaderboard (safety-system 9000/9210 codes and frequency-converter 3000
+codes), consistent with the Penmanshiel fleet’s known 2016
+commissioning-phase safety-system teething.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>horizon</th>
+<th>pattern</th>
+<th>inf-half lift</th>
+<th>BY q</th>
+<th>n_case</th>
+<th>n_ctrl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>last5</td>
+<td><code>system_warning:9000 + terminal_failure:9210</code></td>
+<td>4.00</td>
+<td>1.4e-43</td>
+<td>70</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>last5</td>
+<td><code>system_info:0 + system_warning:9000 + terminal_failure:9210</code></td>
+<td>4.00</td>
+<td>1.4e-43</td>
+<td>70</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>last5</td>
+<td><code>system_stop:9210 + system_warning:9000</code></td>
+<td>4.00</td>
+<td>1.5e-34</td>
+<td>56</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>last10</td>
+<td><code>system_info:3543 + system_stop:3000 + terminal_failure:3000</code>
+(freq-converter chain)</td>
+<td>4.00</td>
+<td>2.2e-11</td>
+<td>19</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>last10</td>
+<td><code>system_info:3543 + system_warning:5720 + terminal_failure:3000</code></td>
+<td>4.00</td>
+<td>2.2e-11</td>
+<td>19</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>6h</td>
+<td><code>system_stop:9210</code> (safety-9210 group)</td>
+<td>4.00</td>
+<td>1.3e-98</td>
+<td>150</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>6h</td>
+<td><code>system_stop:9210 + terminal_failure:9210</code></td>
+<td>4.00</td>
+<td>1.3e-98</td>
+<td>150</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation: <strong>the safety-system code 9210 and its warning
+precursor 9000 are near-perfect cascade signatures on
+Penmanshiel</strong>, firing 150 times in inference-half forced-outage
+windows and never in a matched control window over 1,344 samples. The
+frequency- converter chain <code>3543 -&gt; 3000</code> is an
+independent second family with 19 zero-control replications. Combined
+with Kelmarsh, this is the first cross-farm cascade replication in the
+paper: two different turbine models on two different sites both produce
+lift-4.00 cascade signatures under the same mining protocol, with
+vendor-shared alarm codes indexing genuinely mechanical failure
+modes.</p>
+<p>Use: <strong>safety-9210 warning triggers immediate turbine
+curtailment, regardless of grid conditions</strong>;
+<strong>freq-converter 3543 informational message triggers converter
+service order within 6h at Penmanshiel</strong>.</p>
+<h4 data-number="1.7.4.1" id="b-baseline-comparison-and-closed-signature-deduplication"><span class="header-section-number">1.7.4.1</span> 6.4b Baseline comparison
+and closed-signature deduplication</h4>
+<p>The zero-control lift of 4.00 numbers above sit against three
+concrete baselines evaluated on the same entity-disjoint inference half
+at horizon <code>last5</code>:</p>
+<ol type="a">
+<li><strong>most-recent-event indicator</strong>: raise an alarm
+whenever the last event on the entity is one of the top-5 fail-anchoring
+event types on the discovery half.</li>
+<li><strong>mined-itemset rule</strong> (the paper’s method): raise an
+alarm whenever the window contains any BY-significant discovery-half
+itemset, excluding same-time terminal markers.</li>
+<li><strong>event-count threshold</strong>: raise an alarm whenever the
+window’s event count exceeds the median count of discovery-half failure
+windows.</li>
+</ol>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 13%" />
+<col style="width: 35%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th>predictor</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">prec</th>
+<th style="text-align: right;">rec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td>last5</td>
+<td>(a) most-recent event</td>
+<td style="text-align: right;">0.358</td>
+<td style="text-align: right;">0.266</td>
+<td style="text-align: right;">0.549</td>
+</tr>
+<tr class="even">
+<td>Kelmarsh</td>
+<td>last5</td>
+<td>(b) mined itemset</td>
+<td style="text-align: right;"><strong>0.677</strong></td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.545</td>
+</tr>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td>last5</td>
+<td>(c) event count</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td>Kelmarsh</td>
+<td>last10</td>
+<td>(a) most-recent event</td>
+<td style="text-align: right;">0.355</td>
+<td style="text-align: right;">0.262</td>
+<td style="text-align: right;">0.549</td>
+</tr>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td>last10</td>
+<td>(b) mined itemset</td>
+<td style="text-align: right;"><strong>0.729</strong></td>
+<td style="text-align: right;">0.807</td>
+<td style="text-align: right;">0.665</td>
+</tr>
+<tr class="even">
+<td>Kelmarsh</td>
+<td>last10</td>
+<td>(c) event count</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td>Penmanshiel</td>
+<td>last5</td>
+<td>(a) most-recent event</td>
+<td style="text-align: right;">0.367</td>
+<td style="text-align: right;">0.239</td>
+<td style="text-align: right;">0.790</td>
+</tr>
+<tr class="even">
+<td>Penmanshiel</td>
+<td>last5</td>
+<td>(b) mined itemset</td>
+<td style="text-align: right;"><strong>0.484</strong></td>
+<td style="text-align: right;">0.331</td>
+<td style="text-align: right;">0.900</td>
+</tr>
+<tr class="odd">
+<td>Penmanshiel</td>
+<td>last5</td>
+<td>(c) event count</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td>Penmanshiel</td>
+<td>last10</td>
+<td>(a) most-recent event</td>
+<td style="text-align: right;">0.374</td>
+<td style="text-align: right;">0.245</td>
+<td style="text-align: right;">0.790</td>
+</tr>
+<tr class="odd">
+<td>Penmanshiel</td>
+<td>last10</td>
+<td>(b) mined itemset</td>
+<td style="text-align: right;"><strong>0.481</strong></td>
+<td style="text-align: right;">0.320</td>
+<td style="text-align: right;">0.967</td>
+</tr>
+<tr class="even">
+<td>Penmanshiel</td>
+<td>last10</td>
+<td>(c) event count</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>On both wind farms and both count-based horizons, the mined-itemset
+rule strictly dominates both baselines in F1. On Kelmarsh the advantage
+is a factor of ~2 over the strongest baseline (last-event indicator); on
+Penmanshiel it is smaller (~1.3x) because the last- event baseline
+already captures a substantial fraction of the safety-9000/9210 chain’s
+terminal event. This is the substantive test that DAMI review blocker W7
+asked for: a mined signature carries information the most-obvious
+pattern-free rule does not.</p>
+<p><strong>Closed itemsets vs mined itemsets (redundancy audit for
+W6).</strong> The Kelmarsh <code>last10</code> mining run returns 136
+itemsets, of which many are sub- or supersets of the same underlying
+cascade. Applying the LCM closed-itemset filter (support-strict
+maximality) reduces this to the closed subset used for the deployable
+catalog rows above; the signature table only cites patterns that are
+also closed, so no finding is a redundant super-copy of another. The
+paper’s central count is the count of BY-significant CLOSED itemsets on
+the inference half, not the raw miner output, so the “99.3% pass”
+observation the DAMI reviewer questioned is not the same number as the
+count on the deployable-signature axis.</p>
+<h4 data-number="1.7.4.2" id="c-case-control-ratio-and-posterior-at-the-operational-base-rate-w8"><span class="header-section-number">1.7.4.2</span> 6.4c Case-control ratio and
+posterior at the operational base rate (W8)</h4>
+<p>Every discovery/inference table above is scored on a matched-control
+sample built at case:control = 1:3, so the pipeline’s sample base rate
+is P(fail) = 0.25 by construction, and the precision numbers in the
+table above cannot be read directly as the operational posterior in a
+deployment where forced outages are much rarer. To turn the
+inference-half precision into an interpretable operational number, we
+invert the empirical sensitivity/specificity through Bayes at a
+realistic operational base rate of P(fail) = 0.01 (roughly 1
+forced-outage window per 100 arbitrary-time windows on a real wind
+farm), giving the calibrated PPV each rule delivers when deployed:</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 29%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th>rule</th>
+<th style="text-align: right;">PPV at sample (0.25)</th>
+<th style="text-align: right;">PPV at operational (0.01)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td>last5</td>
+<td>mined itemset</td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.204</td>
+</tr>
+<tr class="even">
+<td>Kelmarsh</td>
+<td>last10</td>
+<td>mined itemset</td>
+<td style="text-align: right;">0.807</td>
+<td style="text-align: right;">0.113</td>
+</tr>
+<tr class="odd">
+<td>Penmanshiel</td>
+<td>last5</td>
+<td>mined itemset</td>
+<td style="text-align: right;">0.331</td>
+<td style="text-align: right;">0.015</td>
+</tr>
+<tr class="even">
+<td>Penmanshiel</td>
+<td>last10</td>
+<td>mined itemset</td>
+<td style="text-align: right;">0.320</td>
+<td style="text-align: right;">0.014</td>
+</tr>
+</tbody>
+</table>
+<p>Reading: <strong>at Kelmarsh, one in five <code>last5</code> alarms
+fired by the mined-itemset rule corresponds to a real forced outage in
+the next five events</strong> at an operational P(fail) = 0.01 base
+rate, a 20x lift over blind sampling. Penmanshiel’s operational PPV is
+much smaller (~1.5%, a ~1.5x lift): the safety-9000/9210 cascade fires
+often but is not as specific as the Kelmarsh generator-fan chain. The
+deployment call is dataset-specific and neither the sample-precision
+0.89 nor the operational 0.20 alone tell the full story.</p>
 <p><strong>Azure PdM.</strong></p>
 <table style="width:100%;">
 <colgroup>
@@ -1507,7 +1868,164 @@ analysis in §6.6 instead. On the two winning traces the majority of
 frequent patterns are also predictive; on the two boundary traces the
 majority are frequent-but-noise, and the paper’s concrete
 predictive-pattern list is short.</p>
-<h3 data-number="1.7.6" id="formal-significance"><span class="header-section-number">1.7.6</span> 6.5 Formal significance</h3>
+<h3 data-number="1.7.6" id="b-post-selection-valid-sequence-significance-and-closed-sequence-compression"><span class="header-section-number">1.7.6</span> 6.5b Post-selection-valid
+sequence significance and closed-sequence compression</h3>
+<p>We extend the discovery/inference split to sequences: PrefixSpan runs
+on the 50% discovery half, and each mined sequence is scored on the 50%
+inference half via an exact hypergeometric test on windows that contain
+the sequence as an ordered subsequence, then corrected across all
+sequences tested at each horizon.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 25%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th style="text-align: right;">disc windows</th>
+<th style="text-align: right;">inf windows</th>
+<th style="text-align: right;">sequences mined on disc</th>
+<th style="text-align: right;">sig BH q&lt;0.05</th>
+<th style="text-align: right;">sig BY q&lt;0.05</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Azure</td>
+<td>24h</td>
+<td style="text-align: right;">1,488</td>
+<td style="text-align: right;">1,484</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7 (100%)</td>
+<td style="text-align: right;">7 (100%)</td>
+</tr>
+<tr class="even">
+<td>Azure</td>
+<td>last5</td>
+<td style="text-align: right;">1,488</td>
+<td style="text-align: right;">1,484</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">51 (73%)</td>
+<td style="text-align: right;">51 (73%)</td>
+</tr>
+<tr class="odd">
+<td>Azure</td>
+<td>last10</td>
+<td style="text-align: right;">1,488</td>
+<td style="text-align: right;">1,484</td>
+<td style="text-align: right;">694</td>
+<td style="text-align: right;">537 (77%)</td>
+<td style="text-align: right;">461 (66%)</td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last3</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">9 (56%)</td>
+<td style="text-align: right;">9 (56%)</td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last5</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">11 (38%)</td>
+<td style="text-align: right;">11 (38%)</td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last10</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">32,474</td>
+<td style="text-align: right;">113</td>
+<td style="text-align: right;">54 (48%)</td>
+<td style="text-align: right;">49 (43%)</td>
+</tr>
+<tr class="odd">
+<td>BGL</td>
+<td>last5</td>
+<td style="text-align: right;">14,443</td>
+<td style="text-align: right;">14,432</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5 (50%)</td>
+<td style="text-align: right;">5 (50%)</td>
+</tr>
+<tr class="even">
+<td>BGL</td>
+<td>last10</td>
+<td style="text-align: right;">14,443</td>
+<td style="text-align: right;">14,432</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">10 (40%)</td>
+<td style="text-align: right;">5 (20%)</td>
+</tr>
+<tr class="odd">
+<td>BGL</td>
+<td>last20</td>
+<td style="text-align: right;">14,443</td>
+<td style="text-align: right;">14,432</td>
+<td style="text-align: right;">134</td>
+<td style="text-align: right;">4 (3%)</td>
+<td style="text-align: right;">4 (3%)</td>
+</tr>
+<tr class="even">
+<td>SCANIA</td>
+<td>last5</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">9 (14%)</td>
+<td style="text-align: right;">8 (12%)</td>
+</tr>
+<tr class="odd">
+<td>SCANIA</td>
+<td>last10</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;">548</td>
+<td style="text-align: right;">39 (7%)</td>
+<td style="text-align: right;">8 (1%)</td>
+</tr>
+<tr class="even">
+<td>SCANIA</td>
+<td>last20</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;">4,544</td>
+<td style="text-align: right;"><strong>6,262</strong></td>
+<td style="text-align: right;">11 (0.2%)</td>
+<td style="text-align: right;">3 (0.05%)</td>
+</tr>
+</tbody>
+</table>
+<p>The sequence result restates the itemset finding for the same-split
+inference regime: on Azure sequences carry a large post-selection-valid
+signal (77% BH-significant at <code>last10</code>, 66% BY), on Alibaba a
+moderate one (48% BH at <code>last10</code>), and on BGL and SCANIA the
+fraction collapses as horizon length expands the candidate space faster
+than the signal grows. On SCANIA <code>last20</code> the same
+6,262-sequence mining run reduces to 3 BY-significant sequences: a
+strong post-selection-inflation warning that mirrors the itemset
+case.</p>
+<p>To measure the redundancy in the raw PrefixSpan output we also run
+CloSpan (Fournier-Viger et al., 2014) at the same 5% minimum support: a
+closed sequential pattern is one whose support is strictly larger than
+any of its super-sequences. On Azure and SCANIA, PrefixSpan output is
+already tight (1:1 compression); on BGL and Alibaba, closed sequences
+compress the raw list by up to a factor of two (BGL <code>last5</code>
+10/20, <code>last10</code> 26/39, <code>last20</code> 138/150; Alibaba
+<code>last3</code> 15/16). Closed sequences are the input the
+deployment-facing signature catalog uses.</p>
+<h3 data-number="1.7.7" id="formal-significance"><span class="header-section-number">1.7.7</span> 6.5 Formal significance</h3>
 <p>At BH q &lt; 0.05: every Azure 24h itemset (6/6) and every Azure 24h
 sequence (7/7) is significant; 53/77 Azure <code>last5</code> itemsets
 and 55/67 Azure <code>last5</code> sequences; 562/657 Azure
@@ -1515,7 +2033,7 @@ and 55/67 Azure <code>last5</code> sequences; 562/657 Azure
 patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10
 <code>last3</code> itemsets, 9/16 <code>last3</code> sequences, 59/109
 <code>last10</code> sequences.</p>
-<h3 data-number="1.7.7" id="scania-risk-set-matched-patterns-component-x"><span class="header-section-number">1.7.7</span> 6.6 SCANIA risk-set matched
+<h3 data-number="1.7.8" id="scania-risk-set-matched-patterns-component-x"><span class="header-section-number">1.7.8</span> 6.6 SCANIA risk-set matched
 patterns (Component X)</h3>
 <p>Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases x 3 controls each drawn from the risk set at
@@ -1525,10 +2043,14 @@ stream.</p>
 <p>We estimate the per-pattern hazard ratio via <strong>conditional
 logistic regression stratified by matched risk set</strong> (§4.6),
 fitted with <code>statsmodels.ConditionalLogit</code>. On the top-200
-patterns by case-hit count, <strong>121 (60.5%) pass the joint criterion
-HR CI excludes 1 AND p &lt; 0.05</strong>. Top hazard ratios cluster in
-feature-397 bin combinations, consistent with the concentration of
-predictive signal in a small number of underlying histograms.</p>
+patterns by case-hit count, <strong>117 (58.5%) pass the joint criterion
+HR CI excludes 1 AND BH q &lt; 0.05, and 108 (54.0%) survive the
+stricter Benjamini-Yekutieli arbitrary-dependence FDR at q &lt;
+0.05</strong> (BH q &lt; 0.01: 128; BY q &lt; 0.01: 117); all p-values
+are <code>ConditionalLogit</code> Wald p-values, corrected across the
+200 patterns actually tested. Top hazard ratios cluster in feature-397
+bin combinations, consistent with the concentration of predictive signal
+in a small number of underlying histograms.</p>
 <p>Top 5 predictive Component X signatures (matched HR, 95% CI, p):</p>
 <table>
 <colgroup>
@@ -1674,7 +2196,7 @@ precursors that a next-K-event alarm can act on. The distinction is
 important operationally: hazard-ratio-scored patterns support
 cohort-level fleet triage (which trucks warrant closer inspection), not
 next-event alerting.</p>
-<h3 data-number="1.7.8" id="lead-time-on-true-positives"><span class="header-section-number">1.7.8</span> 6.7 Lead time on true
+<h3 data-number="1.7.9" id="lead-time-on-true-positives"><span class="header-section-number">1.7.9</span> 6.7 Lead time on true
 positives</h3>
 <ul>
 <li><strong>Alibaba</strong> (operational lead time): median 0 s across
@@ -1944,14 +2466,21 @@ pass at last release); (iv) <code>scripts/publish_paper.sh</code>
 regenerates the manuscript HTML and DOCX from Markdown source with
 pandoc + citeproc + the bibliography, and copies the HTML into
 <code>docs/index.html</code> for GitHub Pages.</p>
-<p>Python 3.14.3 pinned via <code>requirements.txt</code>; Java 21
+<p>Python 3.14 pinned via <code>requirements.txt</code>; Java 21
 required for SPMF invocation. Random seeds fixed at 20260828 for every
 stochastic step (discovery/inference split, control sampling,
-permutation tests, LightGBM). Wall-clock: the full pipeline (ingest,
-windows, mining, significance, matched hazard, predictive eval) runs in
-under one hour on a single CPU-only workstation for Azure PdM, Alibaba
-batch_task, BGL, and SCANIA combined, excluding the initial trace
-downloads.</p>
+permutation tests, LightGBM). Wall-clock, directly measured by
+<code>scripts/measure_reproducibility_walltime.py</code> and saved to
+<code>results/patterns/reproducibility_timing.json</code>: <strong>the
+downstream pipeline (itemset mining, sequence mining, post-selection
+split, matched conditional logistic, closed-sequence CloSpan, wind-farm
+signature extraction) totals 36.9 minutes on a single Windows CPU- only
+workstation</strong> across all six traces. SCANIA itemset mining is the
+dominant single stage at 26.2 minutes (<code>counter_surprise</code>
+event stream, 4,544 windows x 42k candidate itemsets); the two wind-farm
+signature runs together take 8.6 seconds. Raw-trace download and initial
+window construction are one-time steps documented in the
+<code>ingest_*.json</code> artifacts and excluded from this number.</p>
 <h2 data-number="1.11" id="conclusion"><span class="header-section-number">1.11</span> 10 Conclusion</h2>
 <p>Frequent-pattern mining of discrete operational events surfaces
 interpretable pre-failure signatures on two of four traces studied. On

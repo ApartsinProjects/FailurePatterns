@@ -281,30 +281,70 @@ def main() -> int:
           ali_l10["fraction_full_dominant"], "0.295",
           approx(ali_l10["fraction_full_dominant"], 0.295, tol=0.01))
 
-    # 6.4 Kelmarsh signatures (cleanest physical-cascade)
+    # 6.4 Kelmarsh signatures (multi-year 2016+2017 physical cascade)
     km = json.loads((PATT / "kelmarsh_signatures.json").read_text(encoding="utf-8"))
     km_l5 = km.get("last5", {})
     check("6.4 (Kelmarsh)",
-          "Kelmarsh last5: 31 BH-sig / 39 mined",
-          f"{km_l5['n_sig_bh']}/{km_l5['n_mined']}", "31/39",
-          km_l5["n_sig_bh"] == 31 and km_l5["n_mined"] == 39)
+          "Kelmarsh last5: 30 BH-sig / 35 mined",
+          f"{km_l5['n_sig_bh']}/{km_l5['n_mined']}", "30/35",
+          km_l5["n_sig_bh"] == 30 and km_l5["n_mined"] == 35)
     check("6.4 (Kelmarsh)",
-          "Kelmarsh last5: 30 BY-sig / 39 mined",
-          f"{km_l5['n_sig_by']}/{km_l5['n_mined']}", "30/39",
-          km_l5["n_sig_by"] == 30 and km_l5["n_mined"] == 39)
+          "Kelmarsh last5: 30 BY-sig / 35 mined",
+          f"{km_l5['n_sig_by']}/{km_l5['n_mined']}", "30/35",
+          km_l5["n_sig_by"] == 30 and km_l5["n_mined"] == 35)
     check("6.4 (Kelmarsh)",
-          "Kelmarsh last10: 159 BH-sig",
-          km["last10"]["n_sig_bh"], "159",
-          km["last10"]["n_sig_bh"] == 159)
+          "Kelmarsh last10: 115 BH-sig / 136 mined",
+          f"{km['last10']['n_sig_bh']}/{km['last10']['n_mined']}", "115/136",
+          km["last10"]["n_sig_bh"] == 115 and km["last10"]["n_mined"] == 136)
     load_km = _load_json(PROC / "kelmarsh_load_stats.json")
     check("3.4 (Kelmarsh)",
-          "Kelmarsh 2016: 306 forced outages",
-          load_km["n_forced_outages"], "306",
-          load_km["n_forced_outages"] == 306)
+          "Kelmarsh 2016-2017: 482 forced outages",
+          load_km["n_forced_outages"], "482",
+          load_km["n_forced_outages"] == 482)
     check("3.4 (Kelmarsh)",
-          "Kelmarsh 2016: 6 turbines",
+          "Kelmarsh: 6 turbines",
           load_km["n_turbines"], "6",
           load_km["n_turbines"] == 6)
+
+    # 6.4b baselines
+    bl = _load_json(PATT / "baselines_wind.json")
+    kl5 = bl["kelmarsh_last5"]["baseline_b_mined_itemset"]
+    check("6.4b", "Kelmarsh last5 mined-itemset F1 = 0.677",
+          kl5["f1"], "0.677", approx(kl5["f1"], 0.677, tol=0.005))
+    kl10 = bl["kelmarsh_last10"]["baseline_b_mined_itemset"]
+    check("6.4b", "Kelmarsh last10 mined-itemset F1 = 0.729",
+          kl10["f1"], "0.729", approx(kl10["f1"], 0.729, tol=0.005))
+    pl5 = bl["penmanshiel_last5"]["baseline_b_mined_itemset"]
+    check("6.4b", "Penmanshiel last5 mined-itemset F1 = 0.484",
+          pl5["f1"], "0.484", approx(pl5["f1"], 0.484, tol=0.005))
+    # 6.4c calibrated PPV at operational base rate 0.01
+    check("6.4c", "Kelmarsh last5 mined-itemset PPV@0.01 = 0.20",
+          round(kl5["ppv_at_target_baserate"], 2), "0.20",
+          approx(kl5["ppv_at_target_baserate"], 0.204, tol=0.01))
+    check("6.4c", "Kelmarsh last10 mined-itemset PPV@0.01 = 0.11",
+          round(kl10["ppv_at_target_baserate"], 2), "0.11",
+          approx(kl10["ppv_at_target_baserate"], 0.113, tol=0.005))
+
+    # 3.5 + 6.4 Penmanshiel wind farm
+    pen = json.loads((PATT / "penmanshiel_signatures.json").read_text(encoding="utf-8"))
+    pen_l5 = pen["last5"]
+    check("6.4 (Penmanshiel)",
+          "Penmanshiel last5: 27 BY-sig / 30 mined",
+          f"{pen_l5['n_sig_by']}/{pen_l5['n_mined']}", "27/30",
+          pen_l5["n_sig_by"] == 27 and pen_l5["n_mined"] == 30)
+    check("6.4 (Penmanshiel)",
+          "Penmanshiel last10: 83 BY-sig / 98 mined",
+          f"{pen['last10']['n_sig_by']}/{pen['last10']['n_mined']}", "83/98",
+          pen["last10"]["n_sig_by"] == 83 and pen["last10"]["n_mined"] == 98)
+    load_pen = _load_json(PROC / "penmanshiel_load_stats.json")
+    check("3.5 (Penmanshiel)",
+          "Penmanshiel 2016: 790 forced outages",
+          load_pen["n_forced_outages"], "790",
+          load_pen["n_forced_outages"] == 790)
+    check("3.5 (Penmanshiel)",
+          "Penmanshiel: 9 turbines",
+          load_pen["n_turbines"], "9",
+          load_pen["n_turbines"] == 9)
 
     # 6.4 Signature catalog (data-supported hypotheses)
     cat = _load_json(TAB / "signature_catalog.json")
@@ -337,6 +377,65 @@ def main() -> int:
     check("6.6", "SCANIA matched conditional logistic: 121/200 top patterns significant",
           mch["n_significant_conditional_logistic_005"], "121",
           mch["n_significant_conditional_logistic_005"] == 121)
+
+    # 6.6 SCANIA matched hazards with FDR correction (BH and BY)
+    fdr = _load_json(PATT / "scania_matched_hazard_fdr.json")
+    check("6.6", "SCANIA matched BH q<0.05 and CI>1: 117/200",
+          fdr["bh_005_and_hr_gt1_ci_excl_1"], "117",
+          fdr["bh_005_and_hr_gt1_ci_excl_1"] == 117)
+    check("6.6", "SCANIA matched BY q<0.05 and CI>1: 108/200",
+          fdr["by_005_and_hr_gt1_ci_excl_1"], "108",
+          fdr["by_005_and_hr_gt1_ci_excl_1"] == 108)
+    check("6.6", "SCANIA matched BH q<0.01: 128/200",
+          fdr["bh_significant_001"], "128",
+          fdr["bh_significant_001"] == 128)
+    check("6.6", "SCANIA matched BY q<0.01: 117/200",
+          fdr["by_significant_001"], "117",
+          fdr["by_significant_001"] == 117)
+
+    # 6.5b post-selection sequence significance
+    pss = json.loads((PATT / "post_selection_sequences.json").read_text(encoding="utf-8"))
+    def _pss(trace, horizon):
+        for r in pss:
+            if r["trace"] == trace and r["horizon"] == horizon:
+                return r
+        return None
+    az_seq_l10 = _pss("Azure", "last10")
+    check("6.5b", "Post-selection Azure last10 seqs: 537 BH-sig / 694 mined",
+          f"{az_seq_l10['n_significant_bh_005']}/{az_seq_l10['n_seq_mined_on_discovery']}",
+          "537/694",
+          az_seq_l10["n_significant_bh_005"] == 537 and az_seq_l10["n_seq_mined_on_discovery"] == 694)
+    check("6.5b", "Post-selection Azure last10 seqs BY: 461/694",
+          az_seq_l10["n_significant_by_005"], "461",
+          az_seq_l10["n_significant_by_005"] == 461)
+    sc_seq_l20 = _pss("SCANIA", "last20")
+    check("6.5b", "Post-selection SCANIA last20 seqs: 6262 mined, 3 BY-sig",
+          f"{sc_seq_l20['n_seq_mined_on_discovery']}/{sc_seq_l20['n_significant_by_005']}",
+          "6262/3",
+          sc_seq_l20["n_seq_mined_on_discovery"] == 6262 and sc_seq_l20["n_significant_by_005"] == 3)
+
+    # 6.5b closed sequential compression (CloSpan)
+    clo = json.loads((PATT / "closed_sequential_clospan.json").read_text(encoding="utf-8"))
+    bgl_l5 = next(r for r in clo if r["trace"] == "bgl" and r["horizon"] == "last5")
+    check("6.5b", "BGL last5 CloSpan closed 10 / raw 20",
+          f"{bgl_l5['n_closed_sequences_clospan']}/{bgl_l5['n_prefixspan_patterns']}",
+          "10/20",
+          bgl_l5["n_closed_sequences_clospan"] == 10 and bgl_l5["n_prefixspan_patterns"] == 20)
+    bgl_l10 = next(r for r in clo if r["trace"] == "bgl" and r["horizon"] == "last10")
+    check("6.5b", "BGL last10 CloSpan closed 26 / raw 39",
+          f"{bgl_l10['n_closed_sequences_clospan']}/{bgl_l10['n_prefixspan_patterns']}",
+          "26/39",
+          bgl_l10["n_closed_sequences_clospan"] == 26 and bgl_l10["n_prefixspan_patterns"] == 39)
+    bgl_l20 = next(r for r in clo if r["trace"] == "bgl" and r["horizon"] == "last20")
+    check("6.5b", "BGL last20 CloSpan closed 138 / raw 150",
+          f"{bgl_l20['n_closed_sequences_clospan']}/{bgl_l20['n_prefixspan_patterns']}",
+          "138/150",
+          bgl_l20["n_closed_sequences_clospan"] == 138 and bgl_l20["n_prefixspan_patterns"] == 150)
+    ali_l3 = next(r for r in clo if r["trace"] == "alibaba" and r["horizon"] == "last3")
+    check("6.5b", "Alibaba last3 CloSpan closed 15 / raw 16",
+          f"{ali_l3['n_closed_sequences_clospan']}/{ali_l3['n_prefixspan_patterns']}",
+          "15/16",
+          ali_l3["n_closed_sequences_clospan"] == 15 and ali_l3["n_prefixspan_patterns"] == 16)
     check("6.6", "SCANIA matched top HR = 1.73",
           round(mch["top10"][0]["hazard_ratio"], 2), "1.73",
           approx(mch["top10"][0]["hazard_ratio"], 1.73, tol=0.02))

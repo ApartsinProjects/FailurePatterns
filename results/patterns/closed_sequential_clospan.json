@@ -1,0 +1,98 @@
+[
+  {
+    "trace": "azure",
+    "horizon": "24h",
+    "n_fail_windows": 743,
+    "n_closed_sequences_clospan": 7,
+    "n_prefixspan_patterns": 7,
+    "compression_ratio": 1.0
+  },
+  {
+    "trace": "azure",
+    "horizon": "last5",
+    "n_fail_windows": 743,
+    "n_closed_sequences_clospan": 67,
+    "n_prefixspan_patterns": 67,
+    "compression_ratio": 1.0
+  },
+  {
+    "trace": "azure",
+    "horizon": "last10",
+    "n_fail_windows": 743,
+    "n_closed_sequences_clospan": 657,
+    "n_prefixspan_patterns": 657,
+    "compression_ratio": 1.0
+  },
+  {
+    "trace": "alibaba",
+    "horizon": "last3",
+    "n_fail_windows": 16237,
+    "n_closed_sequences_clospan": 15,
+    "n_prefixspan_patterns": 16,
+    "compression_ratio": 0.938
+  },
+  {
+    "trace": "alibaba",
+    "horizon": "last5",
+    "n_fail_windows": 16237,
+    "n_closed_sequences_clospan": 28,
+    "n_prefixspan_patterns": 29,
+    "compression_ratio": 0.966
+  },
+  {
+    "trace": "alibaba",
+    "horizon": "last10",
+    "n_fail_windows": 16237,
+    "n_closed_sequences_clospan": 108,
+    "n_prefixspan_patterns": 109,
+    "compression_ratio": 0.991
+  },
+  {
+    "trace": "bgl",
+    "horizon": "last5",
+    "n_fail_windows": 7203,
+    "n_closed_sequences_clospan": 10,
+    "n_prefixspan_patterns": 20,
+    "compression_ratio": 0.5
+  },
+  {
+    "trace": "bgl",
+    "horizon": "last10",
+    "n_fail_windows": 7203,
+    "n_closed_sequences_clospan": 26,
+    "n_prefixspan_patterns": 39,
+    "compression_ratio": 0.667
+  },
+  {
+    "trace": "bgl",
+    "horizon": "last20",
+    "n_fail_windows": 7203,
+    "n_closed_sequences_clospan": 138,
+    "n_prefixspan_patterns": 150,
+    "compression_ratio": 0.92
+  },
+  {
+    "trace": "scania",
+    "horizon": "last5",
+    "n_fail_windows": 2272,
+    "n_closed_sequences_clospan": 63,
+    "n_prefixspan_patterns": 63,
+    "compression_ratio": 1.0
+  },
+  {
+    "trace": "scania",
+    "horizon": "last10",
+    "n_fail_windows": 2272,
+    "n_closed_sequences_clospan": 573,
+    "n_prefixspan_patterns": 573,
+    "compression_ratio": 1.0
+  },
+  {
+    "trace": "scania",
+    "horizon": "last20",
+    "n_fail_windows": 2272,
+    "n_closed_sequences_clospan": 7389,
+    "n_prefixspan_patterns": 7389,
+    "compression_ratio": 1.0
+  }
+]

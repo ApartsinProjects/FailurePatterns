@@ -1,0 +1,134 @@
+[
+  {
+    "trace": "Azure",
+    "horizon": "24h",
+    "n_disc_windows": 1488,
+    "n_inf_windows": 1484,
+    "n_seq_mined_on_discovery": 7,
+    "n_significant_bh_005": 7,
+    "n_significant_by_005": 7,
+    "fraction_bh": 1.0,
+    "fraction_by": 1.0
+  },
+  {
+    "trace": "Azure",
+    "horizon": "last5",
+    "n_disc_windows": 1488,
+    "n_inf_windows": 1484,
+    "n_seq_mined_on_discovery": 70,
+    "n_significant_bh_005": 51,
+    "n_significant_by_005": 51,
+    "fraction_bh": 0.729,
+    "fraction_by": 0.729
+  },
+  {
+    "trace": "Azure",
+    "horizon": "last10",
+    "n_disc_windows": 1488,
+    "n_inf_windows": 1484,
+    "n_seq_mined_on_discovery": 694,
+    "n_significant_bh_005": 537,
+    "n_significant_by_005": 461,
+    "fraction_bh": 0.774,
+    "fraction_by": 0.664
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last3",
+    "n_disc_windows": 32474,
+    "n_inf_windows": 32474,
+    "n_seq_mined_on_discovery": 16,
+    "n_significant_bh_005": 9,
+    "n_significant_by_005": 9,
+    "fraction_bh": 0.562,
+    "fraction_by": 0.562
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last5",
+    "n_disc_windows": 32474,
+    "n_inf_windows": 32474,
+    "n_seq_mined_on_discovery": 29,
+    "n_significant_bh_005": 11,
+    "n_significant_by_005": 11,
+    "fraction_bh": 0.379,
+    "fraction_by": 0.379
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last10",
+    "n_disc_windows": 32474,
+    "n_inf_windows": 32474,
+    "n_seq_mined_on_discovery": 113,
+    "n_significant_bh_005": 54,
+    "n_significant_by_005": 49,
+    "fraction_bh": 0.478,
+    "fraction_by": 0.434
+  },
+  {
+    "trace": "BGL",
+    "horizon": "last5",
+    "n_disc_windows": 14443,
+    "n_inf_windows": 14432,
+    "n_seq_mined_on_discovery": 10,
+    "n_significant_bh_005": 5,
+    "n_significant_by_005": 5,
+    "fraction_bh": 0.5,
+    "fraction_by": 0.5
+  },
+  {
+    "trace": "BGL",
+    "horizon": "last10",
+    "n_disc_windows": 14443,
+    "n_inf_windows": 14432,
+    "n_seq_mined_on_discovery": 25,
+    "n_significant_bh_005": 10,
+    "n_significant_by_005": 5,
+    "fraction_bh": 0.4,
+    "fraction_by": 0.2
+  },
+  {
+    "trace": "BGL",
+    "horizon": "last20",
+    "n_disc_windows": 14443,
+    "n_inf_windows": 14432,
+    "n_seq_mined_on_discovery": 134,
+    "n_significant_bh_005": 4,
+    "n_significant_by_005": 4,
+    "fraction_bh": 0.03,
+    "fraction_by": 0.03
+  },
+  {
+    "trace": "SCANIA",
+    "horizon": "last5",
+    "n_disc_windows": 4544,
+    "n_inf_windows": 4544,
+    "n_seq_mined_on_discovery": 65,
+    "n_significant_bh_005": 9,
+    "n_significant_by_005": 8,
+    "fraction_bh": 0.138,
+    "fraction_by": 0.123
+  },
+  {
+    "trace": "SCANIA",
+    "horizon": "last10",
+    "n_disc_windows": 4544,
+    "n_inf_windows": 4544,
+    "n_seq_mined_on_discovery": 548,
+    "n_significant_bh_005": 39,
+    "n_significant_by_005": 8,
+    "fraction_bh": 0.071,
+    "fraction_by": 0.015
+  },
+  {
+    "trace": "SCANIA",
+    "horizon": "last20",
+    "n_disc_windows": 4544,
+    "n_inf_windows": 4544,
+    "n_seq_mined_on_discovery": 6262,
+    "n_significant_bh_005": 11,
+    "n_significant_by_005": 3,
+    "fraction_bh": 0.002,
+    "fraction_by": 0.0
+  }
+]

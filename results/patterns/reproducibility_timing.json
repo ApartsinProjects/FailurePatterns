@@ -1,0 +1,57 @@
+{
+  "measured_stages": [
+    {
+      "stage": "itemsets_azure",
+      "wall_seconds": 4.3,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "itemsets_alibaba",
+      "wall_seconds": 13.1,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "itemsets_bgl",
+      "wall_seconds": 7.0,
+      "status": "fail rc=2",
+      "stderr_tail": "\nINVARIANT FAILURES: ['real_top_lift_dominates_permuted_top']\n"
+    },
+    {
+      "stage": "post_selection_split",
+      "wall_seconds": 610.2,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "bh_by_matched",
+      "wall_seconds": 4.5,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "wind_signatures_kelmarsh",
+      "wall_seconds": 5.5,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "wind_signatures_penmanshiel",
+      "wall_seconds": 3.1,
+      "status": "ok",
+      "stderr_tail": ""
+    },
+    {
+      "stage": "itemsets_scania",
+      "wall_seconds": 1573.9,
+      "status": "ok",
+      "note": "measured in prior run, longest single stage"
+    }
+  ],
+  "measured_downstream_seconds": 2214.6,
+  "measured_downstream_minutes": 36.9,
+  "note": "Wall-clock measured on a Windows CPU-only workstation (Python 3.14, single core per subprocess). Excludes raw-trace downloads and initial window construction; those are one-time steps.",
+  "host": "single Windows CPU-only workstation",
+  "python": "3.14"
+}

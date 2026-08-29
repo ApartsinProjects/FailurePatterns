@@ -1,0 +1,182 @@
+{
+  "kelmarsh_last5": {
+    "trace": "kelmarsh",
+    "horizon": "last5",
+    "n_disc_windows": 996,
+    "n_inf_windows": 932,
+    "n_inf_fail": 233,
+    "n_inf_ctrl": 699,
+    "target_operational_base_rate": 0.01,
+    "baseline_a_most_recent_event": {
+      "tp": 128,
+      "fp": 354,
+      "fn": 105,
+      "tn": 345,
+      "precision": 0.266,
+      "recall": 0.549,
+      "f1": 0.358,
+      "ppv_at_sample_baserate": 0.266,
+      "ppv_at_target_baserate": 0.0108,
+      "rule": "last event in top-5 disc-half fail-anchoring events: ['system_info:0', 'system_info:6410', 'system_warning:2125', 'terminal_failure:3000', 'terminal_failure:2655']"
+    },
+    "baseline_b_mined_itemset": {
+      "tp": 127,
+      "fp": 15,
+      "fn": 106,
+      "tn": 684,
+      "precision": 0.894,
+      "recall": 0.545,
+      "f1": 0.677,
+      "ppv_at_sample_baserate": 0.894,
+      "ppv_at_target_baserate": 0.2042,
+      "n_significant_deployable_patterns": 16
+    },
+    "baseline_c_event_count": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 233,
+      "tn": 699,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "ppv_at_sample_baserate": 0.0,
+      "ppv_at_target_baserate": 0.0,
+      "rule": "n_events > median(disc fail) = 5.0"
+    }
+  },
+  "kelmarsh_last10": {
+    "trace": "kelmarsh",
+    "horizon": "last10",
+    "n_disc_windows": 996,
+    "n_inf_windows": 932,
+    "n_inf_fail": 233,
+    "n_inf_ctrl": 699,
+    "target_operational_base_rate": 0.01,
+    "baseline_a_most_recent_event": {
+      "tp": 128,
+      "fp": 361,
+      "fn": 105,
+      "tn": 338,
+      "precision": 0.262,
+      "recall": 0.549,
+      "f1": 0.355,
+      "ppv_at_sample_baserate": 0.262,
+      "ppv_at_target_baserate": 0.0106,
+      "rule": "last event in top-5 disc-half fail-anchoring events: ['system_info:0', 'system_info:6410', 'system_warning:2125', 'terminal_failure:3000', 'terminal_failure:2655']"
+    },
+    "baseline_b_mined_itemset": {
+      "tp": 155,
+      "fp": 37,
+      "fn": 78,
+      "tn": 662,
+      "precision": 0.807,
+      "recall": 0.665,
+      "f1": 0.729,
+      "ppv_at_sample_baserate": 0.807,
+      "ppv_at_target_baserate": 0.1126,
+      "n_significant_deployable_patterns": 45
+    },
+    "baseline_c_event_count": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 233,
+      "tn": 699,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "ppv_at_sample_baserate": 0.0,
+      "ppv_at_target_baserate": 0.0,
+      "rule": "n_events > median(disc fail) = 10.0"
+    }
+  },
+  "penmanshiel_last5": {
+    "trace": "penmanshiel",
+    "horizon": "last5",
+    "n_disc_windows": 1368,
+    "n_inf_windows": 1792,
+    "n_inf_fail": 448,
+    "n_inf_ctrl": 1344,
+    "target_operational_base_rate": 0.01,
+    "baseline_a_most_recent_event": {
+      "tp": 354,
+      "fp": 1125,
+      "fn": 94,
+      "tn": 219,
+      "precision": 0.239,
+      "recall": 0.79,
+      "f1": 0.367,
+      "ppv_at_sample_baserate": 0.239,
+      "ppv_at_target_baserate": 0.0094,
+      "rule": "last event in top-5 disc-half fail-anchoring events: ['system_info:0', 'system_warning:9000', 'system_info:10', 'terminal_failure:3000', 'system_info:1552']"
+    },
+    "baseline_b_mined_itemset": {
+      "tp": 403,
+      "fp": 815,
+      "fn": 45,
+      "tn": 529,
+      "precision": 0.331,
+      "recall": 0.9,
+      "f1": 0.484,
+      "ppv_at_sample_baserate": 0.331,
+      "ppv_at_target_baserate": 0.0148,
+      "n_significant_deployable_patterns": 13
+    },
+    "baseline_c_event_count": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 448,
+      "tn": 1344,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "ppv_at_sample_baserate": 0.0,
+      "ppv_at_target_baserate": 0.0,
+      "rule": "n_events > median(disc fail) = 5.0"
+    }
+  },
+  "penmanshiel_last10": {
+    "trace": "penmanshiel",
+    "horizon": "last10",
+    "n_disc_windows": 1368,
+    "n_inf_windows": 1792,
+    "n_inf_fail": 448,
+    "n_inf_ctrl": 1344,
+    "target_operational_base_rate": 0.01,
+    "baseline_a_most_recent_event": {
+      "tp": 354,
+      "fp": 1093,
+      "fn": 94,
+      "tn": 251,
+      "precision": 0.245,
+      "recall": 0.79,
+      "f1": 0.374,
+      "ppv_at_sample_baserate": 0.245,
+      "ppv_at_target_baserate": 0.0097,
+      "rule": "last event in top-5 disc-half fail-anchoring events: ['system_info:0', 'system_warning:9000', 'system_info:10', 'terminal_failure:3000', 'system_info:1552']"
+    },
+    "baseline_b_mined_itemset": {
+      "tp": 433,
+      "fp": 919,
+      "fn": 15,
+      "tn": 425,
+      "precision": 0.32,
+      "recall": 0.967,
+      "f1": 0.481,
+      "ppv_at_sample_baserate": 0.32,
+      "ppv_at_target_baserate": 0.0141,
+      "n_significant_deployable_patterns": 43
+    },
+    "baseline_c_event_count": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 448,
+      "tn": 1344,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "ppv_at_sample_baserate": 0.0,
+      "ppv_at_target_baserate": 0.0,
+      "rule": "n_events > median(disc fail) = 10.0"
+    }
+  }
+}
