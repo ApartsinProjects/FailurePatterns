@@ -34,3 +34,10 @@ _spmf_tmp/
 
 # Fetched binary tool (see scripts/fetch_spmf.sh)
 scripts/spmf.jar
+
+# Scratch / temp
+_spmf_tmp_clospan/
+_spmf_tmp/
+hs_err_pid*.log
+penmanshiel_2016_p2.zip
+*.zip
