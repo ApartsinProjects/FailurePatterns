@@ -398,6 +398,26 @@ showing that sequence mining recovers “errors → replacement”
 trajectories that itemset mining misses. Both studies stop short of the
 post-selection-valid matched-control + BY-corrected + predictive-utility
 comparison used here, and neither touches Alibaba PdM or Azure.</p>
+<p><strong>Industrial alarm-flood mining and wind-turbine alarm
+logs.</strong> The process-control community mines alarm sequences
+directly. Hu, Wang and Wang <span class="citation" data-cites="hu2023priority">(Hu, Wang, and Wang 2023)</span> mine
+priority-aware closed sequential patterns to compress alarm floods into
+compact patterns; Hu et al. <span class="citation" data-cites="hu2023frequent">(Hu, Gao, and Chen 2023)</span> adapt
+PrefixSpan to tolerate the short-term order ambiguity of alarm
+timestamps. These methods are descriptive, keyed to frequency and
+compactness rather than a validated pre-failure claim; our
+count-preserving order comparator (§4.7) is the principled test of
+exactly the order-vs-multiplicity ambiguity they handle heuristically,
+and our matched controls turn each mined pattern into an FDR-tested
+predictive hypothesis. On wind-turbine alarm logs specifically,
+Chatterjee and Dethlefs <span class="citation" data-cites="chatterjee2022deep">(Chatterjee and Dethlefs 2022)</span>
+predict repair actions with a bi-LSTM over turbine alarm sequences, and
+Shah and Tan <span class="citation" data-cites="shah2025alarm">(Shah and
+Tan 2025)</span> forecast future turbine alarms with LSTM regression.
+Both are black-box and forecast the alarm stream itself; we mine
+auditable pre-failure signatures on the same class of Senvion SCADA logs
+(Kelmarsh, Penmanshiel) with FDR guarantees and zero control-window
+false alarms.</p>
 <p><strong>Discriminative and statistically-significant pattern
 mining.</strong> Dong and Li <span class="citation" data-cites="dong1999emerging">(Dong and Li 1999)</span> introduced
 emerging patterns as itemsets whose support differs substantially
@@ -407,11 +427,21 @@ class-contrast literature is a direct ancestor of the paper’s
 predictive-vs-frequent-noise separation. Statistically significant
 pattern mining sharpens the criterion: Terada et al. <span class="citation" data-cites="terada2013statssp">(Terada et al.
 2013)</span> give an exact family-wise-error control for combinatorial
-regulations. All of these methods share the ordinary
-post-selection-inference concern (Fithian, Sun and Taylor <span class="citation" data-cites="fithian2014optimal">(Fithian, Sun, and
+regulations, and the Hämäläinen-Webb tutorial <span class="citation" data-cites="hamalainen2019tutorial">(Hämäläinen and Webb 2019)</span> is
+the canonical statement of the multiple-testing pitfalls this class of
+method must handle. Recent work controls the false discovery rate
+directly: Dalleiger and Vreeken <span class="citation" data-cites="dalleiger2022significant">(Dalleiger and Vreeken
+2022)</span> test pattern significance against an evolving data model
+under sequential FDR control, and Pellegrina and Vandin <span class="citation" data-cites="pellegrina2024efficient">(Pellegrina and
+Vandin 2024)</span> mine significant itemsets, sequential patterns, and
+subgroups with rigorous guarantees via few-shot resampling. These are
+our closest methodological siblings. All of these methods share the
+ordinary post-selection-inference concern (Fithian, Sun and Taylor <span class="citation" data-cites="fithian2014optimal">(Fithian, Sun, and
 Taylor 2014)</span>) that mining and testing on the same sample
 invalidates marginal p-values; we address it via entity-disjoint
-discovery/inference splits (§4.5).</p>
+discovery/inference splits (§4.5) and add the pre-failure windowing and
+survival-matched design that the general-purpose significance frameworks
+do not model.</p>
 <p><strong>Deep learning on log sequences.</strong> DeepLog <span class="citation" data-cites="du2017deeplog">(Du et al. 2017)</span>
 frames system-log anomaly detection as next-template prediction with a
 stacked LSTM, and remains the canonical DL baseline. LogAnomaly <span class="citation" data-cites="meng2019loganomaly">(Meng et al.
@@ -421,13 +451,19 @@ attention Bi-LSTM to survive log-template drift, and PLELog <span class="citatio
 introduces semi-supervised label estimation for the weakly-labelled
 setting. Recent transformer approaches (LogBERT <span class="citation" data-cites="guo2021logbert">(Haixuan Guo, Yuan, and Wu 2021)</span>;
 LogFormer <span class="citation" data-cites="guo2024logformer">(Hongcheng Guo et al. 2024)</span>)
-pre-train on unlabelled logs and fine-tune for anomaly detection. These
-methods generally outperform classical pattern miners on held-out AUROC
-when trained on enough data, but produce opaque per-line anomaly scores
-rather than interpretable pre-failure signatures. Our contribution is
-orthogonal: we ask whether explicit ordered patterns add signal over
-their itemset counterparts, with every mined pattern human-readable and
-independently significance-tested.</p>
+pre-train on unlabelled logs and fine-tune for anomaly detection; the
+Landauer et al. survey <span class="citation" data-cites="landauer2023deep">(Landauer et al. 2023)</span> catalogues
+this landscape and its benchmark datasets (including BGL). Hadadi et al.
+<span class="citation" data-cites="hadadi2024systematic">(Hadadi et al.
+2024)</span> give the systematic controlled study of log-embedding by
+architecture combinations for log-based failure prediction, the
+canonical modern DL baseline framing. These methods generally outperform
+classical pattern miners on held-out AUROC when trained on enough data,
+but produce opaque per-line anomaly scores rather than interpretable
+pre-failure signatures. Our contribution is orthogonal: we ask whether
+explicit ordered patterns add signal over their itemset counterparts,
+with every mined pattern human-readable and independently
+significance-tested.</p>
 <h3 data-number="1.3.3" id="log-parsing-infrastructure"><span class="header-section-number">1.3.3</span> 2.3 Log-parsing
 infrastructure</h3>
 <p>The raw text of most system logs must first be converted into event
@@ -2015,14 +2051,16 @@ than the signal grows. On SCANIA <code>last20</code> the same
 strong post-selection-inflation warning that mirrors the itemset
 case.</p>
 <p>To measure the redundancy in the raw PrefixSpan output we also run
-CloSpan (Fournier-Viger et al., 2014) at the same 5% minimum support: a
-closed sequential pattern is one whose support is strictly larger than
-any of its super-sequences. On Azure and SCANIA, PrefixSpan output is
-already tight (1:1 compression); on BGL and Alibaba, closed sequences
-compress the raw list by up to a factor of two (BGL <code>last5</code>
-10/20, <code>last10</code> 26/39, <code>last20</code> 138/150; Alibaba
-<code>last3</code> 15/16). Closed sequences are the input the
-deployment-facing signature catalog uses.</p>
+CloSpan <span class="citation" data-cites="yan2003clospan">(Yan, Han,
+and Afshar 2003)</span>, as implemented in SPMF <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span>, at
+the same 5% minimum support: a closed sequential pattern is one whose
+support is strictly larger than any of its super-sequences. On Azure and
+SCANIA, PrefixSpan output is already tight (1:1 compression); on BGL and
+Alibaba, closed sequences compress the raw list by up to a factor of two
+(BGL <code>last5</code> 10/20, <code>last10</code> 26/39,
+<code>last20</code> 138/150; Alibaba <code>last3</code> 15/16). Closed
+sequences are the input the deployment-facing signature catalog
+uses.</p>
 <h3 data-number="1.7.7" id="formal-significance-same-sample-marginal-counts"><span class="header-section-number">1.7.7</span> 6.7 Formal significance
 (same-sample marginal counts)</h3>
 <p>The same-sample BH counts (mining and testing on the full training
@@ -2548,6 +2586,11 @@ Benjamini, Yoav, and Daniel Yekutieli. 2001. <span>“The Control of the
 False Discovery Rate in Multiple Testing Under Dependency.”</span>
 <em>The Annals of Statistics</em> 29 (4): 1165–88. <a href="https://doi.org/10.1214/aos/1013699998">https://doi.org/10.1214/aos/1013699998</a>.
 </div>
+<div id="ref-chatterjee2022deep" class="csl-entry" role="listitem">
+Chatterjee, Joyjit, and Nina Dethlefs. 2022. <span>“A Deep Learning
+Framework for Wind Turbine Repair Action Prediction Using Alarm
+Sequences and Long Short-Term Memory Algorithms.”</span> <a href="https://doi.org/10.1007/978-3-031-15842-1_14">https://doi.org/10.1007/978-3-031-15842-1_14</a>.
+</div>
 <div id="ref-cheng2018characterizing" class="csl-entry" role="listitem">
 Cheng, Yue, Zheng Chai, and Ali Anwar. 2018. <span>“Characterizing
 Co-Located Datacenter Workloads: An Alibaba Case Study.”</span> arXiv.
@@ -2559,6 +2602,12 @@ Costa, Camila Ferreira, and Mario A. Nascimento. 2016.
 Learning for Predicting Failures.”</span> In <em>Advances in Intelligent
 Data Analysis XV (IDA 2016)</em>, 9897:381–86. Lecture Notes in Computer
 Science. Springer. <a href="https://doi.org/10.1007/978-3-319-46349-0_33">https://doi.org/10.1007/978-3-319-46349-0_33</a>.
+</div>
+<div id="ref-dalleiger2022significant" class="csl-entry" role="listitem">
+Dalleiger, Sebastian, and Jilles Vreeken. 2022. <span>“Discovering
+Significant Patterns Under Sequential False Discovery Control.”</span>
+In <em>Proceedings of the 28th ACM SIGKDD Conference on Knowledge
+Discovery and Data Mining (KDD ’22)</em>. ACM. <a href="https://doi.org/10.1145/3534678.3539398">https://doi.org/10.1145/3534678.3539398</a>.
 </div>
 <div id="ref-dong1999emerging" class="csl-entry" role="listitem">
 Dong, Guozhu, and Jinyan Li. 1999. <span>“Efficient Mining of Emerging
@@ -2617,11 +2666,33 @@ Li, Tieqiao Zheng, Bo Zhang, Junran Peng, and Qi Tian. 2024.
 <span>“<span>LogFormer</span>: A Pre-Train and Tuning Pipeline for Log
 Anomaly Detection.”</span> arXiv. <a href="https://arxiv.org/abs/2401.04749">https://arxiv.org/abs/2401.04749</a>.
 </div>
+<div id="ref-hadadi2024systematic" class="csl-entry" role="listitem">
+Hadadi, Fatemeh, Joshua H. Dawes, Donghwan Shin, Domenico Bianculli, and
+Lionel Briand. 2024. <span>“Systematic Evaluation of Deep Learning
+Models for Log-Based Failure Prediction.”</span> <em>Empirical Software
+Engineering</em> 29. <a href="https://doi.org/10.1007/s10664-024-10501-4">https://doi.org/10.1007/s10664-024-10501-4</a>.
+</div>
+<div id="ref-hamalainen2019tutorial" class="csl-entry" role="listitem">
+Hämäläinen, Wilhelmiina, and Geoffrey I. Webb. 2019. <span>“A Tutorial
+on Statistically Sound Pattern Discovery.”</span> <em>Data Mining and
+Knowledge Discovery</em> 33 (2): 325–77. <a href="https://doi.org/10.1007/s10618-018-0590-x">https://doi.org/10.1007/s10618-018-0590-x</a>.
+</div>
 <div id="ref-han2000mining" class="csl-entry" role="listitem">
 Han, Jiawei, Jian Pei, and Yiwen Yin. 2000. <span>“Mining Frequent
 Patterns Without Candidate Generation.”</span> In <em>Proceedings of the
 2000 ACM SIGMOD International Conference on Management of Data</em>,
 1–12. <a href="https://doi.org/10.1145/342009.335372">https://doi.org/10.1145/342009.335372</a>.
+</div>
+<div id="ref-hu2023frequent" class="csl-entry" role="listitem">
+Hu, Wenkai, Yue Gao, and Xu Chen. 2023. <span>“Frequent Alarm Pattern
+Mining of Industrial Alarm Flood Sequences by an Improved PrefixSpan
+Algorithm.”</span> <em>Processes</em> 11 (4): 1169. <a href="https://doi.org/10.3390/pr11041169">https://doi.org/10.3390/pr11041169</a>.
+</div>
+<div id="ref-hu2023priority" class="csl-entry" role="listitem">
+Hu, Wenkai, Zhuang Wang, and Jiandong Wang. 2023. <span>“A
+Priority-Aware Sequential Pattern Mining Method for Detection of Compact
+Patterns from Alarm Floods.”</span> <em>Journal of Process Control</em>
+129: 103041. <a href="https://doi.org/10.1016/j.jprocont.2023.103041">https://doi.org/10.1016/j.jprocont.2023.103041</a>.
 </div>
 <div id="ref-ifraz2024sequential" class="csl-entry" role="listitem">
 İfraz, Metin, and Süleyman Ersöz. 2024. <span>“Sequential Predictive
@@ -2634,6 +2705,12 @@ Reza Asadi Khoshkangini. 2025. <span>“<span>SCANIA</span>
 <span>Component X</span> Dataset: A Real-World Multivariate Time Series
 Dataset for Predictive Maintenance.”</span> <em>Scientific Data</em> 12:
 493. <a href="https://doi.org/10.1038/s41597-025-04802-6">https://doi.org/10.1038/s41597-025-04802-6</a>.
+</div>
+<div id="ref-landauer2023deep" class="csl-entry" role="listitem">
+Landauer, Max, Sebastian Onder, Florian Skopik, and Markus Wurzenberger.
+2023. <span>“Deep Learning for Anomaly Detection in Log Data: A
+Survey.”</span> <em>Machine Learning with Applications</em> 12: 100470.
+<a href="https://doi.org/10.1016/j.mlwa.2023.100470">https://doi.org/10.1016/j.mlwa.2023.100470</a>.
 </div>
 <div id="ref-langholz1996risk" class="csl-entry" role="listitem">
 Langholz, Bryan, and Larry Goldstein. 1996. <span>“Risk Set Sampling in
@@ -2677,6 +2754,11 @@ Mining Sequential Patterns Efficiently by Prefix-Projected Pattern
 Growth.”</span> In <em>Proceedings 17th International Conference on Data
 Engineering (ICDE)</em>, 215–24. <a href="https://doi.org/10.1109/ICDE.2001.914830">https://doi.org/10.1109/ICDE.2001.914830</a>.
 </div>
+<div id="ref-pellegrina2024efficient" class="csl-entry" role="listitem">
+Pellegrina, Leonardo, and Fabio Vandin. 2024. <span>“Efficient Discovery
+of Significant Patterns with Few-Shot Resampling.”</span>
+<em>Proceedings of the VLDB Endowment</em> 17 (10). <a href="https://doi.org/10.14778/3675034.3675055">https://doi.org/10.14778/3675034.3675055</a>.
+</div>
 <div id="ref-plumley2022kelmarsh" class="csl-entry" role="listitem">
 Plumley, Charlie. 2022a. <span>“Kelmarsh Wind Farm Data.”</span> <a href="https://zenodo.org/records/5841834" class="uri">https://zenodo.org/records/5841834</a>; Zenodo. <a href="https://doi.org/10.5281/zenodo.5841834">https://doi.org/10.5281/zenodo.5841834</a>.
 </div>
@@ -2713,6 +2795,12 @@ Serradilla, Oscar, Ekhi Zugasti, Jon Rodriguez, and Urko Zurutuza. 2022.
 Comparison, Challenges and Prospects.”</span> <em>Applied
 Intelligence</em> 52 (10): 10934–64. <a href="https://doi.org/10.1007/s10489-021-03004-y">https://doi.org/10.1007/s10489-021-03004-y</a>.
 </div>
+<div id="ref-shah2025alarm" class="csl-entry" role="listitem">
+Shah, Syed Shazaib, and Daoliang Tan. 2025. <span>“Early Wind Turbine
+Alarm Prediction Based on Machine Learning:
+<span>AlarmForecasting</span>.”</span> <em>arXiv Preprint
+arXiv:2510.06831</em>.
+</div>
 <div id="ref-srikant1996gsp" class="csl-entry" role="listitem">
 Srikant, Ramakrishnan, and Rakesh Agrawal. 1996. <span>“Mining
 Sequential Patterns: Generalizations and Performance
@@ -2724,6 +2812,12 @@ Terada, Aika, Mariko Okada-Hatakeyama, Koji Tsuda, and Jun Sese. 2013.
 <span>“Statistical Significance of Combinatorial Regulations.”</span>
 <em>Proceedings of the National Academy of Sciences</em> 110 (32):
 12996–3001. <a href="https://doi.org/10.1073/pnas.1302233110">https://doi.org/10.1073/pnas.1302233110</a>.
+</div>
+<div id="ref-yan2003clospan" class="csl-entry" role="listitem">
+Yan, Xifeng, Jiawei Han, and Ramin Afshar. 2003. <span>“CloSpan: Mining
+Closed Sequential Patterns in Large Datasets.”</span> In <em>Proceedings
+of the 2003 SIAM International Conference on Data Mining (SDM)</em>.
+SIAM. <a href="https://doi.org/10.1137/1.9781611972733.15">https://doi.org/10.1137/1.9781611972733.15</a>.
 </div>
 <div id="ref-yang2021plelog" class="csl-entry" role="listitem">
 Yang, Lin, Junjie Chen, Zan Wang, Weijing Wang, Jiajun Jiang, Xuyuan

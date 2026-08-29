@@ -123,6 +123,25 @@ mining misses. Both studies stop short of the post-selection-valid
 matched-control + BY-corrected + predictive-utility comparison used
 here, and neither touches Alibaba PdM or Azure.
 
+**Industrial alarm-flood mining and wind-turbine alarm logs.** The
+process-control community mines alarm sequences directly. Hu, Wang
+and Wang [@hu2023priority] mine priority-aware closed sequential
+patterns to compress alarm floods into compact patterns; Hu et al.
+[@hu2023frequent] adapt PrefixSpan to tolerate the short-term order
+ambiguity of alarm timestamps. These methods are descriptive, keyed
+to frequency and compactness rather than a validated pre-failure
+claim; our count-preserving order comparator (§4.7) is the principled
+test of exactly the order-vs-multiplicity ambiguity they handle
+heuristically, and our matched controls turn each mined pattern into
+an FDR-tested predictive hypothesis. On wind-turbine alarm logs
+specifically, Chatterjee and Dethlefs [@chatterjee2022deep] predict
+repair actions with a bi-LSTM over turbine alarm sequences, and Shah
+and Tan [@shah2025alarm] forecast future turbine alarms with LSTM
+regression. Both are black-box and forecast the alarm stream itself;
+we mine auditable pre-failure signatures on the same class of Senvion
+SCADA logs (Kelmarsh, Penmanshiel) with FDR guarantees and zero
+control-window false alarms.
+
 **Discriminative and statistically-significant pattern mining.** Dong
 and Li [@dong1999emerging] introduced emerging patterns as itemsets
 whose support differs substantially between classes; Bay and Pazzani
@@ -131,11 +150,21 @@ in the same year. This class-contrast literature is a direct
 ancestor of the paper's predictive-vs-frequent-noise separation.
 Statistically significant pattern mining sharpens the criterion:
 Terada et al. [@terada2013statssp] give an exact family-wise-error
-control for combinatorial regulations. All of these
-methods share the ordinary post-selection-inference concern (Fithian,
-Sun and Taylor [@fithian2014optimal]) that mining and testing on the
-same sample invalidates marginal p-values; we address it via
-entity-disjoint discovery/inference splits (§4.5).
+control for combinatorial regulations, and the Hämäläinen-Webb
+tutorial [@hamalainen2019tutorial] is the canonical statement of the
+multiple-testing pitfalls this class of method must handle. Recent
+work controls the false discovery rate directly: Dalleiger and
+Vreeken [@dalleiger2022significant] test pattern significance against
+an evolving data model under sequential FDR control, and Pellegrina
+and Vandin [@pellegrina2024efficient] mine significant itemsets,
+sequential patterns, and subgroups with rigorous guarantees via
+few-shot resampling. These are our closest methodological siblings.
+All of these methods share the ordinary post-selection-inference
+concern (Fithian, Sun and Taylor [@fithian2014optimal]) that mining
+and testing on the same sample invalidates marginal p-values; we
+address it via entity-disjoint discovery/inference splits (§4.5) and
+add the pre-failure windowing and survival-matched design that the
+general-purpose significance frameworks do not model.
 
 **Deep learning on log sequences.** DeepLog [@du2017deeplog] frames
 system-log anomaly detection as next-template prediction with a
@@ -146,10 +175,15 @@ an attention Bi-LSTM to survive log-template drift, and PLELog
 [@yang2021plelog] introduces semi-supervised label estimation for the
 weakly-labelled setting. Recent transformer approaches (LogBERT
 [@guo2021logbert]; LogFormer [@guo2024logformer]) pre-train on unlabelled
-logs and fine-tune for anomaly detection. These methods generally
-outperform classical pattern miners on held-out AUROC when trained on
-enough data, but produce opaque per-line anomaly scores rather than
-interpretable pre-failure signatures. Our contribution is orthogonal:
+logs and fine-tune for anomaly detection; the Landauer et al. survey
+[@landauer2023deep] catalogues this landscape and its benchmark
+datasets (including BGL). Hadadi et al. [@hadadi2024systematic] give
+the systematic controlled study of log-embedding by architecture
+combinations for log-based failure prediction, the canonical modern
+DL baseline framing. These methods generally outperform classical
+pattern miners on held-out AUROC when trained on enough data, but
+produce opaque per-line anomaly scores rather than interpretable
+pre-failure signatures. Our contribution is orthogonal:
 we ask whether explicit ordered patterns add signal over their
 itemset counterparts, with every mined pattern human-readable and
 independently significance-tested.
@@ -954,9 +988,9 @@ to 3 BY-significant sequences: a strong post-selection-inflation
 warning that mirrors the itemset case.
 
 To measure the redundancy in the raw PrefixSpan output we also run
-CloSpan (Fournier-Viger et al., 2014) at the same 5% minimum support:
-a closed sequential pattern is one whose support is strictly larger
-than any of its super-sequences. On Azure and SCANIA, PrefixSpan output
+CloSpan [@yan2003clospan], as implemented in SPMF [@fournier2016spmf],
+at the same 5% minimum support: a closed sequential pattern is one
+whose support is strictly larger than any of its super-sequences. On Azure and SCANIA, PrefixSpan output
 is already tight (1:1 compression); on BGL and Alibaba, closed
 sequences compress the raw list by up to a factor of two
 (BGL `last5` 10/20, `last10` 26/39, `last20` 138/150; Alibaba `last3`
