@@ -281,6 +281,32 @@ def main() -> int:
           ali_l10["fraction_full_dominant"], "0.295",
           approx(ali_l10["fraction_full_dominant"], 0.295, tol=0.01))
 
+    # 6.4 Signature catalog (data-supported hypotheses)
+    cat = _load_json(TAB / "signature_catalog.json")
+    # Azure {error2, error3} at 24h: 135 cases, 0 controls, lift 4.00
+    az_23 = [r for r in cat["azure"]
+             if r["horizon"] == "24h"
+             and set(r["pattern"]) == {"software_error:error2", "software_error:error3"}]
+    check("6.4", "Azure 24h {error2, error3}: 135 cases, 0 controls, lift 4.0",
+          f"{az_23[0]['n_case_inf']}/{az_23[0]['n_control_inf']}",
+          "135/0",
+          az_23[0]["n_case_inf"] == 135 and az_23[0]["n_control_inf"] == 0)
+    # Alibaba task_waiting:R at last5, lift 4.01
+    ali_wR = [r for r in cat["alibaba"]
+              if r["horizon"] == "last5"
+              and set(r["pattern"]) == {"task_waiting:R"}]
+    check("6.4", "Alibaba last5 {task_waiting:R} lift = 4.01",
+          round(ali_wR[0]["inference_lift"], 2), "4.01",
+          approx(ali_wR[0]["inference_lift"], 4.01, tol=0.02))
+    check("6.4", "Alibaba last5 {task_waiting:R}: 829 cases, 9 controls",
+          f"{ali_wR[0]['n_case_inf']}/{ali_wR[0]['n_control_inf']}",
+          "829/9",
+          ali_wR[0]["n_case_inf"] == 829 and ali_wR[0]["n_control_inf"] == 9)
+    # BGL null finding
+    check("6.4", "BGL: 0 signatures pass post-selection-valid BY q<0.05",
+          cat["bgl"]["n_signatures"], "0",
+          cat["bgl"]["n_signatures"] == 0)
+
     # 6.6 SCANIA matched conditional logistic (Path 1: W2 fix)
     mch = _load_json(PATT / "scania_matched_hazard_summary.json")
     check("6.6", "SCANIA matched conditional logistic: 121/200 top patterns significant",

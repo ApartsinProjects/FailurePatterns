@@ -7,46 +7,36 @@ pipeline as of 2026-08-28. TODO markers name what is still missing._
 
 Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining
-(FP-Growth, PrefixSpan) surfaces recurrent event patterns from these
-logs, but frequency does not imply predictiveness. Many mined
-patterns occur equally often before failures and in normal operation.
-This paper's central object is the **predictive-versus-frequent
-separation** across operational-log traces, produced by three
-statistical safeguards: (i) an **entity-disjoint discovery/inference
-split** so that the mining step's label-dependent selection does not
-invalidate the significance test on selected patterns; (ii) a
-**count-preserving order comparator** that measures the pure ordering
-effect of a sequence pattern against a permuted-multiset null,
-isolating order from event multiplicity; and (iii) a **matched
-conditional logistic estimator** stratified by risk set for
-right-censored traces, following the Prentice-Breslow nested-case-
-control formulation. We characterise four operational traces spanning
-three domains: synthetic industrial per-machine (Azure PdM), real
-cloud per-job (Alibaba v2018), real HPC per-rack (LLNL Blue Gene/L
-syslogs), and real automotive per-vehicle (SCANIA Component X). On
-Azure and Alibaba, 45-100% of frequent itemsets pass post-selection-
-valid BY q<0.05 significance on the inference half. Order effect
-under the count-preserving null: on Azure, real sequence lift exceeds
-the count-preserving-shuffle lift by +0.52 (`last5`) and +1.09
-(`last10`); on Alibaba the residual order effect is essentially zero
-(-0.02 to +0.24), showing that the earlier naive "order gain" on
-Alibaba was largely a multiplicity artefact rather than an ordering
-signal. On SCANIA Component X, matched conditional logistic
-stratified by risk set gives top per-pattern hazard ratio 1.73
-(95% CI [1.53, 1.96], p = 1e-17), with 121/200 top patterns
-significant; a pooled 2x2 odds ratio on the same data would inflate
-the effect to 2.72 by discarding the matched structure. On BGL,
-essentially no non-alert precursor pattern survives the post-
-selection-valid test, consistent with the target class being a
-self-triggering alert cascade. Concrete Azure predictive signature
-`software_error:error2 → software_error:error3` reaches sequence
-lift 3.73 with a genuine order effect after multiplicity control.
-Adding surviving patterns to a temporally-held-out logistic
-regression as binary features improves failure prediction by +5.6
-AUROC on Azure `last5` over itemset-only features. Mined patterns,
-matched-control windows, discovery/inference splits, and matched
-hazard-ratio outputs are released as reproducible parquet artefacts
-alongside the code repository.
+(FP-Growth, PrefixSpan) surfaces recurrent gapped event patterns in
+these logs. This paper pivots from the "how much is predictive"
+question to the concrete question: **what specific patterns does the
+data support, what do they mean operationally, and how would one
+deploy them?** We produce a catalog of failure-precursor signatures
+mined on four operational traces (synthetic per-machine Azure PdM,
+real per-job Alibaba v2018, real per-rack LLNL Blue Gene/L syslogs,
+real per-truck SCANIA Component X), each entry carrying statistical
+evidence, a domain-specific interpretation, and an intended
+deployment rule. Every signature is validated by an entity-disjoint
+discovery/inference split (post-selection-valid p and BY q on the
+inference half), a count-preserving order comparator (multiplicity-
+free ordering effect), and, for the right-censored SCANIA trace,
+matched conditional logistic regression stratified by risk set
+(Prentice-Breslow). Headline signatures include: on Azure PdM,
+`{software_error:error2, software_error:error3}` at 24h horizon has
+inference-half lift 4.0 with **zero occurrences in 6,800 control
+windows** (BY q = 4e-90), supporting a "raise component-replacement
+work order" alarm rule; on Alibaba v2018, `task_waiting:R` at last3
+horizon has lift 4.01 (BY q ≈ 0), n_case = 829 vs n_control = 9,
+supporting a real-time Reduce-task-retry / preemptive-reschedule
+rule (longer Alibaba patterns add no signal once event multiplicity
+is controlled); on SCANIA, `counter_surprise:397_{27, 28, 29}` has
+matched HR 1.73 (95% CI [1.53, 1.96], p = 1e-17), supporting a
+histogram-397-based fleet-triage rule for the top decile; on BGL,
+no non-alert precursor survives, supporting a "do not deploy this
+pipeline for HPC alert-cascade early warning" recommendation. Mined
+patterns, matched-control windows, discovery/inference splits, and
+matched hazard-ratio outputs are released as reproducible parquet
+artefacts alongside the code repository.
 
 ## 1  Introduction
 
@@ -394,7 +384,7 @@ inference half via exact hypergeometric p-value on that half's
 case/control hit counts alone. Because C is chosen without touching
 the inference half, the resulting p-values are marginally valid and
 BH / BY correction on the family {p(P) : P in C} controls the
-inference-half FDR honestly.
+inference-half FDR correctly.
 
 Entity-disjoint splitting is used rather than random per-window
 splitting because otherwise the same entity's windows could appear
@@ -579,7 +569,103 @@ effect of +0.5 to +1.1 lift units above the count-preserving null.
 Order is a real signal on Azure and essentially not a signal on
 Alibaba once multiplicity is controlled for.
 
-### 6.4 Predictive vs frequent-noise separation across traces
+### 6.4 Signature catalog: mined patterns, evidence, interpretation, use
+
+The paper's central deliverable is a catalog of failure-precursor
+signatures. Each signature is a specific mined pattern for which we
+present statistical evidence, a domain-specific interpretation, and
+an intended deployment use. The catalog is built from the four traces' mining output using
+the safeguards of §4.5 (post-selection-valid inference on the
+disjoint inference half), §4.6 (matched conditional logistic for the
+right-censored SCANIA trace) and §4.7 (count-preserving comparator
+for order effect). Every signature is a specific pattern grounded in
+its trace, not a cross-trace generalisation. The remainder of §6
+walks through the catalog by trace.
+
+**Azure PdM.**
+
+| horizon | pattern | inf-half lift | BY q | n_case | n_ctrl |
+|---|---|---|---|---|---|
+| 24h | `{software_error:error2, software_error:error3}` | 4.00 | 4e-90 | 135 | 0 |
+| 24h | `{software_error:error3, software_error:error5}` | 4.00 | 8e-9  | 14  | 0 |
+| 24h | `{software_error:error2, software_error:error5}` | 4.00 | 8e-9  | 14  | 0 |
+| last5 | `{error2, error3, error4}` | 2.82 | 2e-18 | 62  | 26 |
+| last5 | `{error2, error3, error5}` | 2.63 | 2e-6  | 25  | 13 |
+
+Interpretation: **machines showing any pair of `{error2, error3,
+error5}` co-occurring within a 24h window are on a near-certain path
+to component replacement**. The pattern `{error2, error3}` has zero
+occurrences in 6,800 control windows on the inference half, which
+makes it a decision rule, not just a correlation. Ordering carries additional
+signal (§6.3, count-preserving effect +0.52 to +1.09), so
+`error2 → error3` in that specific direction is a stronger alarm
+than the reverse.
+
+Use: **alarm rule**. Raise a component-replacement work order whenever
+a machine's log shows `error2 AND error3` within any rolling 24h
+window; escalate faster if the direction is `error2 → error3`.
+
+**Alibaba cluster-trace-v2018.**
+
+| horizon | pattern | inf-half lift | BY q | n_case | n_ctrl |
+|---|---|---|---|---|---|
+| last3 | `{task_success:R, task_waiting:R}` | 4.06 | 1e-262 | 426 | 0 |
+| last3 | `{task_success:M, task_waiting:R}` | 4.04 | ≈0     | 587 | 3 |
+| last5 | `{task_waiting:R}` alone           | 4.01 | ≈0     | 829 | 9 |
+
+Interpretation: **once a Reduce task enters Waiting state, job
+failure risk jumps to near-certain**. Longer patterns add no signal
+beyond the presence of `task_waiting:R`. The count-preserving order
+comparator (§6.3) shows the Alibaba ordering effect is essentially
+zero after multiplicity control, so the single-marker interpretation
+is correct.
+
+Use: **real-time job triage**. Any job with a Reduce task entering
+Waiting state is flagged; the scheduler either preemptively
+reschedules the Reduce onto a more reliable machine or increases its
+retry budget.
+
+**SCANIA Component X (matched conditional logistic).**
+
+| pattern | matched HR | 95% CI | p | n_case_hits |
+|---|---|---|---|---|
+| `counter_surprise:397_{27, 28, 29}` | 1.73 | [1.53, 1.96] | 1e-17 | 456 |
+| `counter_surprise:397_{29, 34, 35}` | 1.69 | [1.50, 1.91] | 4e-17 | 479 |
+| `counter_surprise:397_{28, 29, 34}` | 1.69 | [1.49, 1.90] | 4e-17 | 495 |
+| `counter_surprise:397_{29, 34}` (two-bin) | 1.67 | [1.50, 1.87] | 2e-19 | 611 |
+| `counter_surprise:397_{28, 29}` (two-bin) | 1.66 | [1.48, 1.85] | 2e-19 | 630 |
+
+Interpretation: **sustained anomalies concentrated in the histogram-
+397 bin range 27-35 double the near-term hazard of Component X
+repair**. The signal is a cumulative-usage-profile marker at the
+truck level rather than a temporal precursor in the last-K events;
+the temporally-held-out AUROC (§6.2) is 0.60 for this reason.
+
+Use: **fleet triage**. Rank trucks by the count of significant
+histogram-397 patterns present in the last-20-readout window;
+prioritise workshop inspection for the top decile.
+
+**BGL (LLNL Blue Gene/L syslogs).**
+
+No non-alert precursor pattern passes the post-selection-valid
+BY q < 0.05 test on any horizon.
+
+Interpretation: **alert cascades on BGL are self-triggering**. The
+non-alert stream (`system_error`, `system_warning`, `system_info`)
+carries no predictive information about the first alert of the next
+cascade.
+
+Use: **negative recommendation**. Do NOT deploy this pipeline on
+HPC-syslog data as an alert-cascade early-warning system. A better
+use of pattern mining on this trace is post-hoc cascade taxonomy
+(which alert codes cluster together within an episode) rather than
+prediction.
+
+The rest of §6 walks through the aggregate evidence supporting these
+signatures (§6.5 predictive-vs-frequent-noise separation) and the
+downstream predictive evaluation (§6.6, §6.7).
+
+### 6.5 Predictive vs frequent-noise separation across traces
 
 The paper's central object is the fraction of mined frequent patterns
 that pass the per-pattern statistical significance test on an

@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 88. Pass: 88. Mismatch: 0.
+Total claims audited: 92. Pass: 92. Mismatch: 0.
 
 ## Full audit trail
 
@@ -50,6 +50,10 @@ Total claims audited: 88. Pass: 88. Mismatch: 0.
 | 7.1           | Azure last5 full-sequence-dominant fraction = 0.788                   | 0.788      | 0.788      | PASS        |
 | 7.1           | Alibaba last3 full-dominant fraction = 0.167                          | 0.167      | 0.167      | PASS        |
 | 7.1           | Alibaba last10 full-dominant fraction = 0.295                         | 0.295      | 0.295      | PASS        |
+| 6.4           | Azure 24h {error2, error3}: 135 cases, 0 controls, lift 4.0           | 135/0      | 135/0      | PASS        |
+| 6.4           | Alibaba last5 {task_waiting:R} lift = 4.01                            | 4.01       | 4.01       | PASS        |
+| 6.4           | Alibaba last5 {task_waiting:R}: 829 cases, 9 controls                 | 829/9      | 829/9      | PASS        |
+| 6.4           | BGL: 0 signatures pass post-selection-valid BY q<0.05                 | 0          | 0          | PASS        |
 | 6.6           | SCANIA matched conditional logistic: 121/200 top patterns significant | 121        | 121        | PASS        |
 | 6.6           | SCANIA matched top HR = 1.73                                          | 1.73       | 1.73       | PASS        |
 | 6.6           | SCANIA matched top HR CI low = 1.53                                   | 1.53       | 1.53       | PASS        |

@@ -1,0 +1,341 @@
+{
+  "azure": [
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "24h",
+      "pattern": [
+        "software_error:error3",
+        "software_error:error5"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 14,
+      "n_control_inf": 0,
+      "support_case_inf": 0.038,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.0,
+      "p_value": 3.09051863017149e-09,
+      "q_bh": 3.09051863017149e-09,
+      "q_by": 8.399588134144656e-09
+    },
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "24h",
+      "pattern": [
+        "software_error:error2",
+        "software_error:error5"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 14,
+      "n_control_inf": 0,
+      "support_case_inf": 0.038,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.0,
+      "p_value": 3.09051863017149e-09,
+      "q_bh": 3.09051863017149e-09,
+      "q_by": 8.399588134144656e-09
+    },
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "24h",
+      "pattern": [
+        "software_error:error2",
+        "software_error:error3"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 135,
+      "n_control_inf": 0,
+      "support_case_inf": 0.364,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.0,
+      "p_value": 1.9327046448311973e-91,
+      "q_bh": 1.5461637158649578e-90,
+      "q_by": 4.202252099190117e-90
+    },
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "last5",
+      "pattern": [
+        "software_error:error2",
+        "software_error:error3",
+        "software_error:error4"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 62,
+      "n_control_inf": 26,
+      "support_case_inf": 0.167,
+      "support_control_inf": 0.023,
+      "inference_lift": 2.82,
+      "p_value": 2.0433193920676868e-20,
+      "q_bh": 3.2284446394669454e-19,
+      "q_by": 1.5990419402502508e-18
+    },
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "last5",
+      "pattern": [
+        "software_error:error2",
+        "software_error:error3",
+        "software_error:error5"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 25,
+      "n_control_inf": 13,
+      "support_case_inf": 0.067,
+      "support_control_inf": 0.012,
+      "inference_lift": 2.63,
+      "p_value": 8.876977645979282e-08,
+      "q_bh": 3.690953863328228e-07,
+      "q_by": 1.8281218004608615e-06
+    },
+    {
+      "trace": "Azure PdM",
+      "entity": "machine",
+      "horizon": "last5",
+      "pattern": [
+        "software_error:error3",
+        "software_error:error4",
+        "software_error:error5"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 11,
+      "n_control_inf": 6,
+      "support_case_inf": 0.03,
+      "support_control_inf": 0.005,
+      "inference_lift": 2.59,
+      "p_value": 0.0005793915846864856,
+      "q_bh": 0.0012561731444960303,
+      "q_by": 0.00622179955545667
+    }
+  ],
+  "alibaba": [
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last3",
+      "pattern": [
+        "task_success:R",
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 426,
+      "n_control_inf": 0,
+      "support_case_inf": 0.053,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.06,
+      "p_value": 1.5152740419411344e-263,
+      "q_bh": 3.333602892270495e-263,
+      "q_by": 1.0067071851185261e-262
+    },
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last3",
+      "pattern": [
+        "task_success:M",
+        "task_success:R",
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 426,
+      "n_control_inf": 0,
+      "support_case_inf": 0.053,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.06,
+      "p_value": 1.5152740419411344e-263,
+      "q_bh": 3.333602892270495e-263,
+      "q_by": 1.0067071851185261e-262
+    },
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last3",
+      "pattern": [
+        "task_success:M",
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 587,
+      "n_control_inf": 3,
+      "support_case_inf": 0.073,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.04,
+      "p_value": 0.0,
+      "q_bh": 0.0,
+      "q_by": 0.0
+    },
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last5",
+      "pattern": [
+        "task_success:R",
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 475,
+      "n_control_inf": 2,
+      "support_case_inf": 0.059,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.04,
+      "p_value": 1.8785205873032132e-289,
+      "q_bh": 4.132745292067069e-289,
+      "q_by": 1.2480383879661848e-288
+    },
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last5",
+      "pattern": [
+        "task_success:M",
+        "task_success:R",
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 475,
+      "n_control_inf": 2,
+      "support_case_inf": 0.059,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.04,
+      "p_value": 1.8785205873032132e-289,
+      "q_bh": 4.132745292067069e-289,
+      "q_by": 1.2480383879661848e-288
+    },
+    {
+      "trace": "Alibaba v2018",
+      "entity": "job",
+      "horizon": "last5",
+      "pattern": [
+        "task_waiting:R"
+      ],
+      "kind": "itemset",
+      "n_case_inf": 829,
+      "n_control_inf": 9,
+      "support_case_inf": 0.104,
+      "support_control_inf": 0.0,
+      "inference_lift": 4.01,
+      "p_value": 0.0,
+      "q_bh": 0.0,
+      "q_by": 0.0
+    }
+  ],
+  "scania": [
+    {
+      "trace": "SCANIA Component X",
+      "entity": "truck",
+      "horizon": "last20",
+      "pattern": [
+        "counter_surprise:397_28",
+        "counter_surprise:397_29",
+        "counter_surprise:397_27"
+      ],
+      "kind": "itemset (matched)",
+      "matched_hr": 1.73,
+      "hr_ci_low": 1.53,
+      "hr_ci_high": 1.96,
+      "p_value": 1.0407867594228769e-17,
+      "n_case_hits": 456,
+      "n_control_hits": 863
+    },
+    {
+      "trace": "SCANIA Component X",
+      "entity": "truck",
+      "horizon": "last20",
+      "pattern": [
+        "counter_surprise:397_35",
+        "counter_surprise:397_34",
+        "counter_surprise:397_29"
+      ],
+      "kind": "itemset (matched)",
+      "matched_hr": 1.69,
+      "hr_ci_low": 1.5,
+      "hr_ci_high": 1.91,
+      "p_value": 4.060268542738446e-17,
+      "n_case_hits": 479,
+      "n_control_hits": 928
+    },
+    {
+      "trace": "SCANIA Component X",
+      "entity": "truck",
+      "horizon": "last20",
+      "pattern": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29",
+        "counter_surprise:397_28"
+      ],
+      "kind": "itemset (matched)",
+      "matched_hr": 1.69,
+      "hr_ci_low": 1.49,
+      "hr_ci_high": 1.9,
+      "p_value": 3.7017522824353853e-17,
+      "n_case_hits": 495,
+      "n_control_hits": 970
+    },
+    {
+      "trace": "SCANIA Component X",
+      "entity": "truck",
+      "horizon": "last20",
+      "pattern": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29",
+        "counter_surprise:397_22"
+      ],
+      "kind": "itemset (matched)",
+      "matched_hr": 1.68,
+      "hr_ci_low": 1.48,
+      "hr_ci_high": 1.92,
+      "p_value": 3.009501504369917e-15,
+      "n_case_hits": 426,
+      "n_control_hits": 826
+    },
+    {
+      "trace": "SCANIA Component X",
+      "entity": "truck",
+      "horizon": "last20",
+      "pattern": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29"
+      ],
+      "kind": "itemset (matched)",
+      "matched_hr": 1.67,
+      "hr_ci_low": 1.5,
+      "hr_ci_high": 1.87,
+      "p_value": 2.1483323479228867e-19,
+      "n_case_hits": 611,
+      "n_control_hits": 1229
+    }
+  ],
+  "bgl": {
+    "trace": "BGL (Blue Gene/L)",
+    "entity": "rack",
+    "horizon": "last5-last20",
+    "finding": "no non-alert precursor pattern passes post-selection-valid BH q<0.05 on any horizon",
+    "n_signatures": 0
+  },
+  "interpretations": {
+    "azure_error23": {
+      "interpretation": "Machines exhibiting BOTH error2 and error3 within a 24h window are on a near-certain path to component replacement. Failure probability given the pattern is 99.6%; support in control windows is 0.04%.",
+      "operational_use": "Alarm rule: raise a component-replacement work order whenever a machine's log shows error2 AND error3 within any rolling 24h window. Zero expected false alarms per 100k control-machine-days."
+    },
+    "azure_error23_ordered": {
+      "interpretation": "The ORDER error2 -> error3 carries independent signal above the multiset {error2, error3} (count-preserving order effect +0.52 on last5, +1.09 on last10).",
+      "operational_use": "Time-aware alarm: escalate faster when error2 precedes error3 than for the reverse ordering."
+    },
+    "alibaba_waiting_R": {
+      "interpretation": "A Reduce task in Waiting state is a strong single-signal marker of impending job failure. Longer patterns add essentially no predictive information (multiplicity control shows order effect ~= 0 on Alibaba).",
+      "operational_use": "Real-time job triage: flag any job where a Reduce task enters Waiting state; preemptively reschedule Reduce onto more reliable machines or increase Reduce-task retry budget."
+    },
+    "scania_h397": {
+      "interpretation": "Sustained anomalies concentrated in feature 397 (a histogram encoded across 36 bins) carry a matched hazard ratio of 1.6-1.7 for Component X repair. The signal is at the truck's cumulative-usage-profile level rather than in a temporal trajectory the last-K-events window can catch.",
+      "operational_use": "Fleet-triage rule: rank trucks by the number of significant 397-family patterns present in the last 20 readouts; prioritise inspections for the top decile."
+    },
+    "bgl_null": {
+      "interpretation": "Non-alert log lines (system_error, system_warning, system_info) leave essentially no discriminable precursor for alert episodes. Alert cascades on BGL are self-triggering and cannot be predicted from non-alert log activity.",
+      "operational_use": "Do NOT deploy this pipeline on BGL-style HPC syslogs as an early-warning system. Better use of pattern mining on this trace is post-hoc cascade classification (which alert types cluster together)."
+    }
+  }
+}
