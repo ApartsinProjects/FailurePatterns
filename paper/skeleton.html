@@ -259,9 +259,9 @@ traces)</a></li>
 <li><a href="#predictive-vs-frequent-noise-separation-across-traces" id="toc-predictive-vs-frequent-noise-separation-across-traces"><span class="toc-section-number">1.7.4</span> 6.4 Predictive vs frequent-noise
 separation across traces</a></li>
 <li><a href="#formal-significance" id="toc-formal-significance"><span class="toc-section-number">1.7.5</span> 6.5 Formal significance</a></li>
-<li><a href="#scania-risk-set-matched-patterns-component-x" id="toc-scania-risk-set-matched-patterns-component-x"><span class="toc-section-number">1.7.6</span> 6.5 SCANIA risk-set matched
+<li><a href="#scania-risk-set-matched-patterns-component-x" id="toc-scania-risk-set-matched-patterns-component-x"><span class="toc-section-number">1.7.6</span> 6.6 SCANIA risk-set matched
 patterns (Component X)</a></li>
-<li><a href="#lead-time-on-true-positives" id="toc-lead-time-on-true-positives"><span class="toc-section-number">1.7.7</span> 6.6 Lead time on true
+<li><a href="#lead-time-on-true-positives" id="toc-lead-time-on-true-positives"><span class="toc-section-number">1.7.7</span> 6.7 Lead time on true
 positives</a></li>
 </ul></li>
 <li><a href="#discussion" id="toc-discussion"><span class="toc-section-number">1.8</span> 7 Discussion</a>
@@ -286,7 +286,7 @@ missing.</em></p>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,
 PrefixSpan) surfaces recurrent event patterns from these logs, but
-frequency does not imply predictiveness — many of the mined patterns are
+frequency does not imply predictiveness. Many of the mined patterns are
 common cascades that occur equally often before failures and in normal
 operation. This paper’s central claim: <strong>only a specific minority
 of frequent event patterns carries elevated hazard for future failure,
@@ -308,17 +308,18 @@ binary features improves failure prediction by +5.6 AUROC on Azure
 itemset-only features. On the two boundary traces, 0-11% of mined
 patterns pass significance: BGL syslogs (0 patterns; self-triggering
 alert cascades leave no discriminable non-alert precursors) and
-Component X (4,829 of 42,453 patterns pass a risk-set matched
-hazard-ratio test, top MH-OR 2.72 [2.10, 3.51], but the strongest
-per-pattern signals cannot lift a temporally-held-out classifier beyond
-AUROC 0.60 because the underlying signal is a static per-truck usage
-profile rather than a temporal degradation trajectory). We generalise
-the matched-control pipeline to right-censored survival- style data via
-incidence-density (risk-set) sampling with Mantel-Haenszel odds-ratio
-scoring, which estimates per-pattern hazard ratios and applies without
-modifying the mining stage. Mined patterns, matched-control windows, and
-hazard-ratio-scored risk-set patterns are released as reproducible
-parquet artefacts.</p>
+Component X (of 42,453 candidate itemsets mined at min-support 0.05,
+2,560 pass a risk-set matched hazard-ratio test at Benjamini-Yekutieli q
+&lt; 0.05 that is valid under arbitrary dependence between patterns; top
+MH-OR 2.72 [2.10, 3.51]. The strongest per-pattern signals cannot lift a
+temporally-held-out classifier beyond AUROC 0.60 because the underlying
+signal is a static per-truck usage profile rather than a temporal
+degradation trajectory). We generalise the matched-control pipeline to
+right-censored survival- style data via incidence-density (risk-set)
+sampling with Mantel-Haenszel odds-ratio scoring, which estimates
+per-pattern hazard ratios and applies without modifying the mining
+stage. Mined patterns, matched-control windows, and hazard-ratio-scored
+risk-set patterns are released as reproducible parquet artefacts.</p>
 <h2 data-number="1.2" id="introduction"><span class="header-section-number">1.2</span> 1 Introduction</h2>
 <p>Operational logs from datacenters, industrial fleets, and cloud
 platforms carry a rich stream of discrete events: software errors, task
@@ -358,8 +359,8 @@ cluster-trace-v2018), real HPC per-rack (LLNL Blue Gene/L syslogs), and
 real automotive per-vehicle (SCANIA Component X). We report the fraction
 of mined patterns that pass significance on each trace, the strongest
 predictive signatures, and the mechanistic reason why the fraction
-varies from ~85% (Azure last5 sequences) to 0% (BGL) to 11% (SCANIA
-risk-set matched).</li>
+varies from ~85% (Azure last5 sequences) to 0% (BGL) to 6% (SCANIA
+risk-set matched, BY-corrected).</li>
 </ol>
 <h2 data-number="1.3" id="background-and-related-work"><span class="header-section-number">1.3</span> 2 Background and related
 work</h2>
@@ -597,8 +598,8 @@ have 5%.</p>
 sampling (Prentice and Breslow 1978; Rothman-Greenland ch. 15), we
 replace §4.1’s sampler with a risk-set matched design: for each case
 with observed failure time T_f, controls are drawn from the risk set at
-T_f — the set of entities still under observation at that lifetime index
-— and their windows are aligned to T_f rather than to their own
+T_f (the set of entities still under observation at that lifetime index)
+and their windows are aligned to T_f rather than to their own
 end-of-observation. Both case and control windows use the last K events
 with time_step &lt; T_f. Under this sampling, the pooled 2 x 2 odds
 ratio of a mined pattern (case-in vs case-out; control-in vs
@@ -772,7 +773,7 @@ strongly than the mere presence of Map events would suggest.</p>
 <td>24h</td>
 <td>0.97 / 0.91</td>
 <td>0.996 / 0.99</td>
-<td>—</td>
+<td>n/a</td>
 <td>0.996 / 0.99</td>
 </tr>
 <tr class="even">
@@ -820,7 +821,7 @@ strongly than the mere presence of Map events would suggest.</p>
 <td>last5</td>
 <td>0.50 / 0.25</td>
 <td>0.49 / 0.25</td>
-<td>—</td>
+<td>n/a</td>
 <td>0.49 / 0.25</td>
 </tr>
 <tr class="even">
@@ -844,7 +845,7 @@ strongly than the mere presence of Map events would suggest.</p>
 <td>last5</td>
 <td>0.50 / 0.09</td>
 <td>0.52 / 0.11</td>
-<td>—</td>
+<td>n/a</td>
 <td>0.52 / 0.11</td>
 </tr>
 <tr class="odd">
@@ -971,18 +972,34 @@ failure hazard against matched controls.</p>
 <tr class="even">
 <td>SCANIA</td>
 <td>last20</td>
-<td>risk-set matched itemsets</td>
-<td style="text-align: right;"><strong>4,829 / 42,453</strong></td>
-<td style="text-align: right;"><strong>11.4%</strong></td>
+<td>risk-set + MH-OR raw 95% CI</td>
+<td style="text-align: right;">4,829 / 42,453</td>
+<td style="text-align: right;">11.4%</td>
+</tr>
+<tr class="odd">
+<td>SCANIA</td>
+<td>last20</td>
+<td>risk-set + hypergeom + BH q&lt;0.05</td>
+<td style="text-align: right;">3,516 / 42,453</td>
+<td style="text-align: right;">8.3%</td>
+</tr>
+<tr class="even">
+<td><strong>SCANIA</strong></td>
+<td><strong>last20</strong></td>
+<td><strong>risk-set + hypergeom + BY q&lt;0.05</strong></td>
+<td style="text-align: right;"><strong>2,560 / 42,453</strong></td>
+<td style="text-align: right;"><strong>6.0%</strong></td>
 </tr>
 </tbody>
 </table>
 <p>Significance is BH-corrected q&lt;0.05 for Azure / Alibaba
-(Fisher-exact p-values), and 95% Woolf-Haldane CI excludes 1 for SCANIA
-(MH odds ratio under risk-set matching). On the two winning traces the
-majority of frequent patterns are also predictive; on the two boundary
-traces the majority are frequent-but-noise, and the paper’s concrete
-predictive-pattern list is short.</p>
+(Fisher-exact p-values). SCANIA carries three rows to show how the
+fraction shifts with increasingly conservative multi-testing correction:
+raw 95% CI (11.4%), BH (8.3%), and the arbitrary-dependence-valid BY
+(6.0%). On the two winning traces the majority of frequent patterns are
+also predictive; on the two boundary traces the majority are
+frequent-but-noise, and the paper’s concrete predictive-pattern list is
+short.</p>
 <h3 data-number="1.7.5" id="formal-significance"><span class="header-section-number">1.7.5</span> 6.5 Formal significance</h3>
 <p>At BH q &lt; 0.05: every Azure 24h itemset (6/6) and every Azure 24h
 sequence (7/7) is significant; 53/77 Azure <code>last5</code> itemsets
@@ -991,15 +1008,25 @@ and 55/67 Azure <code>last5</code> sequences; 562/657 Azure
 patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10
 <code>last3</code> itemsets, 9/16 <code>last3</code> sequences, 59/109
 <code>last10</code> sequences.</p>
-<h3 data-number="1.7.6" id="scania-risk-set-matched-patterns-component-x"><span class="header-section-number">1.7.6</span> 6.5 SCANIA risk-set matched
+<h3 data-number="1.7.6" id="scania-risk-set-matched-patterns-component-x"><span class="header-section-number">1.7.6</span> 6.6 SCANIA risk-set matched
 patterns (Component X)</h3>
 <p>Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases × 3 controls each drawn from the risk set at
 each case’s failure lifetime), FP-Growth at min-support 0.05 mines
 42,453 candidate itemsets from the <code>counter_surprise</code> event
-stream. Under Mantel-Haenszel odds-ratio scoring with 95% CI, 4,829
-patterns (11.4%) survive as predictive against the risk-set-matched
-null.</p>
+stream. A closed-itemset post-filter losslessly deduplicates any
+patterns that share exact support with a strict superset; on this trace
+only 281 patterns collapse (99.3% of the frequent set is already closed
+because histogram-bin supersets typically differ in support from any
+proper subset by at least one truck). Applying exact one-sided
+hypergeometric p-values on the risk-set-matched 2 x 2 tables, then
+Benjamini-Hochberg FDR correction: <strong>3,516 patterns pass q_BH &lt;
+0.05</strong> (8.3%). Under the more conservative Benjamini-Yekutieli
+correction that is valid under arbitrary dependence between patterns
+(justified here because nearby itemsets share items): <strong>2,560
+patterns pass q_BY &lt; 0.05</strong> (6.0%). The naive per-pattern 95%
+Woolf-Haldane CI without multi-testing correction flags 4,829 (11.4%);
+the honest predictive fraction after FDR is therefore 6-8%.</p>
 <p>Top 5 predictive Component X signatures (MH-OR, 95% CI):</p>
 <table>
 <colgroup>
@@ -1062,13 +1089,13 @@ features encode 6 histograms. The <code>158_9 + 309_0</code>
 cross-feature signature is an example of a two-feature interaction that
 pattern mining surfaces without needing a black-box classifier. Despite
 these interpretable hazard-ratio-scored patterns, none of them lift a
-temporally-held-out logistic regression beyond AUROC 0.60 (per §6.3):
+temporally-held-out logistic regression beyond AUROC 0.60 (per §6.2):
 the patterns are per-truck static discriminators, not temporal
 precursors that a next-K-event alarm can act on. The distinction is
 important operationally: hazard-ratio-scored patterns support
 cohort-level fleet triage (which trucks warrant closer inspection), not
 next-event alerting.</p>
-<h3 data-number="1.7.7" id="lead-time-on-true-positives"><span class="header-section-number">1.7.7</span> 6.6 Lead time on true
+<h3 data-number="1.7.7" id="lead-time-on-true-positives"><span class="header-section-number">1.7.7</span> 6.7 Lead time on true
 positives</h3>
 <ul>
 <li><strong>Alibaba</strong> (operational lead time): median 0 s across
@@ -1161,31 +1188,31 @@ absence.</strong> A stratified 5-fold cross-validation on the same 420
 aggregated Component X features (mean / max / std / last of each of the
 105 columns per vehicle), with each column linearly residualised against
 <code>length_of_study_time_step</code> inside every fold, reaches AUROC
-0.826 ± 0.005 — comparable to Alibaba’s <code>last3</code> combined
-score (0.81) and BGL’s chance (0.51). The same LightGBM configuration
-under the temporal split used elsewhere in the paper only reaches 0.67,
-and the pattern-mining pipeline reaches 0.60. Component X features
-therefore carry substantial per-truck failure signal, but the signal is
-a static per-vehicle profile (aggregate usage, cumulative counter shape)
-rather than a temporal degradation trajectory. Last-K-events windows and
-the ordered-pattern mining built on them cannot see it, because there is
-no pre-failure event ordering to catch; the discriminative information
-is spread across the truck’s entire operating history.</p>
+0.826 ± 0.005, comparable to Alibaba’s <code>last3</code> combined score
+(0.81) and BGL’s chance (0.51). The same LightGBM configuration under
+the temporal split used elsewhere in the paper only reaches 0.67, and
+the pattern-mining pipeline reaches 0.60. Component X features therefore
+carry substantial per-truck failure signal, but the signal is a static
+per-vehicle profile (aggregate usage, cumulative counter shape) rather
+than a temporal degradation trajectory. Last-K-events windows and the
+ordered-pattern mining built on them cannot see it, because there is no
+pre-failure event ordering to catch; the discriminative information is
+spread across the truck’s entire operating history.</p>
 <p>This gives a sharper three-way regime-of-validity: (i) two wins
-(Azure PdM, Alibaba v2018) — target failure preceded by a discriminable
-ordered event trajectory; (ii) BGL — target class is self-triggering
-with no discriminable non-alert precursor; (iii) Component X — target
-has strong per-truck signal in aggregate features but no last-K-events
-trajectory signal, so pattern mining on windows attains the
-temporal-split ceiling but not the transductive per-vehicle ceiling. The
-APS positive control confirms that (iii) is a target-shape distinction,
-not a manufacturer or schema deficiency.</p>
+(Azure PdM, Alibaba v2018), where target failure is preceded by a
+discriminable ordered event trajectory; (ii) BGL, where the target class
+is self-triggering with no discriminable non-alert precursor; (iii)
+Component X, where the target has strong per-truck signal in aggregate
+features but no last-K-events trajectory signal, so pattern mining on
+windows attains the temporal-split ceiling but not the transductive
+per-vehicle ceiling. The APS positive control confirms that (iii) is a
+target-shape distinction, not a manufacturer or schema deficiency.</p>
 <p>The method’s regime of validity is therefore “trace has a rich native
 discrete event vocabulary AND failure class is not self-triggering AND
 readout-cadence signal capacity exceeds the target AUROC bar”. BGL fails
 the second condition; SCANIA fails the third; Azure PdM and Alibaba
 v2018 satisfy all three.</p>
-<p>The two lead-time regimes in §6.5 speak to deployment. Azure inherits
+<p>The two lead-time regimes in §6.7 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not be
 read as a real-world warning interval; Alibaba’s median 0-second lead
 time is the honest one, and a per-job classifier there must be paired

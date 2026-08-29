@@ -8,7 +8,7 @@ pipeline as of 2026-08-28. TODO markers name what is still missing._
 Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining
 (FP-Growth, PrefixSpan) surfaces recurrent event patterns from these
-logs, but frequency does not imply predictiveness — many of the
+logs, but frequency does not imply predictiveness. Many of the
 mined patterns are common cascades that occur equally often before
 failures and in normal operation. This paper's central claim: **only
 a specific minority of frequent event patterns carries elevated
@@ -31,11 +31,13 @@ binary features improves failure prediction by +5.6 AUROC on Azure
 On the two boundary traces, 0-11% of mined patterns pass
 significance: BGL syslogs (0 patterns; self-triggering alert
 cascades leave no discriminable non-alert precursors) and Component
-X (4,829 of 42,453 patterns pass a risk-set matched hazard-ratio
-test, top MH-OR 2.72 [2.10, 3.51], but the strongest per-pattern
-signals cannot lift a temporally-held-out classifier beyond AUROC
-0.60 because the underlying signal is a static per-truck usage
-profile rather than a temporal degradation trajectory). We
+X (of 42,453 candidate itemsets mined at min-support 0.05, 2,560
+pass a risk-set matched hazard-ratio test at Benjamini-Yekutieli
+q < 0.05 that is valid under arbitrary dependence between patterns;
+top MH-OR 2.72 [2.10, 3.51]. The strongest per-pattern signals
+cannot lift a temporally-held-out classifier beyond AUROC 0.60
+because the underlying signal is a static per-truck usage profile
+rather than a temporal degradation trajectory). We
 generalise the matched-control pipeline to right-censored survival-
 style data via incidence-density (risk-set) sampling with
 Mantel-Haenszel odds-ratio scoring, which estimates per-pattern
@@ -86,7 +88,7 @@ We contribute:
    patterns that pass significance on each trace, the strongest
    predictive signatures, and the mechanistic reason why the
    fraction varies from ~85% (Azure last5 sequences) to 0% (BGL) to
-   11% (SCANIA risk-set matched).
+   6% (SCANIA risk-set matched, BY-corrected).
 
 ## 2  Background and related work
 
@@ -335,8 +337,8 @@ have 5%.
 Following the epidemiological literature on incidence-density sampling
 (Prentice and Breslow 1978; Rothman-Greenland ch. 15), we replace §4.1's
 sampler with a risk-set matched design: for each case with observed
-failure time T_f, controls are drawn from the risk set at T_f — the set
-of entities still under observation at that lifetime index — and their
+failure time T_f, controls are drawn from the risk set at T_f (the set
+of entities still under observation at that lifetime index) and their
 windows are aligned to T_f rather than to their own end-of-observation.
 Both case and control windows use the last K events with time_step < T_f.
 Under this sampling, the pooled 2 x 2 odds ratio of a mined pattern
@@ -448,16 +450,16 @@ Head-to-head on temporally-held-out test sets:
 
 | trace   | horizon | event_count | itemsets_only | sequences_only | combined     |
 |---------|---------|-------------|---------------|----------------|--------------|
-| Azure   | 24h     | 0.97 / 0.91 | 0.996 / 0.99  | —              | 0.996 / 0.99 |
+| Azure   | 24h     | 0.97 / 0.91 | 0.996 / 0.99  | n/a            | 0.996 / 0.99 |
 | Azure   | last5   | 0.50 / 0.34 | 0.75 / 0.56   | 0.66 / 0.56    | **0.81 / 0.72** |
 | Azure   | last10  | 0.50 / 0.34 | 0.64 / 0.50   | 0.67 / 0.53    | **0.70 / 0.58** |
 | Alibaba | last3   | 0.69 / 0.50 | 0.75 / 0.44   | 0.50 / 0.20    | **0.81 / 0.63** |
 | Alibaba | last5   | 0.60 / 0.50 | 0.67 / 0.34   | 0.51 / 0.21    | **0.74 / 0.57** |
 | Alibaba | last10  | 0.59 / 0.50 | 0.68 / 0.36   | 0.52 / 0.23    | **0.74 / 0.59** |
-| BGL     | last5   | 0.50 / 0.25 | 0.49 / 0.25   | —              | 0.49 / 0.25  |
+| BGL     | last5   | 0.50 / 0.25 | 0.49 / 0.25   | n/a            | 0.49 / 0.25  |
 | BGL     | last10  | 0.50 / 0.25 | 0.49 / 0.25   | 0.50 / 0.25    | 0.50 / 0.25  |
 | BGL     | last20  | 0.50 / 0.25 | 0.48 / 0.25   | 0.50 / 0.25    | 0.51 / 0.26  |
-| SCANIA  | last5   | 0.50 / 0.09 | 0.52 / 0.11   | —              | 0.52 / 0.11  |
+| SCANIA  | last5   | 0.50 / 0.09 | 0.52 / 0.11   | n/a            | 0.52 / 0.11  |
 | SCANIA  | last10  | 0.50 / 0.09 | 0.60 / 0.14   | 0.55 / 0.11    | 0.60 / 0.15  |
 | SCANIA  | last20  | 0.50 / 0.09 | 0.57 / 0.14   | 0.53 / 0.10    | 0.57 / 0.13  |
 
@@ -498,11 +500,14 @@ carry elevated failure hazard against matched controls.
 | Alibaba | last3   | sequences   | 9 / 16              | 56%      |
 | Alibaba | last10  | sequences   | 59 / 109            | 54%      |
 | BGL     | any     | itemsets+seq| ≤ 1 / 2-13          | ~0%      |
-| SCANIA  | last20  | risk-set matched itemsets | **4,829 / 42,453** | **11.4%** |
+| SCANIA  | last20  | risk-set + MH-OR raw 95% CI | 4,829 / 42,453 | 11.4% |
+| SCANIA  | last20  | risk-set + hypergeom + BH q<0.05 | 3,516 / 42,453 | 8.3% |
+| **SCANIA**  | **last20**  | **risk-set + hypergeom + BY q<0.05** | **2,560 / 42,453** | **6.0%** |
 
 Significance is BH-corrected q<0.05 for Azure / Alibaba (Fisher-exact
-p-values), and 95% Woolf-Haldane CI excludes 1 for SCANIA (MH odds
-ratio under risk-set matching). On the two winning traces the
+p-values). SCANIA carries three rows to show how the fraction shifts
+with increasingly conservative multi-testing correction: raw 95% CI
+(11.4%), BH (8.3%), and the arbitrary-dependence-valid BY (6.0%). On the two winning traces the
 majority of frequent patterns are also predictive; on the two
 boundary traces the majority are frequent-but-noise, and the paper's
 concrete predictive-pattern list is short.
@@ -516,15 +521,25 @@ Both 1h and 6h Azure horizons flag zero patterns as expected
 (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10 `last3` itemsets,
 9/16 `last3` sequences, 59/109 `last10` sequences.
 
-### 6.5 SCANIA risk-set matched patterns (Component X)
+### 6.6 SCANIA risk-set matched patterns (Component X)
 
 Applying the risk-set matched-sampling extension from §4.4 to SCANIA
-Component X (2,272 cases × 3 controls each drawn from the risk set
-at each case's failure lifetime), FP-Growth at min-support 0.05
-mines 42,453 candidate itemsets from the `counter_surprise` event
-stream. Under Mantel-Haenszel odds-ratio scoring with 95% CI, 4,829
-patterns (11.4%) survive as predictive against the risk-set-matched
-null.
+Component X (2,272 cases × 3 controls each drawn from the risk set at
+each case's failure lifetime), FP-Growth at min-support 0.05 mines
+42,453 candidate itemsets from the `counter_surprise` event stream.
+A closed-itemset post-filter losslessly deduplicates any patterns
+that share exact support with a strict superset; on this trace only
+281 patterns collapse (99.3% of the frequent set is already closed
+because histogram-bin supersets typically differ in support from any
+proper subset by at least one truck). Applying exact one-sided
+hypergeometric p-values on the risk-set-matched 2 x 2 tables, then
+Benjamini-Hochberg FDR correction: **3,516 patterns pass q_BH < 0.05**
+(8.3%). Under the more conservative Benjamini-Yekutieli correction
+that is valid under arbitrary dependence between patterns (justified
+here because nearby itemsets share items): **2,560 patterns pass
+q_BY < 0.05** (6.0%). The naive per-pattern 95% Woolf-Haldane CI
+without multi-testing correction flags 4,829 (11.4%); the honest
+predictive fraction after FDR is therefore 6-8%.
 
 Top 5 predictive Component X signatures (MH-OR, 95% CI):
 
@@ -543,13 +558,13 @@ cross-feature signature is an example of a two-feature interaction
 that pattern mining surfaces without needing a black-box classifier.
 Despite these interpretable hazard-ratio-scored patterns, none of
 them lift a temporally-held-out logistic regression beyond AUROC
-0.60 (per §6.3): the patterns are per-truck static discriminators,
+0.60 (per §6.2): the patterns are per-truck static discriminators,
 not temporal precursors that a next-K-event alarm can act on. The
 distinction is important operationally: hazard-ratio-scored patterns
 support cohort-level fleet triage (which trucks warrant closer
 inspection), not next-event alerting.
 
-### 6.6 Lead time on true positives
+### 6.7 Lead time on true positives
 
 - **Alibaba** (operational lead time): median 0 s across horizons,
   IQR 0-2 min. Task boundaries are the practical alarm resolution;
@@ -649,7 +664,7 @@ absence.** A stratified 5-fold cross-validation on the same 420
 aggregated Component X features (mean / max / std / last of each of
 the 105 columns per vehicle), with each column linearly
 residualised against `length_of_study_time_step` inside every fold,
-reaches AUROC 0.826 ± 0.005 — comparable to Alibaba's `last3`
+reaches AUROC 0.826 ± 0.005, comparable to Alibaba's `last3`
 combined score (0.81) and BGL's chance (0.51). The same LightGBM
 configuration under the temporal split used elsewhere in the paper
 only reaches 0.67, and the pattern-mining pipeline reaches 0.60.
@@ -662,10 +677,10 @@ ordering to catch; the discriminative information is spread across
 the truck's entire operating history.
 
 This gives a sharper three-way regime-of-validity: (i) two wins
-(Azure PdM, Alibaba v2018) — target failure preceded by a
-discriminable ordered event trajectory; (ii) BGL — target class is
-self-triggering with no discriminable non-alert precursor; (iii)
-Component X — target has strong per-truck signal in aggregate
+(Azure PdM, Alibaba v2018), where target failure is preceded by a
+discriminable ordered event trajectory; (ii) BGL, where the target
+class is self-triggering with no discriminable non-alert precursor;
+(iii) Component X, where the target has strong per-truck signal in aggregate
 features but no last-K-events trajectory signal, so pattern mining
 on windows attains the temporal-split ceiling but not the
 transductive per-vehicle ceiling. The APS positive control confirms
@@ -678,7 +693,7 @@ self-triggering AND readout-cadence signal capacity exceeds the
 target AUROC bar". BGL fails the second condition; SCANIA fails the
 third; Azure PdM and Alibaba v2018 satisfy all three.
 
-The two lead-time regimes in §6.5 speak to deployment. Azure inherits
+The two lead-time regimes in §6.7 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
 be read as a real-world warning interval; Alibaba's median 0-second
 lead time is the honest one, and a per-job classifier there must be

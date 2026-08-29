@@ -46,6 +46,48 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — Reviewer pass + closed-itemset dedup + BY correction
+
+Autonomous improvement pass.
+
+**Reviewer pass** on the reframed draft caught two blocking issues:
+- 10 em-dashes in prose + tables (post-reframe writing regression);
+  replaced with commas, parentheses, and "n/a" markers.
+- SC-14 heading hygiene: two `### 6.5` headings (Formal significance +
+  SCANIA risk-set). Renumbered; §6.5 = significance, §6.6 = SCANIA
+  risk-set, §6.7 = lead time. Fixed one stale §6.3 cross-ref (was
+  Order gain, should point to Predictive evaluation §6.2) and one
+  §6.5 cross-ref (lead-time is §6.7 now).
+Post-fix: wins-only scan clean, tone audit clean, 0 em-dashes,
+73/73 audit still passes.
+
+**Closed itemset post-filter** [src/mine/closed.py](src/mine/closed.py).
+Losslessly drops any itemset whose support equals a strict superset in
+the mined frame. On SCANIA the compression is modest (42,172 / 42,453 =
+99.3% retained) because histogram-bin supersets on this dataset
+typically differ in support by at least one truck.
+
+**Benjamini-Yekutieli FDR** correction added alongside BH in the same
+module. BY is valid under arbitrary dependence between p-values,
+appropriate for pattern-mining where nearby itemsets share items.
+
+**Rerun** on SCANIA risk-set patterns with exact one-sided
+hypergeometric p-values, closed filter, then both corrections
+[scripts/scania_closed_by.py](scripts/scania_closed_by.py):
+- 42,453 raw candidates
+- 42,172 closed (99.3%)
+- 3,516 pass BH q<0.05 (8.3%)
+- **2,560 pass BY q<0.05 (6.0%)**
+- 4,829 pass raw per-pattern 95% CI (11.4%, no multi-test correction)
+
+Paper §6.6 rewritten to lead with the BY-corrected number as the
+honest predictive fraction, with BH and raw CI shown as sensitivity
+rows. Abstract updated. §6.4 predictive-fraction table now has
+three SCANIA rows illustrating the correction cascade.
+
+Numbers audit: **76 / 76 pass** (up from 73). Bibliography unchanged
+at 29 entries. Artifact republished at the same URL.
+
 ## 2026-08-29 — Main claim reframed; risk-set matched sampling implemented
 
 User proposed a stronger reframing of the paper's central claim:

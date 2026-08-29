@@ -250,9 +250,21 @@ def main() -> int:
     check("6.5", "SCANIA risk-set top pattern CI low = 2.10",
           round(rs["top10_mh_or"][0]["mh_or_ci_low"], 2), "2.10",
           approx(rs["top10_mh_or"][0]["mh_or_ci_low"], 2.10, tol=0.02))
-    check("6.5", "SCANIA risk-set top pattern CI high = 3.51",
+    check("6.6", "SCANIA risk-set top pattern CI high = 3.51",
           round(rs["top10_mh_or"][0]["mh_or_ci_high"], 2), "3.51",
           approx(rs["top10_mh_or"][0]["mh_or_ci_high"], 3.51, tol=0.02))
+
+    # 6.6 post-correction significance (closed + BH + BY)
+    closed = _load_json(PATT / "scania_closed_by_summary.json")
+    check("6.6", "SCANIA closed itemsets = 42,172",
+          closed["n_closed_patterns"], "42172",
+          closed["n_closed_patterns"] == 42172)
+    check("6.6", "SCANIA BH-corrected significant = 3,516",
+          closed["n_closed_significant_bh_005"], "3516",
+          closed["n_closed_significant_bh_005"] == 3516)
+    check("6.6", "SCANIA BY-corrected significant = 2,560",
+          closed["n_closed_significant_by_005"], "2560",
+          closed["n_closed_significant_by_005"] == 2560)
 
     # 5.3 Predictive table cells
     bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")

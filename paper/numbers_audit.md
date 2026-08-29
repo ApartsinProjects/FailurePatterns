@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 73. Pass: 73. Mismatch: 0.
+Total claims audited: 76. Pass: 76. Mismatch: 0.
 
 ## Full audit trail
 
@@ -44,7 +44,10 @@ Total claims audited: 73. Pass: 73. Mismatch: 0.
 | 6.5           | SCANIA risk-set 4,829 significant patterns (CI excludes 1) | 4829       | 4829       | PASS        |
 | 6.5           | SCANIA risk-set top pattern MH-OR = 2.72                   | 2.72       | 2.72       | PASS        |
 | 6.5           | SCANIA risk-set top pattern CI low = 2.10                  | 2.10       | 2.1        | PASS        |
-| 6.5           | SCANIA risk-set top pattern CI high = 3.51                 | 3.51       | 3.51       | PASS        |
+| 6.6           | SCANIA risk-set top pattern CI high = 3.51                 | 3.51       | 3.51       | PASS        |
+| 6.6           | SCANIA closed itemsets = 42,172                            | 42172      | 42172      | PASS        |
+| 6.6           | SCANIA BH-corrected significant = 3,516                    | 3516       | 3516       | PASS        |
+| 6.6           | SCANIA BY-corrected significant = 2,560                    | 2560       | 2560       | PASS        |
 | 5.3           | Azure 24h combined AUROC = 0.996                           | 0.996      | 0.996      | PASS        |
 | 5.3           | Azure 24h combined AUPRC = 0.988                           | 0.988      | 0.988      | PASS        |
 | 5.3           | Azure last5 combined AUROC = 0.81                          | 0.81       | 0.81       | PASS        |
