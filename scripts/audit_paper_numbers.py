@@ -281,17 +281,56 @@ def main() -> int:
           ali_l10["fraction_full_dominant"], "0.295",
           approx(ali_l10["fraction_full_dominant"], 0.295, tol=0.01))
 
-    # 6.6 post-correction significance (closed + BH + BY)
-    closed = _load_json(PATT / "scania_closed_by_summary.json")
-    check("6.6", "SCANIA closed itemsets = 42,172",
-          closed["n_closed_patterns"], "42172",
-          closed["n_closed_patterns"] == 42172)
-    check("6.6", "SCANIA BH-corrected significant = 3,516",
-          closed["n_closed_significant_bh_005"], "3516",
-          closed["n_closed_significant_bh_005"] == 3516)
-    check("6.6", "SCANIA BY-corrected significant = 2,560",
-          closed["n_closed_significant_by_005"], "2560",
-          closed["n_closed_significant_by_005"] == 2560)
+    # 6.6 SCANIA matched conditional logistic (Path 1: W2 fix)
+    mch = _load_json(PATT / "scania_matched_hazard_summary.json")
+    check("6.6", "SCANIA matched conditional logistic: 121/200 top patterns significant",
+          mch["n_significant_conditional_logistic_005"], "121",
+          mch["n_significant_conditional_logistic_005"] == 121)
+    check("6.6", "SCANIA matched top HR = 1.73",
+          round(mch["top10"][0]["hazard_ratio"], 2), "1.73",
+          approx(mch["top10"][0]["hazard_ratio"], 1.73, tol=0.02))
+    check("6.6", "SCANIA matched top HR CI low = 1.53",
+          round(mch["top10"][0]["hr_ci_low"], 2), "1.53",
+          approx(mch["top10"][0]["hr_ci_low"], 1.53, tol=0.02))
+    check("6.6", "SCANIA matched top HR CI high = 1.96",
+          round(mch["top10"][0]["hr_ci_high"], 2), "1.96",
+          approx(mch["top10"][0]["hr_ci_high"], 1.96, tol=0.02))
+
+    # 6.4 post-selection-valid significance (W1 fix)
+    ps = json.loads((PATT / "post_selection_significance.json").read_text(encoding="utf-8"))
+    def _ps_row(trace, horizon):
+        for r in ps:
+            if r["trace"] == trace and r["horizon"] == horizon:
+                return r
+        return None
+    az_l10 = _ps_row("Azure", "last10")
+    check("6.4", "Post-selection Azure last10: 379 BH-sig / 815 mined (46%)",
+          f"{az_l10['n_significant_bh_005']}/{az_l10['n_patterns_mined_on_discovery']}",
+          "379/815",
+          az_l10["n_significant_bh_005"] == 379 and az_l10["n_patterns_mined_on_discovery"] == 815)
+    check("6.4", "Post-selection Azure last10 BY: 241/815 (30%)",
+          az_l10["n_significant_by_005"], "241",
+          az_l10["n_significant_by_005"] == 241)
+    sc_l20 = _ps_row("SCANIA", "last20")
+    check("6.4", "Post-selection SCANIA last20: 0 BH-sig / 37,797 mined (0%)",
+          f"{sc_l20['n_significant_bh_005']}/{sc_l20['n_patterns_mined_on_discovery']}",
+          "0/37797",
+          sc_l20["n_significant_bh_005"] == 0 and sc_l20["n_patterns_mined_on_discovery"] == 37797)
+
+    # 6.3 count-preserving order effect (W4 fix)
+    cp = _load_json(PATT / "count_preserving_order.json")
+    az_l10_c = cp.get("Azure_last10", {})
+    check("6.3", "Azure last10 count-preserving order effect ≈ +1.09",
+          round(az_l10_c.get("mean_order_effect", 0), 2), "+1.09",
+          approx(az_l10_c.get("mean_order_effect", 0), 1.09, tol=0.05))
+    az_l5_c = cp.get("Azure_last5", {})
+    check("6.3", "Azure last5 count-preserving order effect ≈ +0.52",
+          round(az_l5_c.get("mean_order_effect", 0), 2), "+0.52",
+          approx(az_l5_c.get("mean_order_effect", 0), 0.52, tol=0.05))
+    ali_l3_c = cp.get("Alibaba_last3", {})
+    check("6.3", "Alibaba last3 count-preserving order effect ≈ 0 (null)",
+          round(ali_l3_c.get("mean_order_effect", 0), 2), "≈0",
+          abs(ali_l3_c.get("mean_order_effect", 0)) < 0.1)
 
     # 5.3 Predictive table cells
     bgl_pred = pd.read_parquet(TAB / "bgl_predictive.parquet")

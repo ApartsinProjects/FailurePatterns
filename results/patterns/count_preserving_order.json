@@ -1,0 +1,381 @@
+{
+  "Azure_last5": {
+    "n_analyzed": 20,
+    "mean_real_lift": 2.8514358944604576,
+    "mean_shuffle_lift": 2.3320304495307247,
+    "mean_order_effect": 0.5194054449297327,
+    "median_order_effect": 0.493307039533993,
+    "mean_naive_order_gain": 0.7579754260377776,
+    "top5": [
+      {
+        "sequence": [
+          "maintenance:comp4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.7260273972602738,
+        "count_preserving_shuffle_lift": 2.5048274128479675,
+        "order_effect": 1.2211999844123063,
+        "itemset_lift_from_mine": 2.219178082191781,
+        "naive_order_gain": 1.506849315068493
+      },
+      {
+        "sequence": [
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.7142857142857144,
+        "count_preserving_shuffle_lift": 3.0064526897759416,
+        "order_effect": 0.7078330245097728,
+        "itemset_lift_from_mine": 2.764044943820225,
+        "naive_order_gain": 0.9502407704654896
+      },
+      {
+        "sequence": [
+          "software_error:error2",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.6444444444444444,
+        "count_preserving_shuffle_lift": 3.31990411218714,
+        "order_effect": 0.32454033225730416,
+        "itemset_lift_from_mine": 2.1952000000000003,
+        "naive_order_gain": 1.4492444444444441
+      },
+      {
+        "sequence": [
+          "maintenance:comp1",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.5492957746478875,
+        "count_preserving_shuffle_lift": 2.4897549518506623,
+        "order_effect": 1.0595408227972252,
+        "itemset_lift_from_mine": 2.212121212121212,
+        "naive_order_gain": 1.3371745625266755
+      },
+      {
+        "sequence": [
+          "software_error:error3",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.5217391304347827,
+        "count_preserving_shuffle_lift": 3.2032670992781185,
+        "order_effect": 0.3184720311566642,
+        "itemset_lift_from_mine": 2.1952000000000003,
+        "naive_order_gain": 1.3265391304347824
+      }
+    ]
+  },
+  "Azure_last10": {
+    "n_analyzed": 20,
+    "mean_real_lift": 3.0094931082123386,
+    "mean_shuffle_lift": 1.9168969307553803,
+    "mean_order_effect": 1.0925961774569581,
+    "median_order_effect": 1.1716830816564312,
+    "mean_naive_order_gain": 1.3287731363145228,
+    "top5": [
+      {
+        "sequence": [
+          "maintenance:comp1",
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 4,
+        "real_lift": 3.2258064516129035,
+        "count_preserving_shuffle_lift": 1.8212667616621807,
+        "order_effect": 1.4045396899507228,
+        "itemset_lift_from_mine": 1.7093023255813955,
+        "naive_order_gain": 1.516504126031508
+      },
+      {
+        "sequence": [
+          "software_error:error1",
+          "maintenance:comp4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 4,
+        "real_lift": 3.1999999999999997,
+        "count_preserving_shuffle_lift": 1.8523184689153687,
+        "order_effect": 1.347681531084631,
+        "itemset_lift_from_mine": 1.745042492917847,
+        "naive_order_gain": 1.4549575070821528
+      },
+      {
+        "sequence": [
+          "software_error:error4",
+          "software_error:error3",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 4,
+        "real_lift": 3.050847457627119,
+        "count_preserving_shuffle_lift": 2.3638766371789757,
+        "order_effect": 0.6869708204481433,
+        "itemset_lift_from_mine": 1.734806629834254,
+        "naive_order_gain": 1.316040827792865
+      },
+      {
+        "sequence": [
+          "software_error:error3",
+          "software_error:error4",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 4,
+        "real_lift": 3.044776119402985,
+        "count_preserving_shuffle_lift": 2.403750863211316,
+        "order_effect": 0.6410252561916692,
+        "itemset_lift_from_mine": 1.734806629834254,
+        "naive_order_gain": 1.309969489568731
+      },
+      {
+        "sequence": [
+          "maintenance:comp3",
+          "software_error:error1",
+          "software_error:error2",
+          "software_error:error3"
+        ],
+        "sequence_length": 4,
+        "real_lift": 3.0384615384615388,
+        "count_preserving_shuffle_lift": 1.8752797540388912,
+        "order_effect": 1.1631817844226475,
+        "itemset_lift_from_mine": 1.6870748299319727,
+        "naive_order_gain": 1.351386708529566
+      }
+    ]
+  },
+  "Alibaba_last3": {
+    "n_analyzed": 12,
+    "mean_real_lift": 1.90850711700133,
+    "mean_shuffle_lift": 1.925040590222105,
+    "mean_order_effect": -0.016533473220775186,
+    "median_order_effect": 0.0,
+    "mean_naive_order_gain": 0.18057693629613444,
+    "top5": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "sequence_length": 3,
+        "real_lift": 4.0,
+        "count_preserving_shuffle_lift": 4.0,
+        "order_effect": 0.0,
+        "itemset_lift_from_mine": 4.0,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "sequence_length": 2,
+        "real_lift": 4.0,
+        "count_preserving_shuffle_lift": 4.0,
+        "order_effect": 0.0,
+        "itemset_lift_from_mine": 4.0,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "sequence_length": 2,
+        "real_lift": 3.983766233766234,
+        "count_preserving_shuffle_lift": 3.98281485414633,
+        "order_effect": 0.0009513796199041025,
+        "itemset_lift_from_mine": 3.983766233766234,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.0595382746051034,
+        "count_preserving_shuffle_lift": 3.0595382746051034,
+        "order_effect": 0.0,
+        "itemset_lift_from_mine": 1.3695210737457282,
+        "naive_order_gain": 1.6900172008593752
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 2,
+        "real_lift": 1.645727383425256,
+        "count_preserving_shuffle_lift": 1.6457273834252562,
+        "order_effect": -2.220446049250313e-16,
+        "itemset_lift_from_mine": 1.3695210737457282,
+        "naive_order_gain": 0.27620630967952775
+      }
+    ]
+  },
+  "Alibaba_last5": {
+    "n_analyzed": 17,
+    "mean_real_lift": 1.7275129145359704,
+    "mean_shuffle_lift": 1.705613066978437,
+    "mean_order_effect": 0.021899847557533485,
+    "median_order_effect": 2.220446049250313e-16,
+    "mean_naive_order_gain": 0.20616880138197816,
+    "top5": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.971971971971972,
+        "count_preserving_shuffle_lift": 3.9725932713636096,
+        "order_effect": -0.0006212993916374643,
+        "itemset_lift_from_mine": 3.971971971971972,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "sequence_length": 2,
+        "real_lift": 3.971971971971972,
+        "count_preserving_shuffle_lift": 3.9682032812455987,
+        "order_effect": 0.003768690726373425,
+        "itemset_lift_from_mine": 3.971971971971972,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "sequence_length": 2,
+        "real_lift": 3.9528432732316223,
+        "count_preserving_shuffle_lift": 3.9474200631364917,
+        "order_effect": 0.005423210095130582,
+        "itemset_lift_from_mine": 3.9528432732316223,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:R",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 4,
+        "real_lift": 2.4293785310734464,
+        "count_preserving_shuffle_lift": 2.021625198745649,
+        "order_effect": 0.4077533323277973,
+        "itemset_lift_from_mine": 0.9419311100101693,
+        "naive_order_gain": 1.487447421063277
+      },
+      {
+        "sequence": [
+          "task_success:M",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 4,
+        "real_lift": 2.0531526836894214,
+        "count_preserving_shuffle_lift": 2.053152683689421,
+        "order_effect": 4.440892098500626e-16,
+        "itemset_lift_from_mine": 1.2215932739532174,
+        "naive_order_gain": 0.831559409736204
+      }
+    ]
+  },
+  "Alibaba_last10": {
+    "n_analyzed": 19,
+    "mean_real_lift": 2.0892845337801886,
+    "mean_shuffle_lift": 1.8477329558896536,
+    "mean_order_effect": 0.2415515778905345,
+    "median_order_effect": 0.2691844131748615,
+    "mean_naive_order_gain": 0.6624991562414282,
+    "top5": [
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M",
+          "task_success:R"
+        ],
+        "sequence_length": 3,
+        "real_lift": 3.955449482895784,
+        "count_preserving_shuffle_lift": 3.927022910077704,
+        "order_effect": 0.028426572818080142,
+        "itemset_lift_from_mine": 3.955449482895784,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:R"
+        ],
+        "sequence_length": 2,
+        "real_lift": 3.955449482895784,
+        "count_preserving_shuffle_lift": 3.948065405911259,
+        "order_effect": 0.007384076984525034,
+        "itemset_lift_from_mine": 3.955449482895784,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_waiting:R",
+          "task_success:M"
+        ],
+        "sequence_length": 2,
+        "real_lift": 3.9382151029748282,
+        "count_preserving_shuffle_lift": 3.9263679552743738,
+        "order_effect": 0.011847147700454475,
+        "itemset_lift_from_mine": 3.9382151029748282,
+        "naive_order_gain": 0.0
+      },
+      {
+        "sequence": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 5,
+        "real_lift": 1.9744118860916222,
+        "count_preserving_shuffle_lift": 1.6585536093234385,
+        "order_effect": 0.3158582767681837,
+        "itemset_lift_from_mine": 0.9215549022352886,
+        "naive_order_gain": 1.0528569838563335
+      },
+      {
+        "sequence": [
+          "task_success:R",
+          "task_success:M",
+          "task_success:R",
+          "task_success:M",
+          "task_success:M"
+        ],
+        "sequence_length": 5,
+        "real_lift": 1.9463917525773196,
+        "count_preserving_shuffle_lift": 1.4057226616879823,
+        "order_effect": 0.5406690908893372,
+        "itemset_lift_from_mine": 0.9215549022352886,
+        "naive_order_gain": 1.024836850342031
+      }
+    ]
+  }
+}

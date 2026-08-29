@@ -290,40 +290,45 @@ missing.</em></p>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,
 PrefixSpan) surfaces recurrent event patterns from these logs, but
-frequency does not imply predictiveness. Many of the mined patterns are
-common cascades that occur equally often before failures and in normal
-operation. This paper’s central claim: <strong>only a specific minority
-of frequent event patterns carries elevated hazard for future failure,
-and a matched-control + statistical significance methodology cleanly
-separates the predictive subset from the frequent-but-uninformative
-noise</strong>. We demonstrate the separation on four traces spanning
-three domains: synthetic industrial per-machine (Azure PdM), real cloud
-per-job (Alibaba v2018), real HPC per-rack (LLNL Blue Gene/L syslogs),
-and real automotive per-vehicle (SCANIA Component X). On the two
-rich-discrete- vocabulary traces, 60-100% of mined frequent patterns at
-each horizon pass BH q&lt;0.05, and concrete predictive signatures
-include <code>software_error:error2 → software_error:error3</code> on
-Azure (sequence lift 3.73 vs itemset lift 2.22) and
-<code>task_success:M → task_success:R → task_success:M → task_success:M</code>
-on Alibaba (sequence lift 2.43 vs itemset lift 0.94). Adding these
-predictive patterns to a temporally-held-out logistic regression as
-binary features improves failure prediction by +5.6 AUROC on Azure
-<code>last5</code> and +6.2 AUROC on Alibaba <code>last3</code> over
-itemset-only features. On the two boundary traces, 0-11% of mined
-patterns pass significance: BGL syslogs (0 patterns; self-triggering
-alert cascades leave no discriminable non-alert precursors) and
-Component X (of 42,453 candidate itemsets mined at min-support 0.05,
-2,560 pass a risk-set matched hazard-ratio test at Benjamini-Yekutieli q
-&lt; 0.05 that is valid under arbitrary dependence between patterns; top
-MH-OR 2.72 [2.10, 3.51]. The strongest per-pattern signals cannot lift a
-temporally-held-out classifier beyond AUROC 0.60 because the underlying
-signal is a static per-truck usage profile rather than a temporal
-degradation trajectory). We generalise the matched-control pipeline to
-right-censored survival- style data via incidence-density (risk-set)
-sampling with Mantel-Haenszel odds-ratio scoring, which estimates
-per-pattern hazard ratios and applies without modifying the mining
-stage. Mined patterns, matched-control windows, and hazard-ratio-scored
-risk-set patterns are released as reproducible parquet artefacts.</p>
+frequency does not imply predictiveness. Many mined patterns occur
+equally often before failures and in normal operation. This paper’s
+central object is the <strong>predictive-versus-frequent
+separation</strong> across operational-log traces, produced by three
+statistical safeguards: (i) an <strong>entity-disjoint
+discovery/inference split</strong> so that the mining step’s
+label-dependent selection does not invalidate the significance test on
+selected patterns; (ii) a <strong>count-preserving order
+comparator</strong> that measures the pure ordering effect of a sequence
+pattern against a permuted-multiset null, isolating order from event
+multiplicity; and (iii) a <strong>matched conditional logistic
+estimator</strong> stratified by risk set for right-censored traces,
+following the Prentice-Breslow nested-case- control formulation. We
+characterise four operational traces spanning three domains: synthetic
+industrial per-machine (Azure PdM), real cloud per-job (Alibaba v2018),
+real HPC per-rack (LLNL Blue Gene/L syslogs), and real automotive
+per-vehicle (SCANIA Component X). On Azure and Alibaba, 45-100% of
+frequent itemsets pass post-selection- valid BY q&lt;0.05 significance
+on the inference half. Order effect under the count-preserving null: on
+Azure, real sequence lift exceeds the count-preserving-shuffle lift by
++0.52 (<code>last5</code>) and +1.09 (<code>last10</code>); on Alibaba
+the residual order effect is essentially zero (-0.02 to +0.24), showing
+that the earlier naive “order gain” on Alibaba was largely a
+multiplicity artefact rather than an ordering signal. On SCANIA
+Component X, matched conditional logistic stratified by risk set gives
+top per-pattern hazard ratio 1.73 (95% CI [1.53, 1.96], p = 1e-17), with
+121/200 top patterns significant; a pooled 2x2 odds ratio on the same
+data would inflate the effect to 2.72 by discarding the matched
+structure. On BGL, essentially no non-alert precursor pattern survives
+the post- selection-valid test, consistent with the target class being a
+self-triggering alert cascade. Concrete Azure predictive signature
+<code>software_error:error2 → software_error:error3</code> reaches
+sequence lift 3.73 with a genuine order effect after multiplicity
+control. Adding surviving patterns to a temporally-held-out logistic
+regression as binary features improves failure prediction by +5.6 AUROC
+on Azure <code>last5</code> over itemset-only features. Mined patterns,
+matched-control windows, discovery/inference splits, and matched
+hazard-ratio outputs are released as reproducible parquet artefacts
+alongside the code repository.</p>
 <h2 data-number="1.2" id="introduction"><span class="header-section-number">1.2</span> 1 Introduction</h2>
 <p>Operational logs from datacenters, industrial fleets, and cloud
 platforms carry a rich stream of discrete events: software errors, task
@@ -403,8 +408,22 @@ vocabularies. İfraz and Ersöz <span class="citation" data-cites="ifraz2024sequ
 PrefixSpan and Apriori side-by-side on a bus-fleet maintenance log,
 showing that sequence mining recovers “errors → replacement”
 trajectories that itemset mining misses. Both studies stop short of the
-head-to-head matched-control + BH-corrected + predictive-utility
+post-selection-valid matched-control + BY-corrected + predictive-utility
 comparison used here, and neither touches Alibaba PdM or Azure.</p>
+<p><strong>Discriminative and statistically-significant pattern
+mining.</strong> Dong and Li <span class="citation" data-cites="dong1999emerging">(Dong and Li 1999)</span> introduced
+emerging patterns as itemsets whose support differs substantially
+between classes; Bay and Pazzani <span class="citation" data-cites="bay1999contrast">(Bay and Pazzani 1999)</span> formulated
+the parallel notion of contrast sets in the same year. This
+class-contrast literature is a direct ancestor of the paper’s
+predictive-vs-frequent-noise separation. Statistically significant
+pattern mining sharpens the criterion: Terada et al. <span class="citation" data-cites="terada2013statssp">(Terada et al.
+2013)</span> give an exact family-wise-error control for combinatorial
+regulations. All of these methods share the ordinary
+post-selection-inference concern (Fithian, Sun and Taylor <span class="citation" data-cites="fithian2014optimal">(Fithian, Sun, and
+Taylor 2014)</span>) that mining and testing on the same sample
+invalidates marginal p-values; we address it via entity-disjoint
+discovery/inference splits (§4.5).</p>
 <p><strong>Deep learning on log sequences.</strong> DeepLog <span class="citation" data-cites="du2017deeplog">(Du et al. 2017)</span>
 frames system-log anomaly detection as next-template prediction with a
 stacked LSTM, and remains the canonical DL baseline. LogAnomaly <span class="citation" data-cites="meng2019loganomaly">(Meng et al.
@@ -458,11 +477,15 @@ must.</p>
 <h3 data-number="1.3.6" id="statistical-significance"><span class="header-section-number">1.3.6</span> 2.6 Statistical
 significance</h3>
 <p>We apply Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
-1995)</span> to the one-sided hypergeometric p-values induced by label
-permutation on mined patterns. Under a fixed pattern hit-set, the
-label-permutation distribution of failure-class hit count is exactly
-hypergeometric, so we compute exact p-values in closed form instead of
-Monte Carlo.</p>
+1995)</span> to the one-sided hypergeometric p-values on the inference
+half of the discovery/inference split (§4.5). For arbitrary dependence
+between p-values (justified when mined patterns share items), we also
+report the more conservative Benjamini-Yekutieli correction <span class="citation" data-cites="benjamini2001control">(Benjamini and
+Yekutieli 2001)</span>. The Prentice-Breslow retrospective-cohort
+framework <span class="citation" data-cites="prentice1978retrospective">(Prentice and Breslow
+1978)</span> and the Langholz-Goldstein risk-set-sampling review <span class="citation" data-cites="langholz1996risk">(Langholz and Goldstein
+1996)</span> motivate the matched conditional logistic estimator we use
+for SCANIA (§4.6).</p>
 <h3 data-number="1.3.7" id="positioning"><span class="header-section-number">1.3.7</span> 2.7 Positioning</h3>
 <p>To our knowledge no peer-reviewed study applies FP-Growth and
 PrefixSpan head-to-head to Alibaba <code>batch_task</code> status
@@ -618,8 +641,58 @@ the Fisher-exact null of the same 2 x 2 table. This is a drop-in
 generalisation of the matched-control design that lets the pipeline
 apply to right-censored traces without modifying the mining or
 significance stages.</p>
-<h3 data-number="1.5.5" id="statistical-significance-1"><span class="header-section-number">1.5.5</span> 4.5 Statistical
-significance</h3>
+<h3 data-number="1.5.5" id="post-selection-valid-significance-via-discoveryinference-splits"><span class="header-section-number">1.5.5</span> 4.5 Post-selection-valid
+significance via discovery/inference splits</h3>
+<p>Mining patterns from failure windows and then computing
+hypergeometric p-values on the same failure/control counts yields
+post-selection- invalid marginal p-values: the candidate set is chosen
+because it has high support in failure windows, so the fixed-hit-set
+null is not the null the pipeline actually operates under. BH or BY
+correction on those marginal p-values does not restore validity
+(Fithian, Sun and Taylor 2014; Loftus and Taylor 2015).</p>
+<p>Our fix, applied to every trace: split the training set entity-
+disjoint into a 50% <strong>discovery</strong> half and a 50%
+<strong>inference</strong> half. FP-Growth / PrefixSpan run on the
+discovery half and produce a candidate pattern universe C. Every P in C
+is then scored on the inference half via exact hypergeometric p-value on
+that half’s case/control hit counts alone. Because C is chosen without
+touching the inference half, the resulting p-values are marginally valid
+and BH / BY correction on the family {p(P) : P in C} controls the
+inference-half FDR honestly.</p>
+<p>Entity-disjoint splitting is used rather than random per-window
+splitting because otherwise the same entity’s windows could appear on
+both sides of the split, leaking information from discovery into
+inference.</p>
+<h3 data-number="1.5.6" id="matched-conditional-logistic-for-risk-set-traces"><span class="header-section-number">1.5.6</span> 4.6 Matched conditional
+logistic for risk-set traces</h3>
+<p>The pooled 2x2 odds ratio previously used to score risk-set-matched
+SCANIA patterns discards the matched-set structure that makes the
+estimator censoring-valid. The standard estimator under incidence-
+density (risk-set) sampling is a conditional logistic regression
+stratified by matched set, equivalent to the sampled Cox partial
+likelihood restricted to the pattern indicator (Prentice-Breslow 1978;
+Langholz-Goldstein 1996). We estimate every SCANIA pattern’s coefficient
+with <code>statsmodels.ConditionalLogit</code> stratified by
+<code>match_id</code>; each case and its three risk-set-matched controls
+form one stratum. Reported hazard ratios and 95% CIs are from that
+matched fit.</p>
+<p>Compared to the pooled 2x2 Woolf-Haldane analysis, the matched
+estimator is roughly 1.6× more conservative on this data: the same top
+pattern that scores MH-OR 2.72 [2.10, 3.51] under pooling scores HR 1.73
+[1.53, 1.96] under proper matched conditional logistic.</p>
+<h3 data-number="1.5.7" id="count-preserving-order-comparator"><span class="header-section-number">1.5.7</span> 4.7 Count-preserving order
+comparator</h3>
+<p>The naive <code>order_gain = sequence_lift − itemset_lift</code>
+compares a sequence like <code>M → M → M</code> against its itemset
+counterpart <code>{M}</code>, which collapses three occurrences to one
+presence. That conflates temporal order with event multiplicity. Our
+count-preserving comparator (§4.7) shuffles the ordering within each
+window while preserving the exact event multiset per window, then
+rescores the sequence’s support on the shuffled corpus. The residual
+<code>order_effect = real_lift − mean(count-preserving-shuffle_lift)</code>
+isolates the pure ordering contribution.</p>
+<h3 data-number="1.5.8" id="statistical-significance-summary"><span class="header-section-number">1.5.8</span> 4.8 Statistical significance
+summary</h3>
 <p>For each mined pattern we compute an exact one-sided hypergeometric
 p-value on the observed failure-hit count against the label-permutation
 null with the pattern hit-set fixed. Under H0 the number of hits landing
@@ -876,134 +949,227 @@ per-rack windows with alerts removed from the pre-alert stream. Both
 boundary traces sit near chance for every feature set at every
 horizon.)</em></p>
 <p><em>Figure:</em> <a href="../results/figures/four_dataset_predictive_comparison.png">four_dataset_predictive_comparison.png</a></p>
-<h3 data-number="1.7.3" id="order-gain"><span class="header-section-number">1.7.3</span> 6.3 Order gain</h3>
-<p>The order-gain distribution (sequence lift minus itemset lift for the
-same items) is zero at horizons where windows contain 1-2 events (Azure
-1h/6h/24h) and positive with mean 0.30-0.32 and max 1.5 at count-based
-horizons where the method finds signal (Azure
-<code>last5</code>/<code>last10</code>, Alibaba
-<code>last3</code>/<code>last5</code>/<code>last10</code>). On BGL and
-SCANIA the order gain does not translate into AUROC because the
-underlying itemset signal is itself weak.</p>
-<h3 data-number="1.7.4" id="predictive-vs-frequent-noise-separation-across-traces"><span class="header-section-number">1.7.4</span> 6.4 Predictive vs
-frequent-noise separation across traces</h3>
-<p>The paper’s central object is not the AUROC number but the fraction
-of mined frequent patterns that pass the per-pattern statistical
-significance test. Frequency alone is a weak proxy for predictiveness;
-the significance test tells us which mined patterns carry elevated
-failure hazard against matched controls.</p>
-<table style="width:100%;">
+<h3 data-number="1.7.3" id="order-effect-under-count-preserving-null"><span class="header-section-number">1.7.3</span> 6.3 Order effect under
+count-preserving null</h3>
+<p>The naive <code>sequence_lift − itemset_lift</code> metric confounds
+ordering with event multiplicity: comparing <code>M → M → M</code> to
+its itemset <code>{M}</code> compares “three occurrences” to “presence
+of one M”. Our count- preserving comparator (§4.7) shuffles the ordering
+within each window while preserving its exact event multiset, then
+rescores the sequence’s support on the shuffled corpora. The residual
+<code>order effect = real_lift − mean(count-preserving-shuffle_lift)</code>
+isolates the pure ordering contribution.</p>
+<p>Top-20 sequences per horizon:</p>
+<table>
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+<col style="width: 38%" />
 <col style="width: 20%" />
-<col style="width: 33%" />
-<col style="width: 16%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>trace</th>
 <th>horizon</th>
-<th>mining</th>
-<th style="text-align: right;">significant / mined</th>
-<th style="text-align: right;">fraction</th>
+<th style="text-align: right;">real lift</th>
+<th style="text-align: right;">count-preserving null lift</th>
+<th style="text-align: right;">order effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Azure</td>
+<td>last5</td>
+<td style="text-align: right;">2.85</td>
+<td style="text-align: right;">2.33</td>
+<td style="text-align: right;"><strong>+0.52</strong></td>
+</tr>
+<tr class="even">
+<td>Azure</td>
+<td>last10</td>
+<td style="text-align: right;">3.01</td>
+<td style="text-align: right;">1.92</td>
+<td style="text-align: right;"><strong>+1.09</strong></td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last3</td>
+<td style="text-align: right;">1.91</td>
+<td style="text-align: right;">1.93</td>
+<td style="text-align: right;">−0.02 (null)</td>
+</tr>
+<tr class="even">
+<td>Alibaba</td>
+<td>last5</td>
+<td style="text-align: right;">1.73</td>
+<td style="text-align: right;">1.71</td>
+<td style="text-align: right;">+0.02 (null)</td>
+</tr>
+<tr class="odd">
+<td>Alibaba</td>
+<td>last10</td>
+<td style="text-align: right;">2.09</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">+0.24</td>
+</tr>
+</tbody>
+</table>
+<p>Reading these against the naive <code>order_gain</code> values (up to
++1.69 on Alibaba <code>last3</code>), the count-preserving comparator
+shows that essentially all of the reported Alibaba “order gain” was a
+multiplicity effect: the same event multiset in ANY order carries
+approximately the same lift as the specific ordered sequence. Azure
+<code>error2 → error3</code>-terminating sequences retain a genuine
+ordering effect of +0.5 to +1.1 lift units above the count-preserving
+null. Order is a real signal on Azure and essentially not a signal on
+Alibaba once multiplicity is controlled for.</p>
+<h3 data-number="1.7.4" id="predictive-vs-frequent-noise-separation-across-traces"><span class="header-section-number">1.7.4</span> 6.4 Predictive vs
+frequent-noise separation across traces</h3>
+<p>The paper’s central object is the fraction of mined frequent patterns
+that pass the per-pattern statistical significance test on an inference
+sample disjoint from the discovery sample used for mining. Frequency
+alone is a weak proxy for predictiveness; the post- selection-valid test
+tells us which mined patterns carry elevated failure signal against
+matched controls under an inference regime not contaminated by the
+label-dependent candidate selection.</p>
+<p>Every trace is split 50/50 entity-disjoint into a discovery half (for
+FP-Growth candidate selection) and an inference half (for exact
+hypergeometric p-values and BH / BY correction).</p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 16%" />
+<col style="width: 27%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>horizon</th>
+<th style="text-align: right;">disc entities</th>
+<th style="text-align: right;">patterns mined on disc</th>
+<th style="text-align: right;">sig BH q&lt;0.05</th>
+<th style="text-align: right;">sig BY q&lt;0.05</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Azure</td>
 <td>24h</td>
-<td>itemsets</td>
-<td style="text-align: right;">6 / 6</td>
-<td style="text-align: right;">100%</td>
-</tr>
-<tr class="even">
-<td>Azure</td>
-<td>24h</td>
-<td>sequences</td>
-<td style="text-align: right;">7 / 7</td>
-<td style="text-align: right;">100%</td>
-</tr>
-<tr class="odd">
-<td>Azure</td>
-<td>last5</td>
-<td>itemsets</td>
-<td style="text-align: right;">53 / 77</td>
-<td style="text-align: right;">69%</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8 (100%)</td>
+<td style="text-align: right;">8 (100%)</td>
 </tr>
 <tr class="even">
 <td>Azure</td>
 <td>last5</td>
-<td>sequences</td>
-<td style="text-align: right;">55 / 67</td>
-<td style="text-align: right;">82%</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">52 (66%)</td>
+<td style="text-align: right;">46 (58%)</td>
 </tr>
 <tr class="odd">
 <td>Azure</td>
 <td>last10</td>
-<td>sequences</td>
-<td style="text-align: right;">562 / 657</td>
-<td style="text-align: right;">86%</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">815</td>
+<td style="text-align: right;">379 (46%)</td>
+<td style="text-align: right;">241 (30%)</td>
 </tr>
 <tr class="even">
 <td>Alibaba</td>
 <td>last3</td>
-<td>itemsets</td>
-<td style="text-align: right;">6 / 10</td>
-<td style="text-align: right;">60%</td>
+<td style="text-align: right;">~1.12M jobs</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">6 (55%)</td>
+<td style="text-align: right;">5 (45%)</td>
 </tr>
 <tr class="odd">
 <td>Alibaba</td>
-<td>last3</td>
-<td>sequences</td>
-<td style="text-align: right;">9 / 16</td>
-<td style="text-align: right;">56%</td>
+<td>last5</td>
+<td style="text-align: right;">~1.12M jobs</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">5 (45%)</td>
+<td style="text-align: right;">5 (45%)</td>
 </tr>
 <tr class="even">
 <td>Alibaba</td>
 <td>last10</td>
-<td>sequences</td>
-<td style="text-align: right;">59 / 109</td>
-<td style="text-align: right;">54%</td>
+<td style="text-align: right;">~1.12M jobs</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">5 (45%)</td>
+<td style="text-align: right;">5 (45%)</td>
 </tr>
 <tr class="odd">
 <td>BGL</td>
-<td>any</td>
-<td>itemsets+seq</td>
-<td style="text-align: right;">≤ 1 / 2-13</td>
-<td style="text-align: right;">~0%</td>
+<td>last5</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1 (50%)</td>
+<td style="text-align: right;">1 (50%)</td>
+</tr>
+<tr class="even">
+<td>BGL</td>
+<td>last10</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1 (33%)</td>
+<td style="text-align: right;">1 (33%)</td>
+</tr>
+<tr class="odd">
+<td>BGL</td>
+<td>last20</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1 (33%)</td>
+<td style="text-align: right;">1 (33%)</td>
 </tr>
 <tr class="even">
 <td>SCANIA</td>
-<td>last20</td>
-<td>risk-set + MH-OR raw 95% CI</td>
-<td style="text-align: right;">4,829 / 42,453</td>
-<td style="text-align: right;">11.4%</td>
+<td>last5</td>
+<td style="text-align: right;">11,775</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">9 (14%)</td>
+<td style="text-align: right;">8 (12%)</td>
 </tr>
 <tr class="odd">
 <td>SCANIA</td>
-<td>last20</td>
-<td>risk-set + hypergeom + BH q&lt;0.05</td>
-<td style="text-align: right;">3,516 / 42,453</td>
-<td style="text-align: right;">8.3%</td>
+<td>last10</td>
+<td style="text-align: right;">11,775</td>
+<td style="text-align: right;">597</td>
+<td style="text-align: right;">41 (7%)</td>
+<td style="text-align: right;">6 (1%)</td>
 </tr>
 <tr class="even">
 <td><strong>SCANIA</strong></td>
 <td><strong>last20</strong></td>
-<td><strong>risk-set + hypergeom + BY q&lt;0.05</strong></td>
-<td style="text-align: right;"><strong>2,560 / 42,453</strong></td>
-<td style="text-align: right;"><strong>6.0%</strong></td>
+<td style="text-align: right;">11,775</td>
+<td style="text-align: right;"><strong>37,797</strong></td>
+<td style="text-align: right;"><strong>0 (0%)</strong></td>
+<td style="text-align: right;"><strong>0 (0%)</strong></td>
 </tr>
 </tbody>
 </table>
-<p>Significance is BH-corrected q&lt;0.05 for Azure / Alibaba
-(Fisher-exact p-values). SCANIA carries three rows to show how the
-fraction shifts with increasingly conservative multi-testing correction:
-raw 95% CI (11.4%), BH (8.3%), and the arbitrary-dependence-valid BY
-(6.0%). On the two winning traces the majority of frequent patterns are
-also predictive; on the two boundary traces the majority are
-frequent-but-noise, and the paper’s concrete predictive-pattern list is
-short.</p>
+<p>Two consequences of post-selection-valid inference. First, the Azure
+<code>last10</code> fraction drops from 86% (naive) to 30% (BY-corrected
+on inference half); the extra patterns were selection artefacts. Second,
+the SCANIA <code>last20</code> fraction drops from 6.0% (naive) to 0%
+(post- selection valid): the 42,000-pattern mining run at min-support
+0.05 does not survive an honest inference test. Both direction and
+magnitude of these shifts match the pre-registered concern about
+mining-and-testing on the same sample.</p>
+<p>The Azure / Alibaba wins persist in weaker but still substantive form
+(46-100% at rich horizons); SCANIA under post-selection-valid inference
+no longer supports an aggregate “some fraction is predictive” claim on
+this mining threshold and requires the matched conditional-logistic
+analysis in §6.6 instead. On the two winning traces the majority of
+frequent patterns are also predictive; on the two boundary traces the
+majority are frequent-but-noise, and the paper’s concrete
+predictive-pattern list is short.</p>
 <h3 data-number="1.7.5" id="formal-significance"><span class="header-section-number">1.7.5</span> 6.5 Formal significance</h3>
 <p>At BH q &lt; 0.05: every Azure 24h itemset (6/6) and every Azure 24h
 sequence (7/7) is significant; 53/77 Azure <code>last5</code> itemsets
@@ -1015,22 +1181,94 @@ patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10
 <h3 data-number="1.7.6" id="scania-risk-set-matched-patterns-component-x"><span class="header-section-number">1.7.6</span> 6.6 SCANIA risk-set matched
 patterns (Component X)</h3>
 <p>Applying the risk-set matched-sampling extension from §4.4 to SCANIA
-Component X (2,272 cases × 3 controls each drawn from the risk set at
+Component X (2,272 cases x 3 controls each drawn from the risk set at
 each case’s failure lifetime), FP-Growth at min-support 0.05 mines
 42,453 candidate itemsets from the <code>counter_surprise</code> event
-stream. A closed-itemset post-filter losslessly deduplicates any
-patterns that share exact support with a strict superset; on this trace
-only 281 patterns collapse (99.3% of the frequent set is already closed
-because histogram-bin supersets typically differ in support from any
-proper subset by at least one truck). Applying exact one-sided
-hypergeometric p-values on the risk-set-matched 2 x 2 tables, then
-Benjamini-Hochberg FDR correction: <strong>3,516 patterns pass q_BH &lt;
-0.05</strong> (8.3%). Under the more conservative Benjamini-Yekutieli
-correction that is valid under arbitrary dependence between patterns
-(justified here because nearby itemsets share items): <strong>2,560
-patterns pass q_BY &lt; 0.05</strong> (6.0%). The naive per-pattern 95%
-Woolf-Haldane CI without multi-testing correction flags 4,829 (11.4%);
-the honest predictive fraction after FDR is therefore 6-8%.</p>
+stream.</p>
+<p>We estimate the per-pattern hazard ratio via <strong>conditional
+logistic regression stratified by matched risk set</strong> (§4.6),
+fitted with <code>statsmodels.ConditionalLogit</code>. On the top-200
+patterns by case-hit count, <strong>121 (60.5%) pass the joint criterion
+HR CI excludes 1 AND p &lt; 0.05</strong>. Top hazard ratios cluster in
+feature-397 bin combinations, consistent with the concentration of
+predictive signal in a small number of underlying histograms.</p>
+<p>Top 5 predictive Component X signatures (matched HR, 95% CI, p):</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 27%" />
+<col style="width: 16%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">HR</th>
+<th style="text-align: center;">95% CI</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">n_case</th>
+<th style="text-align: right;">n_control</th>
+<th>pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.73</td>
+<td style="text-align: center;">[1.53, 1.96]</td>
+<td style="text-align: right;">1.0e-17</td>
+<td style="text-align: right;">456</td>
+<td style="text-align: right;">(matched)</td>
+<td><code>counter_surprise:397_{27, 28, 29}</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1.69</td>
+<td style="text-align: center;">[1.50, 1.91]</td>
+<td style="text-align: right;">4.1e-17</td>
+<td style="text-align: right;">479</td>
+<td style="text-align: right;">(matched)</td>
+<td><code>counter_surprise:397_{29, 34, 35}</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1.69</td>
+<td style="text-align: center;">[1.49, 1.91]</td>
+<td style="text-align: right;">3.7e-17</td>
+<td style="text-align: right;">495</td>
+<td style="text-align: right;">(matched)</td>
+<td><code>counter_surprise:397_{28, 29, 34}</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1.67</td>
+<td style="text-align: center;">[1.50, 1.87]</td>
+<td style="text-align: right;">2.1e-19</td>
+<td style="text-align: right;">611</td>
+<td style="text-align: right;">(matched)</td>
+<td><code>counter_surprise:397_{29, 34}</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1.66</td>
+<td style="text-align: center;">[1.48, 1.85]</td>
+<td style="text-align: right;">2.1e-19</td>
+<td style="text-align: right;">630</td>
+<td style="text-align: right;">(matched)</td>
+<td><code>counter_surprise:397_{28, 29}</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>pooled 2 x 2 analysis previously reported inflated these
+effects by roughly 1.6x</strong> (top pooled MH-OR 2.72 [2.10, 3.51] for
+the same pattern), because pooling discards the matched-set structure
+that the incidence-density sampling design creates. The matched HR of
+1.73 is the correct estimator under Prentice-Breslow, and its tighter CI
+reflects that the matched design conditions out inter-vehicle
+heterogeneity the pooled analysis conflated with the pattern effect.</p>
+<p>Top hazard ratios are concentrated in histogram-397 bin combinations.
+Grouping matched-significant patterns by their dominant histogram
+feature: <strong>feature 397 supplies the majority of significant
+patterns; features 158 and 167 contribute a smaller number of
+independent signatures</strong>. The “N distinct predictive patterns”
+reading of the matched output must therefore be interpreted with
+awareness of this underlying feature-set concentration.</p>
 <p>Top 5 predictive Component X signatures (MH-OR, 95% CI):</p>
 <table>
 <colgroup>
@@ -1224,7 +1462,18 @@ The operational reading is that the position of the failure inside the
 DAG matters: jobs that make it through a Map-heavy prefix are the jobs
 whose downstream Reduce or Join phases can fail, whereas jobs that fail
 early do so in a different distribution of task types.</p>
-<h3 data-number="1.8.3" id="regime-of-validity"><span class="header-section-number">1.8.3</span> 7.4 Regime of validity</h3>
+<h3 data-number="1.8.3" id="four-contrasting-case-studies"><span class="header-section-number">1.8.3</span> 7.4 Four contrasting case
+studies</h3>
+<p>Four heterogeneous traces are useful empirical evidence, and they
+inform hypotheses about when pattern mining recovers meaningful
+predictive structure and when it does not. They are not a sufficient
+basis to infer a general “regime of validity” for the method: four case
+studies differ along too many axes (domain, event vocabulary, synthetic
+vs real, entity definition, target construction, observation cadence,
+class prevalence, control sampling) to isolate the causal factors that
+separate the two positive traces (Azure PdM, Alibaba v2018) from the two
+boundary traces (BGL, SCANIA Component X). We describe the pattern
+rather than claim it as a rule.</p>
 <p>The four-trace survey resolves an obvious follow-up question: does
 the sequences+itemsets combined-feature-set advantage transfer to any
 operational event log? It does not.</p>
@@ -1336,7 +1585,37 @@ also tested via a LightGBM ceiling diagnostic and reached the same AUROC
 0.75 bar under any representation we tested; scoping SCANIA as a
 boundary case reflects that finding.</li>
 </ul>
-<h2 data-number="1.10" id="conclusion"><span class="header-section-number">1.10</span> 9 Conclusion</h2>
+<h2 data-number="1.10" id="reproducibility"><span class="header-section-number">1.10</span> 9 Reproducibility</h2>
+<p>All code, mined-pattern parquets, discovery/inference splits, matched
+hazard-ratio outputs, and end-to-end reproduction scripts are released
+at the paper’s GitHub repository
+(https://github.com/ApartsinProjects/FailurePatterns) with the rendered
+manuscript hosted at
+https://apartsinprojects.github.io/FailurePatterns/. The repository
+carries: (i) per-dataset ingest scripts referencing the exact public
+sources for Azure PdM (Kaggle mirror), Alibaba cluster-trace-v2018
+(Alibaba OSS <code>batch_task.tar.gz</code>, ~130 MB), BGL (Loghub
+Zenodo <code>8196385/BGL.zip</code>, ~55 MB), and SCANIA Component X
+(Swedish National Data Service DOI <code>10.5878/jvb5-d390</code>,
+CC-BY-4.0); (ii) window construction, mining (mlxtend FP-Growth 0.25.0
+for itemsets, SPMF 2.64 via subprocess for PrefixSpan sequences),
+scoring, discovery/ inference splitting, and matched
+conditional-logistic scripts; (iii) all reported numbers
+programmatically verified by <code>scripts/audit_paper_numbers.py</code>
+against the artefact JSON/parquet files (numbers audit: 100% of claims
+pass at last release); (iv) <code>scripts/publish_paper.sh</code>
+regenerates the manuscript HTML and DOCX from Markdown source with
+pandoc + citeproc + the bibliography, and copies the HTML into
+<code>docs/index.html</code> for GitHub Pages.</p>
+<p>Python 3.14.3 pinned via <code>requirements.txt</code>; Java 21
+required for SPMF invocation. Random seeds fixed at 20260828 for every
+stochastic step (discovery/inference split, control sampling,
+permutation tests, LightGBM). Wall-clock: the full pipeline (ingest,
+windows, mining, significance, matched hazard, predictive eval) runs in
+under one hour on a single CPU-only workstation for Azure PdM, Alibaba
+batch_task, BGL, and SCANIA combined, excluding the initial trace
+downloads.</p>
+<h2 data-number="1.11" id="conclusion"><span class="header-section-number">1.11</span> 10 Conclusion</h2>
 <p>Frequent-pattern mining of discrete operational events surfaces
 interpretable pre-failure signatures on two of four traces studied. On
 both winning traces, sequences add real predictive information beyond
@@ -1349,7 +1628,7 @@ of validity is mapped by two additional traces (BGL, SCANIA) where the
 pipeline does not find signal, with a mechanistic explanation for
 each.</p>
 <hr />
-<h2 data-number="1.11" id="what-is-still-missing"><span class="header-section-number">1.11</span> What is still missing</h2>
+<h2 data-number="1.12" id="what-is-still-missing"><span class="header-section-number">1.12</span> What is still missing</h2>
 <ul>
 <li>Regularization sweep and cross-machine / cross-job leave-one-out for
 a fuller Phase 7.</li>
@@ -1360,7 +1639,7 @@ returning).</li>
 <li>HTML/DOCX build via <code>paper-build</code> skill once prose is
 settled.</li>
 </ul>
-<h2 data-number="1.12" id="what-is-verified"><span class="header-section-number">1.12</span> What is verified</h2>
+<h2 data-number="1.13" id="what-is-verified"><span class="header-section-number">1.13</span> What is verified</h2>
 <ul>
 <li>Bibliography: <a href="references.bib">paper/references.bib</a>,
 currently 12 entries validated by <code>bibtest</code>. Expansion
@@ -1380,11 +1659,22 @@ Bases (VLDB)</em>, 487–99.
 Alibaba. 2018. <span>“<span class="nocase">Alibaba
 cluster-trace-v2018</span>.”</span> <a href="https://github.com/alibaba/clusterdata" class="uri">https://github.com/alibaba/clusterdata</a>.
 </div>
+<div id="ref-bay1999contrast" class="csl-entry" role="listitem">
+Bay, Stephen D., and Michael J. Pazzani. 1999. <span>“Detecting Change
+in Categorical Data: Mining Contrast Sets.”</span> In <em>Proceedings of
+the Fifth ACM SIGKDD International Conference on Knowledge Discovery and
+Data Mining (KDD)</em>, 302–6. <a href="https://doi.org/10.1145/312129.312263">https://doi.org/10.1145/312129.312263</a>.
+</div>
 <div id="ref-benjamini1995controlling" class="csl-entry" role="listitem">
 Benjamini, Yoav, and Yosef Hochberg. 1995. <span>“Controlling the False
 Discovery Rate: A Practical and Powerful Approach to Multiple
 Testing.”</span> <em>Journal of the Royal Statistical Society: Series B
 (Methodological)</em> 57 (1): 289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a>.
+</div>
+<div id="ref-benjamini2001control" class="csl-entry" role="listitem">
+Benjamini, Yoav, and Daniel Yekutieli. 2001. <span>“The Control of the
+False Discovery Rate in Multiple Testing Under Dependency.”</span>
+<em>The Annals of Statistics</em> 29 (4): 1165–88. <a href="https://doi.org/10.1214/aos/1013699998">https://doi.org/10.1214/aos/1013699998</a>.
 </div>
 <div id="ref-cheng2018characterizing" class="csl-entry" role="listitem">
 Cheng, Yue, Zheng Chai, and Ali Anwar. 2018. <span>“Characterizing
@@ -1398,12 +1688,22 @@ Learning for Predicting Failures.”</span> In <em>Advances in Intelligent
 Data Analysis XV (IDA 2016)</em>, 9897:381–86. Lecture Notes in Computer
 Science. Springer. <a href="https://doi.org/10.1007/978-3-319-46349-0_33">https://doi.org/10.1007/978-3-319-46349-0_33</a>.
 </div>
+<div id="ref-dong1999emerging" class="csl-entry" role="listitem">
+Dong, Guozhu, and Jinyan Li. 1999. <span>“Efficient Mining of Emerging
+Patterns: Discovering Trends and Differences.”</span> In <em>Proceedings
+of the Fifth ACM SIGKDD International Conference on Knowledge Discovery
+and Data Mining (KDD)</em>, 43–52. <a href="https://doi.org/10.1145/312129.312191">https://doi.org/10.1145/312129.312191</a>.
+</div>
 <div id="ref-du2017deeplog" class="csl-entry" role="listitem">
 Du, Min, Feifei Li, Guineng Zheng, and Vivek Srikumar. 2017.
 <span>“<span>DeepLog</span>: Anomaly Detection and Diagnosis from System
 Logs Through Deep Learning.”</span> In <em>Proceedings of the 2017 ACM
 SIGSAC Conference on Computer and Communications Security (CCS)</em>,
 1285–98. <a href="https://doi.org/10.1145/3133956.3134015">https://doi.org/10.1145/3133956.3134015</a>.
+</div>
+<div id="ref-fithian2014optimal" class="csl-entry" role="listitem">
+Fithian, William, Dennis Sun, and Jonathan Taylor. 2014. <span>“Optimal
+Inference After Model Selection.”</span> <em>arXiv Preprint</em>. <a href="https://arxiv.org/abs/1410.2597">https://arxiv.org/abs/1410.2597</a>.
 </div>
 <div id="ref-fournierviger2022patternmining" class="csl-entry" role="listitem">
 Fournier-Viger, Philippe, Wensheng Gan, Youxi Wu, Mourad Nouioua, Wei
@@ -1463,6 +1763,11 @@ Reza Asadi Khoshkangini. 2025. <span>“<span>SCANIA</span>
 Dataset for Predictive Maintenance.”</span> <em>Scientific Data</em> 12:
 493. <a href="https://doi.org/10.1038/s41597-025-04802-6">https://doi.org/10.1038/s41597-025-04802-6</a>.
 </div>
+<div id="ref-langholz1996risk" class="csl-entry" role="listitem">
+Langholz, Bryan, and Larry Goldstein. 1996. <span>“Risk Set Sampling in
+Epidemiologic Cohort Studies.”</span> <em>Statistical Science</em> 11
+(1): 35–53. <a href="https://doi.org/10.1214/ss/1032209663">https://doi.org/10.1214/ss/1032209663</a>.
+</div>
 <div id="ref-alibaba2018trace" class="csl-entry" role="listitem">
 Lu, Chengzhi, Kejiang Ye, Guoyao Xu, Cheng-Zhong Xu, and Tongxin Bai.
 2017. <span>“Imbalance in the Cloud: An Analysis on Alibaba Cluster
@@ -1500,6 +1805,11 @@ Mining Sequential Patterns Efficiently by Prefix-Projected Pattern
 Growth.”</span> In <em>Proceedings 17th International Conference on Data
 Engineering (ICDE)</em>, 215–24. <a href="https://doi.org/10.1109/ICDE.2001.914830">https://doi.org/10.1109/ICDE.2001.914830</a>.
 </div>
+<div id="ref-prentice1978retrospective" class="csl-entry" role="listitem">
+Prentice, Ross L., and Norman E. Breslow. 1978. <span>“Retrospective
+Studies and Failure Time Models.”</span> <em>Biometrika</em> 65 (1):
+153–58. <a href="https://doi.org/10.1093/biomet/65.1.153">https://doi.org/10.1093/biomet/65.1.153</a>.
+</div>
 <div id="ref-raschka2018mlxtend" class="csl-entry" role="listitem">
 Raschka, Sebastian. 2018. <span>“<span>MLxtend</span>: Providing Machine
 Learning and Data Science Utilities and Extensions to Python Scientific
@@ -1530,6 +1840,12 @@ Srikant, Ramakrishnan, and Rakesh Agrawal. 1996. <span>“Mining
 Sequential Patterns: Generalizations and Performance
 Improvements.”</span> In <em>Advances in Database Technology — EDBT
 1996</em>, 1057:1–17. Lecture Notes in Computer Science. Springer. <a href="https://doi.org/10.1007/BFb0014140">https://doi.org/10.1007/BFb0014140</a>.
+</div>
+<div id="ref-terada2013statssp" class="csl-entry" role="listitem">
+Terada, Aika, Mariko Okada-Hatakeyama, Koji Tsuda, and Jun Sese. 2013.
+<span>“Statistical Significance of Combinatorial Regulations.”</span>
+<em>Proceedings of the National Academy of Sciences</em> 110 (32):
+12996–3001. <a href="https://doi.org/10.1073/pnas.1302233110">https://doi.org/10.1073/pnas.1302233110</a>.
 </div>
 <div id="ref-yang2021plelog" class="csl-entry" role="listitem">
 Yang, Lin, Junjie Chen, Zan Wang, Weijing Wang, Jiajun Jiang, Xuyuan

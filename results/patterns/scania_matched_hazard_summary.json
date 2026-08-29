@@ -1,0 +1,152 @@
+{
+  "n_patterns_scored": 200,
+  "n_significant_conditional_logistic_005": 121,
+  "top10": [
+    {
+      "itemset": [
+        "counter_surprise:397_28",
+        "counter_surprise:397_29",
+        "counter_surprise:397_27"
+      ],
+      "hazard_ratio": 1.7309439122418626,
+      "hr_ci_low": 1.5268006823650737,
+      "hr_ci_high": 1.9623824261631753,
+      "p_value": 1.0407867594228769e-17,
+      "significant_005": true,
+      "n_case_hits": 456,
+      "n_control_hits": 863,
+      "n_informative_strata": 1060
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_35",
+        "counter_surprise:397_34",
+        "counter_surprise:397_29"
+      ],
+      "hazard_ratio": 1.6914905072541973,
+      "hr_ci_low": 1.49650179539194,
+      "hr_ci_high": 1.9118855352804418,
+      "p_value": 4.060268542738446e-17,
+      "significant_005": true,
+      "n_case_hits": 479,
+      "n_control_hits": 928,
+      "n_informative_strata": 1119
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29",
+        "counter_surprise:397_28"
+      ],
+      "hazard_ratio": 1.6864096599597174,
+      "hr_ci_low": 1.4932868440555607,
+      "hr_ci_high": 1.9045085360034377,
+      "p_value": 3.7017522824353853e-17,
+      "significant_005": true,
+      "n_case_hits": 495,
+      "n_control_hits": 970,
+      "n_informative_strata": 1139
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29",
+        "counter_surprise:397_22"
+      ],
+      "hazard_ratio": 1.683238631318752,
+      "hr_ci_low": 1.4790102680745127,
+      "hr_ci_high": 1.915667761828604,
+      "p_value": 3.009501504369917e-15,
+      "significant_005": true,
+      "n_case_hits": 426,
+      "n_control_hits": 826,
+      "n_informative_strata": 1002
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_34",
+        "counter_surprise:397_29"
+      ],
+      "hazard_ratio": 1.6732116487641615,
+      "hr_ci_low": 1.4958766763766393,
+      "hr_ci_high": 1.8715695389685834,
+      "p_value": 2.1483323479228867e-19,
+      "significant_005": true,
+      "n_case_hits": 611,
+      "n_control_hits": 1229,
+      "n_informative_strata": 1348
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_28"
+      ],
+      "hazard_ratio": 1.6572830919086128,
+      "hr_ci_low": 1.4847297055806465,
+      "hr_ci_high": 1.8498904119736992,
+      "p_value": 2.1422710490129493e-19,
+      "significant_005": true,
+      "n_case_hits": 630,
+      "n_control_hits": 1275,
+      "n_informative_strata": 1402
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_28",
+        "counter_surprise:397_10"
+      ],
+      "hazard_ratio": 1.6539673232961656,
+      "hr_ci_low": 1.458604879227134,
+      "hr_ci_high": 1.875496198793048,
+      "p_value": 4.2917753746743375e-15,
+      "significant_005": true,
+      "n_case_hits": 448,
+      "n_control_hits": 881,
+      "n_informative_strata": 1063
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_35",
+        "counter_surprise:397_29",
+        "counter_surprise:397_28"
+      ],
+      "hazard_ratio": 1.6363014066731763,
+      "hr_ci_low": 1.4453276327532714,
+      "hr_ci_high": 1.8525088933504683,
+      "p_value": 7.410013061701045e-15,
+      "significant_005": true,
+      "n_case_hits": 460,
+      "n_control_hits": 915,
+      "n_informative_strata": 1096
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_27"
+      ],
+      "hazard_ratio": 1.6354549545996984,
+      "hr_ci_low": 1.4554601248070855,
+      "hr_ci_high": 1.8377095070737317,
+      "p_value": 1.3500379549584568e-16,
+      "significant_005": true,
+      "n_case_hits": 541,
+      "n_control_hits": 1093,
+      "n_informative_strata": 1244
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_35",
+        "counter_surprise:397_28",
+        "counter_surprise:397_27"
+      ],
+      "hazard_ratio": 1.593004699869467,
+      "hr_ci_low": 1.4049714324176255,
+      "hr_ci_high": 1.8062032545668831,
+      "p_value": 3.708764447563542e-13,
+      "significant_005": true,
+      "n_case_hits": 440,
+      "n_control_hits": 891,
+      "n_informative_strata": 1075
+    }
+  ]
+}

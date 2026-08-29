@@ -46,6 +46,82 @@ issues and 3 substantive:
 Paper is out of skeleton state; ready for internal review before
 resubmission for a second reviewer pass and a final `bibtest` gate.
 
+## 2026-08-29 — Path 1: DAMI-review response (W1, W2, W4, W3, W5, W10)
+
+Autonomous response to the DAMI reviewer's ten blocking issues.
+Full review preserved at [paper/dami_review_chatgpt.md](paper/dami_review_chatgpt.md).
+
+**W1 post-selection inference (fixed).**
+`src/eval/discovery_inference_split.py` implements entity-disjoint
+50/50 split; `scripts/post_selection_split.py` mines on discovery,
+scores on inference, applies BH + BY. Effect on reported fractions:
+- Azure last10: naive 86% → post-selection BH 46%, BY 30%
+- Azure last5: naive 82% → BH 66%, BY 58%
+- Azure 24h: 100% preserved (small mined set)
+- Alibaba: 45-55% BH/BY (was 54-60%)
+- SCANIA last20: naive 6.0% → post-selection **0%** (the 6% headline
+  was pure selection artefact)
+- SCANIA last10: naive 8% → BY 1%
+
+**W2 matched conditional logistic (fixed).**
+`src/eval/matched_hazard.py` fits `statsmodels.ConditionalLogit`
+stratified by `match_id`. Top SCANIA HR is 1.73 (CI [1.53, 1.96],
+p=1e-17), not the previously-reported pooled 2x2 MH-OR of 2.72.
+Matched estimator is ~1.6x more conservative because pooling
+conflated inter-vehicle heterogeneity with the pattern effect. 121
+of top-200 patterns significant under matched joint criterion.
+
+**W4 count-preserving order comparator (fixed).**
+`src/eval/count_preserving_order.py`: shuffle event ORDER within each
+window while preserving event MULTISET, then rescore. Isolates
+ordering from multiplicity. Reveals:
+- Azure last10 order effect **+1.09** (real)
+- Azure last5 **+0.52** (real)
+- Alibaba last3 **-0.02 to +0.24** (essentially null after
+  multiplicity control)
+The paper's earlier Alibaba "order gain +1.49" was almost entirely a
+count effect, not an ordering effect. Azure order-signal is real.
+
+**W3 related-work expansion.**
+Added Dong-Li emerging patterns (1999), Bay-Pazzani contrast sets
+(1999), Terada et al. StatSSP (PNAS 2013), Prentice-Breslow (1978),
+Langholz-Goldstein risk-set review (1996), Fithian-Sun-Taylor
+post-selection inference (2014), Benjamini-Yekutieli FDR (2001) to
+`paper/references.bib`. Bibtest caught one more hallucinated DOI
+(`hamalainen2010kingfisher` → wrong paper) and it was removed.
+36 real citations validated.
+
+**W5 regime-of-validity softened** to "four contrasting case studies"
+per reviewer's instruction. Removed general regime rule.
+
+**W10 reproducibility section** added as §9 with repository URL,
+Pages URL, dataset provenance, tool versions (Python 3.14.3, Java 21,
+mlxtend 0.25.0, SPMF 2.64, statsmodels 0.15.0), pinned seeds
+(20260828), and wall-clock report.
+
+**§6.4 predictive-fraction table rewritten** entirely with post-
+selection-valid numbers. **§6.6 SCANIA section rewritten** entirely
+with matched conditional-logistic HR (not pooled MH-OR). **§6.3
+order-gain section rewritten** with count-preserving comparator
+results. **Abstract rewritten** to lead with the three statistical
+safeguards (discovery/inference split, count-preserving comparator,
+matched conditional logistic) rather than the fraction numbers.
+
+Numbers audit: **88 / 88 pass** (up from 76 after adding W1/W2/W4
+check triples). Wins-only + tone audits clean. 0 em-dashes.
+Bibliography 36 real + 2 grey-lit dataset URLs.
+
+Not-yet-addressed from the DAMI review (deferred):
+- W6 rigorous SCANIA redundancy grouping by underlying histogram
+  feature (top-K SCANIA hazard-ratio patterns are dominated by
+  histogram 397 combinations; mentioned in §6.6 prose but no
+  formal grouping yet).
+- W7 stronger baselines (n-grams, gradient boosting on n-gram
+  features) beyond event-count and existing itemset/sequence.
+- W8 explicit prevalence-invariance annotations on precision,
+  AUPRC where sampled control ratios differ from population.
+- W9 abstract length trim (reworded, still long).
+
 ## 2026-08-29 — Reviewer pass + closed-itemset dedup + BY correction
 
 Autonomous improvement pass.
