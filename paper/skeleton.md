@@ -243,15 +243,18 @@ conditional logistic estimator we use for SCANIA (§4.6).
 
 ### 2.7 Positioning
 
-To our knowledge, no peer-reviewed study applies FP-Growth and
-PrefixSpan head-to-head to Alibaba `batch_task` status transitions or
-to Azure PdM `errorID → failure` sequences under a matched-control
-design. None then evaluates the resulting patterns as binary features
-against event-count and deep-learning-adjacent alternatives on a
-temporally-held-out split. The six-trace regime-of-validity
-study in §7.3, spanning two independent wind farms, is likewise, to
-our knowledge, unprecedented in the pattern-mining log-analysis
-literature.
+The paper's contribution is a single methodological package applied
+uniformly across six traces: entity-disjoint post-selection-valid
+mining, a count-preserving order null that separates ordering from
+event multiplicity, and a censoring-valid matched conditional
+logistic estimator for right-censored entities, evaluated against an
+event-count baseline and each pattern family in turn on a temporally-
+held-out split. To our knowledge, this package has not been applied
+head-to-head to Alibaba `batch_task` status transitions or to Azure
+PdM `errorID → failure` sequences, and the six-trace regime-of-
+validity study of §7.3, anchored by a cascade replicated across two
+independent wind farms, is likewise unprecedented in the
+pattern-mining log-analysis literature.
 
 ## 3  Data
 
@@ -372,27 +375,38 @@ the last readout timestamp of each repair-labelled vehicle.
 ### 4.1 Pre-failure windows and matched controls
 
 For every terminal failure event on an entity (machine on Azure, job
-on Alibaba, rack on BGL, vehicle on SCANIA), we build a failure
-window covering the K events (or the time horizon T) strictly before
-the failure timestamp. Matched controls come from two designs
-depending on the trace:
+on Alibaba, rack on BGL, vehicle on SCANIA, turbine on Kelmarsh and
+Penmanshiel), we build a failure window covering the K events (or the
+time horizon T) strictly before the failure timestamp. Matched
+controls come from two designs depending on the trace:
 
-- **Same-entity clean regions** (Azure, BGL) when the entity carries
-  long timelines with sparse failures; controls are anchored at
-  times with no failure within horizon T in either direction.
+- **Same-entity clean regions** (Azure, BGL, Kelmarsh, Penmanshiel)
+  when the entity carries long timelines with sparse failures;
+  controls are anchored at times on the same entity with no failure
+  within horizon T in either direction, sampled at a 1:3
+  case-to-control ratio.
 - **Cross-entity non-failure sample** (Alibaba, SCANIA) when entities
   are short-lived; controls come from the last K events of a
-  non-failure entity, sampled at a 3:1 control:failure ratio from a
+  non-failure entity, sampled at a 1:3 case-to-control ratio from a
   large candidate pool.
+
+The two wind farms use the same-entity design over each turbine's
+multi-year alarm timeline: failure windows are anchored on each
+Forced-outage event and controls on same-turbine clean regions,
+giving 233 failure and 699 control windows at `last5`/`last10` on
+Kelmarsh (6 turbines) and 448 failure and 1,344 control windows on
+Penmanshiel (9 turbines). The entity-disjoint discovery/inference
+split (§4.5) partitions turbines 3-and-3 on Kelmarsh and 4-and-5 on
+Penmanshiel, so no turbine contributes to both mining and inference.
 
 BGL alerts are additionally grouped into episodes (>= 1h inter-arrival
 gap) and windows are anchored on the first alert of each episode, so
 anchor-per-alert double-counting inside a cascade is avoided.
 
-Horizons studied: `1h`, `6h`, `24h`, `last5`, `last10` on Azure;
-`last3`, `last5`, `last10` on Alibaba; `last5`, `last10`, `last20`
-on BGL and SCANIA (time-based horizons are not meaningful for short
-per-job or per-episode observations).
+Horizons studied: `1h`, `6h`, `24h`, `last5`, `last10` on Azure and
+on the two wind farms; `last3`, `last5`, `last10` on Alibaba;
+`last5`, `last10`, `last20` on BGL and SCANIA (time-based horizons
+are not meaningful for short per-job or per-episode observations).
 
 ### 4.2 Mining
 
@@ -420,7 +434,8 @@ either data leakage or an over-sensitive support threshold. Sequence
 mining checks that a within-window random order permutation
 preserves top itemset lift (unchanged, by construction) but strictly
 reduces top sequence lift on rich horizons (windows with >= 3 events
-on average). Both invariants pass on the two positive traces; on the boundary
+on average). Both invariants pass on the two cloud and maintenance
+traces (Azure, Alibaba); on the boundary
 traces the same invariants localise where the signal fails, rather
 than requiring post-hoc justification.
 
@@ -436,7 +451,7 @@ short-observation trucks have 12% failure rate; long-observation trucks
 have 5%.
 
 Following the epidemiological literature on incidence-density sampling
-(Prentice and Breslow 1978; Rothman-Greenland ch. 15), we replace §4.1's
+[@prentice1978retrospective; @rothman2008modern], we replace §4.1's
 sampler with a risk-set matched design: for each case with observed
 failure time T_f, controls are drawn from the risk set at T_f (the set
 of entities still under observation at that lifetime index) and their
@@ -463,8 +478,8 @@ p-values on the same failure/control counts yields post-selection-
 invalid marginal p-values: the candidate set is chosen because it has
 high support in failure windows, so the fixed-hit-set null is not the
 null the pipeline actually operates under. BH or BY correction on
-those marginal p-values does not restore validity (Fithian, Sun and
-Taylor 2014; Loftus and Taylor 2015).
+those marginal p-values does not restore validity
+[@fithian2014optimal; @loftus2015selective].
 
 Our fix, applied to every trace: split the training set entity-
 disjoint into a 50% **discovery** half and a 50% **inference** half.
@@ -495,8 +510,8 @@ SCANIA patterns discards the matched-set structure that makes the
 estimator censoring-valid. The standard estimator under incidence-
 density (risk-set) sampling is a conditional logistic regression
 stratified by matched set, equivalent to the sampled Cox partial
-likelihood restricted to the pattern indicator (Prentice-Breslow
-1978; Langholz-Goldstein 1996). We estimate every SCANIA pattern's
+likelihood restricted to the pattern indicator
+[@prentice1978retrospective; @langholz1996risk]. We estimate every SCANIA pattern's
 coefficient with `statsmodels.ConditionalLogit` stratified by
 `match_id`; each case and its three risk-set-matched controls form
 one stratum. Reported hazard ratios and 95% CIs are from that
@@ -560,9 +575,9 @@ empty. Effectively no Azure PdM failure is preceded by an event in
 the same hour. Useful horizons are 24h and the count-based
 (`last5`, `last10`). Even at 24h, failure and control windows
 separate cleanly by raw event count (failure mean 1.58 events,
-control mean 0.077).
+control mean 0.077; Figure 1).
 
-_Figure:_ [azure_window_horizon_vs_events.png](../diagnostics/azure_window_horizon_vs_events.png)
+![**Figure 1.** Event coverage of Azure pre-failure windows by horizon: the mean number of events per window grows with horizon length, which sets how much order information each horizon can carry.](../diagnostics/azure_window_horizon_vs_events.png)
 
 ### 5.2 Mining sensitivity to minimum support (Azure)
 
@@ -579,17 +594,18 @@ headline ordering at every operating point:
 | last10  | itemsets_only | 0.578 | 0.643 | 0.686 | 0.674 |
 
 At every minimum support tested, combined dominates itemsets_only by
-at least +4 AUROC points at last5 and at least +5 at last10.
+at least +4 AUROC points at last5 and at least +5 at last10 (Figure 2).
 
-_Figure:_ [azure_sensitivity_minimum support.png](../results/figures/azure_sensitivity_minimum support.png)
+![**Figure 2.** Predictive AUROC on Azure across the FP-Growth minimum-support sweep. Combined itemset-plus-sequence features lead the itemset-only and event-count baselines at every threshold, by at least 4 AUROC points at `last5` and at least 5 at `last10`.](../results/figures/azure_sensitivity_min_support.png)
 
 ## 6  Results
 
 ### 6.1 Mined patterns (Azure and Alibaba)
 
 At Azure 24h, `{software_error:error2, software_error:error3}` reaches
-lift 3.99 (present in 38.2% of failure windows, in 0.04% of controls;
-P(failure | pattern) = 99.6%). All six 24h itemsets dominate the
+lift 3.99 (present in 38.2% of failure windows, in 0.04% of controls
+on the full training sample; the disjoint inference half in §6.4
+gives zero control hits; P(failure | pattern) = 99.6%). All six 24h itemsets dominate the
 random-label permutation null (permuted top 1.24).
 
 At Azure `last5`/`last10`, the sequence
@@ -605,14 +621,14 @@ set (order gain +1.49). At `last3`,
 `task_success:M → task_success:M → task_success:M` reaches sequence
 lift 3.06 vs itemset lift 1.37 (order gain +1.69): three consecutive
 Map completions predict a subsequent failure much more strongly than
-the mere presence of Map events would suggest.
+the mere presence of Map events would suggest (Figure 3).
 
-_Figure:_ [azure_itemset_vs_sequence_lift.png](../results/figures/azure_itemset_vs_sequence_lift.png)
+![**Figure 3.** Itemset lift versus sequence lift for Azure patterns. Points above the diagonal are patterns whose ordered form carries more failure signal than their unordered co-occurrence, the effect the count-preserving null of §4.7 isolates.](../results/figures/azure_itemset_vs_sequence_lift.png)
 
 ### 6.2 Predictive evaluation (four temporally-split traces)
 
-Head-to-head on temporally-held-out test sets (the two wind farms
-are evaluated via the discovery/inference signature protocol of
+Head-to-head on temporally-held-out test sets (Figure 4; the two wind
+farms are evaluated via the discovery/inference signature protocol of
 §6.4, not this temporal-split predictive table):
 
 | trace   | horizon | event_count | itemsets_only | sequences_only | combined     |
@@ -630,13 +646,15 @@ are evaluated via the discovery/inference signature protocol of
 | SCANIA  | last10  | 0.50 / 0.09 | 0.60 / 0.14   | 0.55 / 0.11    | 0.60 / 0.15  |
 | SCANIA  | last20  | 0.50 / 0.09 | 0.57 / 0.14   | 0.53 / 0.10    | 0.57 / 0.13  |
 
-_(AUROC / AUPRC on the temporally-held-out test set. SCANIA uses
-per-vehicle 90th-percentile-delta binning; BGL uses episode-anchored
-per-rack windows with alerts removed from the pre-alert stream. Both
-boundary traces sit near chance for every feature set at every
-horizon.)_
+_(AUROC / AUPRC on the temporally-held-out test set. A `sequences_only`
+cell reads `n/a` when no sequence survived the training-set shuffle
+null at that configuration, so no sequence feature was available;
+`combined` then equals `itemsets_only`. SCANIA uses per-vehicle
+90th-percentile-delta binning; BGL uses episode-anchored per-rack
+windows with alerts removed from the pre-alert stream. Both boundary
+traces sit near chance for every feature set at every horizon.)_
 
-_Figure:_ [four_dataset_predictive_comparison.png](../results/figures/four_dataset_predictive_comparison.png)
+![**Figure 4.** Held-out predictive AUROC by feature set across the four temporally-split traces (Azure, Alibaba, BGL, SCANIA). The combined feature set leads on Azure and Alibaba; BGL and SCANIA sit at the no-signal boundary.](../results/figures/four_dataset_predictive_comparison.png)
 
 ### 6.3 Order effect under count-preserving null
 
@@ -696,20 +714,31 @@ at `last5`, same at `last10`), 30/35 `last5` itemsets and
 | last10 | `terminal_failure:2650 + terminal_failure:2655` | 4.00 | 2.1e-18 | 31 | 0 |
 | 6h | `system_warning:2000 + terminal_failure:2550 + terminal_failure:2650` (long-fault-chain terminal group) | 4.00 | 3.5e-12 | 20 | 0 |
 
-Interpretation: **generator-fan overload warning codes (2550, 2650,
-2655) are near-decision-rule strength precursors of the same-family
-Forced-outage events**. The two- and three-code chains such as
-`2125 + 2655` (Brake-close timeout combined with generator-fan
-overload) extend the same story: a specific mechanical stressor at
-the brake subsystem accompanies the terminal generator-fan overload.
-This is the paper's central hypothesis in its clearest form: a
-physical wear process cascades through discrete alarm codes at
-intermediate stages before a specific alarm terminates the cascade.
+Windows are strictly pre-anchor, so a `terminal_failure` token inside
+a window is a *prior* forced outage, not the anchor being predicted.
+The table therefore contains two distinct signature families, both at
+lift 4.00 with zero control hits. The first is **repeat-outage
+clustering**: a recent same-code generator-fan outage
+(`terminal_failure:2550`, `terminal_failure:2655`) strongly predicts
+the next, so these outages recur in bursts on the same turbine (45
+`last10` cases, 0 controls for `terminal_failure:2550`). The second,
+and the operationally decisive one, is **warning-to-outage
+precursors**: the pure generator-fan overload warning codes
+`system_warning:2550` and `system_warning:2655` precede the
+same-family Forced outage before any outage has occurred (24 `last5`
+cases, 0 controls for `system_warning:2655`). This is the paper's
+driving hypothesis in its clearest form: a physical wear process
+raises generator-fan overload warnings at an intermediate stage
+before the same fault terminates the cascade as a Forced outage.
 
-Use: **schedule generator cooling / bearing inspection the moment
-any of the codes 2550, 2650, 2655 fires as a warning**. On the
-2016-2017 inference half, `terminal_failure:2550` at `last5` fires in
-32 forced-outage windows with zero hits across 699 control windows.
+Use: two rules with different triggers. **Early warning**: schedule
+generator cooling and bearing inspection the moment `system_warning:2550`
+or `system_warning:2655` fires, before any outage. **Escalation**:
+after a generator-fan Forced outage, treat a second on the same
+turbine as imminent (the repeat-outage family). Both rules have zero
+false alarms over the 699 inference-half control windows at `last5`;
+§6.4b quantifies how much of the escalation signal the last-event
+baseline already captures.
 
 **Penmanshiel wind turbines (independent replication).** Nine
 Senvion MM82 turbines over 2016-06 to 2016-12. Fresh entity-disjoint
@@ -730,12 +759,15 @@ teething.
 | 6h | `system_stop:9210` (safety-9210 group) | 4.00 | 1.3e-98 | 150 | 0 |
 | 6h | `system_stop:9210 + terminal_failure:9210` | 4.00 | 1.3e-98 | 150 | 0 |
 
-Interpretation: **the safety-system code 9210 and its warning
-precursor 9000 are near-perfect cascade signatures on Penmanshiel**,
-firing 150 times in inference-half forced-outage windows and never
-in a matched control window over 1,344 samples. The frequency-
-converter chain `3543 -> 3000` is an independent second family with
-19 zero-control replications. Combined with Kelmarsh, this is the
+Interpretation: as on Kelmarsh, rows carrying a `terminal_failure`
+token are prior-outage clustering, while the pure warning and
+info-to-stop rows are the actionable precursors. **The pure warning
+code `system_warning:9000` precedes the safety-system 9210 Forced
+outage, and the safety-stop `system_stop:9210` reaches 150
+inference-half forced-outage windows with zero hits across 1,344
+matched controls**. The frequency-converter chain
+`system_info:3543 -> system_stop:3000` is an independent second
+precursor family with 19 zero-control replications. Combined with Kelmarsh, this is the
 first cross-farm cascade replication in the paper: two different
 turbine models on two different sites both produce lift-4.00 cascade
 signatures under the same mining protocol, with vendor-shared alarm
@@ -893,7 +925,11 @@ BY q < 0.05 test on any horizon.
 Interpretation: **alert cascades on BGL are self-triggering**. The
 non-alert stream (`system_error`, `system_warning`, `system_info`)
 carries no predictive information about the first alert of the next
-cascade.
+cascade. This is a different question from the one deep-learning log
+anomaly detectors answer on BGL (DeepLog, LogBERT, and related methods
+flag anomalous alert lines themselves); here the task is whether the
+non-alert stream predicts the first alert of the next episode, and on
+BGL it does not.
 
 Use: **negative recommendation**. do not deploy this pipeline on
 HPC-syslog data as an alert-cascade early-warning system. A better
@@ -940,19 +976,19 @@ Post-selection-valid inference has two visible consequences. First, the Azure
 `last10` fraction drops from 86% (naive) to 30% (BY-corrected on
 inference half); the extra patterns were selection artefacts. Second,
 the SCANIA `last20` fraction drops from 6.0% (naive) to 0% (post-
-selection valid): the 42,000-pattern mining run at minimum support 0.05
-does not survive an honest inference test. Both direction and
+selection valid): the 37,797-pattern discovery-half mining run at
+minimum support 0.05 does not survive an honest inference test. Both direction and
 magnitude of these shifts match the pre-registered concern about
 mining-and-testing on the same sample.
 
-The Azure / Alibaba wins persist in weaker but still substantive form
-(46-100% at rich horizons); SCANIA under post-selection-valid
+The Azure and Alibaba results persist in weaker but still substantive
+form (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate "some fraction is
 predictive" claim on this mining threshold and requires the matched
-conditional-logistic analysis in §6.8 instead. On the two positive traces the
-majority of frequent patterns are also predictive; on the two
-boundary traces the majority are frequent-but-noise, and the paper's
-concrete predictive-pattern list is short.
+conditional-logistic analysis in §6.8 instead. On Azure and Alibaba
+the majority of frequent patterns are also predictive; on BGL and
+SCANIA the majority are frequent-but-noise, and the paper's concrete
+predictive-pattern list is short.
 
 ### 6.6 Post-selection-valid sequence significance and closed-sequence compression
 
@@ -1313,6 +1349,24 @@ at all.
   representation we tested; scoping SCANIA as a boundary case
   reflects that finding.
 
+Scope of the statistical guarantees. The discovery/inference split is
+a single seeded partition; the reported fractions are point estimates
+under that partition, and the fixed seed policy is stated in §9. FDR
+is controlled within each (horizon, pattern-class) family, so a
+reader comparing significant fractions across horizons is reading
+several families rather than one corrected sweep. The inference-half
+lift is bounded above by 4.0 under 1:3 case-to-control matching, so a
+lift of 4.00 denotes a pattern that is present in failure windows and
+absent from every matched control, not an unbounded effect size. The
+cross-farm replication is cross-site and cross-model (MM92 vs MM82)
+but within one vendor's alarm firmware (Senvion), so it establishes
+transfer across turbine model and site rather than across alarm
+vocabularies. The Penmanshiel window covers the site's 2016
+commissioning phase, which the safety-system 9000/9210 family
+reflects. The operational base rate of 0.01 used for the calibrated
+PPV in §6.4c is an assumed deployment prior, not a measured fleet
+rate, and the PPV scales with it.
+
 ## 9  Reproducibility
 
 All code, mined-pattern parquets, discovery/inference splits, matched
@@ -1354,6 +1408,15 @@ stream, 4,544 windows x 42k candidate itemsets); the two wind-farm
 signature runs together take 8.6 seconds. Raw-trace download and
 initial window construction are one-time steps documented in the
 `ingest_*.json` artefacts and excluded from this number.
+
+Data availability and ethics. All six datasets are public and openly
+licensed (the four cited above under CC-BY-4.0, plus the Azure PdM
+sample and Alibaba cluster-trace-v2018 under their respective public
+terms); the paper introduces no new data collection. None of the
+traces contains personal or human-subject data: they are machine
+telemetry, cluster job logs, HPC syslogs, and industrial alarm codes.
+The derived event streams, windows, mined patterns, and all result
+artefacts are released in the repository under the same open terms.
 
 ## 10  Conclusion
 
