@@ -16,6 +16,7 @@ TODAY="$(date +%Y-%m-%d)"
 ( cd paper && pandoc skeleton.md \
     --citeproc \
     --bibliography=references.bib \
+    --csl=springer-basic-brackets.csl \
     --standalone \
     --metadata date="$TODAY" \
     --css=style.css --embed-resources \
@@ -25,6 +26,7 @@ TODAY="$(date +%Y-%m-%d)"
 pandoc paper/skeleton.md \
   --citeproc \
   --bibliography=paper/references.bib \
+  --csl=paper/springer-basic-brackets.csl \
   --standalone \
   --metadata date="$TODAY" \
   -o paper/skeleton.docx

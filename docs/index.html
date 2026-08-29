@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
@@ -29,7 +29,6 @@ vertical-align: middle;
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
 margin-left:2em;
@@ -177,29 +176,17 @@ border: none;
 }
 tbody tr:last-child td { padding-bottom: 0.55em; }
 
-body { counter-reset: fig-counter tab-counter; }
+table code { white-space: normal; overflow-wrap: anywhere; }
+
+
 figure { margin: 1.4em 0; text-align: center; }
 figure img { max-width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 3px; }
-figure figcaption::before {
-counter-increment: fig-counter;
-content: "Figure " counter(fig-counter) ". ";
-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-font-weight: 600;
-color: var(--ink);
-}
 figure figcaption {
 font-size: 0.9em;
 color: var(--muted);
 margin-top: 0.55em;
 text-align: center;
 padding: 0 1.5em;
-}
-table caption::before {
-counter-increment: tab-counter;
-content: "Table " counter(tab-counter) ". ";
-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-font-weight: 600;
-color: var(--ink);
 }
 table caption {
 caption-side: top;
@@ -219,28 +206,17 @@ font-style: italic;
 
 #refs {
 font-size: 0.9em;
-border-top: 1px solid var(--rule);
-padding-top: 1.1rem;
-margin-top: 3.2rem;
 font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
 }
-#refs::before {
-content: "References";
-display: block;
-font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-color: var(--accent);
-font-size: 1.22rem;
-font-weight: 600;
-border-bottom: 1px solid var(--hair);
-padding-bottom: 0.18rem;
-margin: 0 0 1rem;
-}
+
 #refs .csl-entry {
-text-indent: -1.35em;
-padding-left: 1.35em;
+display: flex;
+gap: 0.4em;
 margin: 0.5em 0;
 line-height: 1.5;
 }
+#refs .csl-left-margin { min-width: 2em; text-align: right; flex-shrink: 0; }
+#refs .csl-right-inline { flex: 1; }
 #refs a { color: var(--ink); text-decoration: none; }
 #refs a:hover { text-decoration: underline; }
 
@@ -395,35 +371,30 @@ to a controlled cross-site replication.</li>
 <h3 id="frequent-itemset-and-sequential-pattern-mining">2.1 Frequent
 itemset and sequential pattern mining</h3>
 <p>The two mining families this paper compares are well-established.
-Association-rule mining introduced Apriori <span class="citation" data-cites="agrawal1994fast">(Agrawal and Srikant 1994)</span> and
-FP-Growth <span class="citation" data-cites="han2000mining">(Han, Pei,
-and Yin 2000)</span> over unordered transactions, the latter avoiding
-candidate generation through a compressed frequent-pattern tree.
-Sequential pattern mining extended this to ordered event streams: GSP
-<span class="citation" data-cites="srikant1996gsp">(Srikant and Agrawal
-1996)</span> generalises Apriori-style level-wise generation to
-sequences; SPADE <span class="citation" data-cites="zaki2001spade">(Zaki
-2001)</span> uses a vertical id-list format; PrefixSpan <span class="citation" data-cites="pei2001prefixspan">(Pei et al. 2001)</span>
-uses prefix-projected pattern growth, and is the algorithm we use in
-this paper.</p>
-<p>Later variants sharpen the raw output. CM-SPAM / CM-SPADE <span class="citation" data-cites="fournierviger2014cmspade">(Fournier-Viger,
-Gomariz, et al. 2014)</span> speed vertical mining through co-occurrence
-pruning; VMSP <span class="citation" data-cites="fournierviger2014vmsp">(Fournier-Viger, Wu, et al.
-2014)</span> returns only maximal sequences, compressing the pattern set
-without losing coverage. A recent survey <span class="citation" data-cites="fournierviger2022patternmining">(Fournier-Viger et al.
-2022)</span> summarises open problems in the area. All of these
-algorithms are implemented in the SPMF library <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span>, which
+Association-rule mining introduced Apriori <span class="citation" data-cites="agrawal1994fast">[<a href="#ref-agrawal1994fast" role="doc-biblioref">1</a>]</span> and FP-Growth <span class="citation" data-cites="han2000mining">[<a href="#ref-han2000mining" role="doc-biblioref">2</a>]</span> over unordered transactions, the
+latter avoiding candidate generation through a compressed
+frequent-pattern tree. Sequential pattern mining extended this to
+ordered event streams: GSP <span class="citation" data-cites="srikant1996gsp">[<a href="#ref-srikant1996gsp" role="doc-biblioref">3</a>]</span> generalises Apriori-style level-wise
+generation to sequences; SPADE <span class="citation" data-cites="zaki2001spade">[<a href="#ref-zaki2001spade" role="doc-biblioref">4</a>]</span> uses a vertical id-list format;
+PrefixSpan <span class="citation" data-cites="pei2001prefixspan">[<a href="#ref-pei2001prefixspan" role="doc-biblioref">5</a>]</span> uses
+prefix-projected pattern growth, and is the algorithm we use in this
+paper.</p>
+<p>Later variants sharpen the raw output. CM-SPAM / CM-SPADE <span class="citation" data-cites="fournierviger2014cmspade">[<a href="#ref-fournierviger2014cmspade" role="doc-biblioref">6</a>]</span>
+speed vertical mining through co-occurrence pruning; VMSP <span class="citation" data-cites="fournierviger2014vmsp">[<a href="#ref-fournierviger2014vmsp" role="doc-biblioref">7</a>]</span>
+returns only maximal sequences, compressing the pattern set without
+losing coverage. A recent survey <span class="citation" data-cites="fournierviger2022patternmining">[<a href="#ref-fournierviger2022patternmining" role="doc-biblioref">8</a>]</span> summarises open problems in the area.
+All of these algorithms are implemented in the SPMF library <span class="citation" data-cites="fournier2016spmf">[<a href="#ref-fournier2016spmf" role="doc-biblioref">9</a>]</span>, which
 we call from Python for the sequence-mining half of our pipeline; the
-itemset half uses <code>mlxtend</code> <span class="citation" data-cites="raschka2018mlxtend">(Raschka 2018)</span>.</p>
+itemset half uses <code>mlxtend</code> <span class="citation" data-cites="raschka2018mlxtend">[<a href="#ref-raschka2018mlxtend" role="doc-biblioref">10</a>]</span>.</p>
 <h3 id="failure-prediction-from-operational-event-logs">2.2 Failure
 prediction from operational event logs</h3>
 <p>Two families of methods dominate the literature: (i) explicit
 frequent-pattern mining on parsed log templates, close to what this
 paper does, and (ii) deep learning over log sequences.</p>
-<p><strong>Pattern mining.</strong> Ren et al. <span class="citation" data-cites="ren2020failure">(Ren et al. 2021)</span> apply Spark
-FP-Growth to failure prediction on BlueGene/L, LANL-HPC, and CMRI-Hadoop
-logs, using event-density sliding windows over long-tail event
-vocabularies. İfraz and Ersöz <span class="citation" data-cites="ifraz2024sequential">(İfraz and Ersöz 2024)</span> run
+<p><strong>Pattern mining.</strong> Ren et al. <span class="citation" data-cites="ren2020failure">[<a href="#ref-ren2020failure" role="doc-biblioref">11</a>]</span> apply Spark FP-Growth to failure
+prediction on BlueGene/L, LANL-HPC, and CMRI-Hadoop logs, using
+event-density sliding windows over long-tail event vocabularies. İfraz
+and Ersöz <span class="citation" data-cites="ifraz2024sequential">[<a href="#ref-ifraz2024sequential" role="doc-biblioref">12</a>]</span> run
 PrefixSpan and Apriori side-by-side on a bus-fleet maintenance log,
 showing that sequence mining recovers “errors → replacement”
 trajectories that itemset mining misses. Both studies stop short of the
@@ -431,9 +402,9 @@ post-selection-valid matched-control + BY-corrected + predictive-utility
 comparison used here, and neither touches Alibaba PdM or Azure.</p>
 <p><strong>Industrial alarm-flood mining and wind-turbine alarm
 logs.</strong> The process-control community mines alarm sequences
-directly. Hu, Wang and Wang <span class="citation" data-cites="hu2023priority">(Hu, Wang, and Wang 2023)</span> mine
-priority-aware closed sequential patterns to compress alarm floods into
-compact patterns; Hu et al. <span class="citation" data-cites="hu2023frequent">(Hu, Gao, and Chen 2023)</span> adapt
+directly. Hu, Wang and Wang <span class="citation" data-cites="hu2023priority">[<a href="#ref-hu2023priority" role="doc-biblioref">13</a>]</span> mine priority-aware closed
+sequential patterns to compress alarm floods into compact patterns; Hu
+et al. <span class="citation" data-cites="hu2023frequent">[<a href="#ref-hu2023frequent" role="doc-biblioref">14</a>]</span> adapt
 PrefixSpan to tolerate the short-term order ambiguity of alarm
 timestamps. These methods are descriptive, keyed to frequency and
 compactness rather than a validated pre-failure claim; our
@@ -441,104 +412,94 @@ count-preserving order comparator (§4.7) is the principled test of
 exactly the order-vs-multiplicity ambiguity they handle heuristically,
 and our matched controls turn each mined pattern into an FDR-tested
 predictive hypothesis. On wind-turbine alarm logs specifically,
-Chatterjee and Dethlefs <span class="citation" data-cites="chatterjee2022deep">(Chatterjee and Dethlefs 2022)</span>
-predict repair actions with a bi-LSTM over turbine alarm sequences, and
-Shah and Tan <span class="citation" data-cites="shah2025alarm">(Shah and
-Tan 2025)</span> forecast future turbine alarms with LSTM regression.
-Both are black-box and forecast the alarm stream itself; we mine
-auditable pre-failure signatures on the same class of Senvion SCADA logs
-(Kelmarsh, Penmanshiel) with FDR guarantees and zero control-window
-false alarms.</p>
+Chatterjee and Dethlefs <span class="citation" data-cites="chatterjee2022deep">[<a href="#ref-chatterjee2022deep" role="doc-biblioref">15</a>]</span> predict repair actions with a
+bi-LSTM over turbine alarm sequences, and Shah and Tan <span class="citation" data-cites="shah2025alarm">[<a href="#ref-shah2025alarm" role="doc-biblioref">16</a>]</span> forecast
+future turbine alarms with LSTM regression. Both are black-box and
+forecast the alarm stream itself; we mine auditable pre-failure
+signatures on the same class of Senvion SCADA logs (Kelmarsh,
+Penmanshiel) with FDR guarantees and zero control-window false
+alarms.</p>
 <p><strong>Discriminative and statistically-significant pattern
-mining.</strong> Dong and Li <span class="citation" data-cites="dong1999emerging">(Dong and Li 1999)</span> introduced
-emerging patterns as itemsets whose support differs substantially
-between classes; Bay and Pazzani <span class="citation" data-cites="bay1999contrast">(Bay and Pazzani 1999)</span> formulated
-the parallel notion of contrast sets in the same year. This
+mining.</strong> Dong and Li <span class="citation" data-cites="dong1999emerging">[<a href="#ref-dong1999emerging" role="doc-biblioref">17</a>]</span> introduced emerging patterns as
+itemsets whose support differs substantially between classes; Bay and
+Pazzani <span class="citation" data-cites="bay1999contrast">[<a href="#ref-bay1999contrast" role="doc-biblioref">18</a>]</span>
+formulated the parallel notion of contrast sets in the same year. This
 class-contrast literature is a direct ancestor of the paper’s
 predictive-vs-frequent-noise separation. Statistically significant
-pattern mining sharpens the criterion: Terada et al. <span class="citation" data-cites="terada2013statssp">(Terada et al.
-2013)</span> give an exact family-wise-error control for combinatorial
-regulations, and the Hämäläinen-Webb tutorial <span class="citation" data-cites="hamalainen2019tutorial">(Hämäläinen and Webb 2019)</span> is
-the canonical statement of the multiple-testing pitfalls this class of
-method must handle. Recent work controls the false discovery rate
-directly: Dalleiger and Vreeken <span class="citation" data-cites="dalleiger2022significant">(Dalleiger and Vreeken
-2022)</span> test pattern significance against an evolving data model
-under sequential FDR control, and Pellegrina and Vandin <span class="citation" data-cites="pellegrina2024efficient">(Pellegrina and
-Vandin 2024)</span> mine significant itemsets, sequential patterns, and
-subgroups with rigorous guarantees via few-shot resampling. These are
-our closest methodological siblings. All of these methods share the
-ordinary post-selection-inference concern (Fithian, Sun and Taylor <span class="citation" data-cites="fithian2014optimal">(Fithian, Sun, and
-Taylor 2014)</span>) that mining and testing on the same sample
-invalidates marginal p-values; we address it via entity-disjoint
-discovery/inference splits (§4.5) and add the pre-failure windowing and
-survival-matched design that the general-purpose significance frameworks
-do not model.</p>
-<p><strong>Deep learning on log sequences.</strong> DeepLog <span class="citation" data-cites="du2017deeplog">(Du et al. 2017)</span>
-frames system-log anomaly detection as next-template prediction with a
-stacked LSTM, and remains the canonical DL baseline. LogAnomaly <span class="citation" data-cites="meng2019loganomaly">(Meng et al.
-2019)</span> adds unsupervised quantitative-anomaly detection alongside
-sequential anomalies. LogRobust <span class="citation" data-cites="zhang2019logrobust">(Zhang et al. 2019)</span> adds an
-attention Bi-LSTM to survive log-template drift, and PLELog <span class="citation" data-cites="yang2021plelog">(Yang et al. 2021)</span>
-introduces semi-supervised label estimation for the weakly-labelled
-setting. Recent transformer approaches (LogBERT <span class="citation" data-cites="guo2021logbert">(Haixuan Guo, Yuan, and Wu 2021)</span>;
-LogFormer <span class="citation" data-cites="guo2024logformer">(Hongcheng Guo et al. 2024)</span>)
-pre-train on unlabelled logs and fine-tune for anomaly detection; the
-Landauer et al. survey <span class="citation" data-cites="landauer2023deep">(Landauer et al. 2023)</span> catalogues
-this landscape and its benchmark datasets (including BGL). Hadadi et al.
-<span class="citation" data-cites="hadadi2024systematic">(Hadadi et al.
-2024)</span> give the systematic controlled study of log-embedding by
-architecture combinations for log-based failure prediction, the
-canonical modern DL baseline framing. These methods generally outperform
-classical pattern miners on held-out AUROC when trained on enough data,
-but produce opaque per-line anomaly scores rather than interpretable
-pre-failure signatures. Our contribution is orthogonal: we ask whether
-explicit ordered patterns add signal over their itemset counterparts,
-with every mined pattern human-readable and independently
-significance-tested.</p>
+pattern mining sharpens the criterion: Terada et al. <span class="citation" data-cites="terada2013statssp">[<a href="#ref-terada2013statssp" role="doc-biblioref">19</a>]</span> give
+an exact family-wise-error control for combinatorial regulations, and
+the Hämäläinen-Webb tutorial <span class="citation" data-cites="hamalainen2019tutorial">[<a href="#ref-hamalainen2019tutorial" role="doc-biblioref">20</a>]</span>
+is the canonical statement of the multiple-testing pitfalls this class
+of method must handle. Recent work controls the false discovery rate
+directly: Dalleiger and Vreeken <span class="citation" data-cites="dalleiger2022significant">[<a href="#ref-dalleiger2022significant" role="doc-biblioref">21</a>]</span>
+test pattern significance against an evolving data model under
+sequential FDR control, and Pellegrina and Vandin <span class="citation" data-cites="pellegrina2024efficient">[<a href="#ref-pellegrina2024efficient" role="doc-biblioref">22</a>]</span>
+mine significant itemsets, sequential patterns, and subgroups with
+rigorous guarantees via few-shot resampling. These are our closest
+methodological siblings. All of these methods share the ordinary
+post-selection-inference concern (Fithian, Sun and Taylor <span class="citation" data-cites="fithian2014optimal">[<a href="#ref-fithian2014optimal" role="doc-biblioref">23</a>]</span>) that
+mining and testing on the same sample invalidates marginal p-values; we
+address it via entity-disjoint discovery/inference splits (§4.5) and add
+the pre-failure windowing and survival-matched design that the
+general-purpose significance frameworks do not model.</p>
+<p><strong>Deep learning on log sequences.</strong> DeepLog <span class="citation" data-cites="du2017deeplog">[<a href="#ref-du2017deeplog" role="doc-biblioref">24</a>]</span> frames
+system-log anomaly detection as next-template prediction with a stacked
+LSTM, and remains the canonical DL baseline. LogAnomaly <span class="citation" data-cites="meng2019loganomaly">[<a href="#ref-meng2019loganomaly" role="doc-biblioref">25</a>]</span> adds
+unsupervised quantitative-anomaly detection alongside sequential
+anomalies. LogRobust <span class="citation" data-cites="zhang2019logrobust">[<a href="#ref-zhang2019logrobust" role="doc-biblioref">26</a>]</span> adds an attention Bi-LSTM to survive
+log-template drift, and PLELog <span class="citation" data-cites="yang2021plelog">[<a href="#ref-yang2021plelog" role="doc-biblioref">27</a>]</span> introduces semi-supervised label
+estimation for the weakly-labelled setting. Recent transformer
+approaches (LogBERT <span class="citation" data-cites="guo2021logbert">[<a href="#ref-guo2021logbert" role="doc-biblioref">28</a>]</span>; LogFormer <span class="citation" data-cites="guo2024logformer">[<a href="#ref-guo2024logformer" role="doc-biblioref">29</a>]</span>) pre-train on unlabelled logs and
+fine-tune for anomaly detection; the Landauer et al. survey <span class="citation" data-cites="landauer2023deep">[<a href="#ref-landauer2023deep" role="doc-biblioref">30</a>]</span>
+catalogues this landscape and its benchmark datasets (including BGL).
+Hadadi et al. <span class="citation" data-cites="hadadi2024systematic">[<a href="#ref-hadadi2024systematic" role="doc-biblioref">31</a>]</span> give the systematic controlled study
+of log-embedding by architecture combinations for log-based failure
+prediction, the canonical modern DL baseline framing. These methods
+generally outperform classical pattern miners on held-out AUROC when
+trained on enough data, but produce opaque per-line anomaly scores
+rather than interpretable pre-failure signatures. Our contribution is
+orthogonal: we ask whether explicit ordered patterns add signal over
+their itemset counterparts, with every mined pattern human-readable and
+independently significance-tested.</p>
 <h3 id="log-parsing-infrastructure">2.3 Log-parsing infrastructure</h3>
 <p>The raw text of most system logs must first be converted into event
 templates before either family of methods applies. The Loghub collection
-<span class="citation" data-cites="zhu2023loghub">(Zhu et al.
-2023)</span> curates parsed versions of BGL, HDFS, Thunderbird, and 13
-other benchmark log datasets; the parsing benchmark of Zhu et al. <span class="citation" data-cites="zhu2019logparsing">(Zhu et al. 2019)</span>
-compares Drain and alternative parsers on the same corpora. We take BGL
-from Loghub directly and use its native label field, avoiding the
-parsing step as a confound.</p>
+<span class="citation" data-cites="zhu2023loghub">[<a href="#ref-zhu2023loghub" role="doc-biblioref">32</a>]</span> curates
+parsed versions of BGL, HDFS, Thunderbird, and 13 other benchmark log
+datasets; the parsing benchmark of Zhu et al. <span class="citation" data-cites="zhu2019logparsing">[<a href="#ref-zhu2019logparsing" role="doc-biblioref">33</a>]</span> compares Drain and alternative
+parsers on the same corpora. We take BGL from Loghub directly and use
+its native label field, avoiding the parsing step as a confound.</p>
 <h3 id="failure-characterisation-on-alibaba-and-bgl">2.4 Failure
 characterisation on Alibaba and BGL</h3>
-<p>Cheng et al. <span class="citation" data-cites="cheng2018characterizing">(Cheng, Chai, and Anwar
-2018)</span> provide the standard characterisation of the Alibaba 2018
-trace, reporting failure statistics and co-location effects but not
-extracting sequential patterns. Luo et al. <span class="citation" data-cites="luo2021alibaba">(Luo et al. 2021)</span> extend this to the
-microservice trace with focus on dependency and latency rather than
-fault prediction. Oliner and Stearley <span class="citation" data-cites="oliner2007supercomputers">(Oliner and Stearley 2007)</span>
+<p>Cheng et al. <span class="citation" data-cites="cheng2018characterizing">[<a href="#ref-cheng2018characterizing" role="doc-biblioref">34</a>]</span>
+provide the standard characterisation of the Alibaba 2018 trace,
+reporting failure statistics and co-location effects but not extracting
+sequential patterns. Luo et al. <span class="citation" data-cites="luo2021alibaba">[<a href="#ref-luo2021alibaba" role="doc-biblioref">35</a>]</span> extend this to the microservice
+trace with focus on dependency and latency rather than fault prediction.
+Oliner and Stearley <span class="citation" data-cites="oliner2007supercomputers">[<a href="#ref-oliner2007supercomputers" role="doc-biblioref">36</a>]</span>
 introduce the BGL log we use, along with four other HPC logs, and
 characterise their alert statistics.</p>
 <h3 id="predictive-maintenance-beyond-system-logs">2.5 Predictive
 maintenance beyond system logs</h3>
 <p>The broader predictive-maintenance literature works mostly on
-continuous sensor telemetry. NASA C-MAPSS <span class="citation" data-cites="saxena2008cmapss">(Saxena et al. 2008)</span> is the
-de-facto Remaining-Useful-Life benchmark; recent surveys <span class="citation" data-cites="serradilla2022pdmsurvey">(Serradilla et al.
-2022)</span> catalogue the deep-learning methods trained on it.
-Automotive predictive maintenance has historically used per-vehicle
-sensor snapshots (SCANIA APS Failure via the IDA 2016 industrial
-challenge <span class="citation" data-cites="costa2016ida">(Costa and
-Nascimento 2016)</span>); the SCANIA Component X release <span class="citation" data-cites="kharazian2025scania">(Kharazian et al.
-2025)</span> we adopt extends this to a per-vehicle longitudinal readout
-stream. Our work sits between these traditions: we take discrete-event
-traces where possible, and derive discrete tokens (per §3.6) where we
-must.</p>
+continuous sensor telemetry. NASA C-MAPSS <span class="citation" data-cites="saxena2008cmapss">[<a href="#ref-saxena2008cmapss" role="doc-biblioref">37</a>]</span> is the de-facto
+Remaining-Useful-Life benchmark; recent surveys <span class="citation" data-cites="serradilla2022pdmsurvey">[<a href="#ref-serradilla2022pdmsurvey" role="doc-biblioref">38</a>]</span>
+catalogue the deep-learning methods trained on it. Automotive predictive
+maintenance has historically used per-vehicle sensor snapshots (SCANIA
+APS Failure via the IDA 2016 industrial challenge <span class="citation" data-cites="costa2016ida">[<a href="#ref-costa2016ida" role="doc-biblioref">39</a>]</span>); the SCANIA Component X release
+<span class="citation" data-cites="kharazian2025scania">[<a href="#ref-kharazian2025scania" role="doc-biblioref">40</a>]</span> we
+adopt extends this to a per-vehicle longitudinal readout stream. Our
+work sits between these traditions: we take discrete-event traces where
+possible, and derive discrete tokens (per §3.6) where we must.</p>
 <h3 id="statistical-significance">2.6 Statistical significance</h3>
-<p>We apply Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
-1995)</span> to the one-sided hypergeometric p-values on the inference
-half of the discovery/inference split (§4.5). For arbitrary dependence
-between p-values (justified when mined patterns share items), we also
-report the more conservative Benjamini-Yekutieli correction <span class="citation" data-cites="benjamini2001control">(Benjamini and
-Yekutieli 2001)</span>. The Prentice-Breslow retrospective-cohort
-framework <span class="citation" data-cites="prentice1978retrospective">(Prentice and Breslow
-1978)</span> and the Langholz-Goldstein risk-set-sampling review <span class="citation" data-cites="langholz1996risk">(Langholz and Goldstein
-1996)</span> motivate the matched conditional logistic estimator we use
-for SCANIA (§4.6).</p>
+<p>We apply Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">[<a href="#ref-benjamini1995controlling" role="doc-biblioref">41</a>]</span>
+to the one-sided hypergeometric p-values on the inference half of the
+discovery/inference split (§4.5). For arbitrary dependence between
+p-values (justified when mined patterns share items), we also report the
+more conservative Benjamini-Yekutieli correction <span class="citation" data-cites="benjamini2001control">[<a href="#ref-benjamini2001control" role="doc-biblioref">42</a>]</span>. The Prentice-Breslow
+retrospective-cohort framework <span class="citation" data-cites="prentice1978retrospective">[<a href="#ref-prentice1978retrospective" role="doc-biblioref">43</a>]</span> and the Langholz-Goldstein
+risk-set-sampling review <span class="citation" data-cites="langholz1996risk">[<a href="#ref-langholz1996risk" role="doc-biblioref">44</a>]</span> motivate the matched conditional
+logistic estimator we use for SCANIA (§4.6).</p>
 <h3 id="positioning">2.7 Positioning</h3>
 <p>The paper’s contribution is a single methodological package applied
 uniformly across six traces: entity-disjoint post-selection-valid
@@ -559,10 +520,10 @@ corpus, and one automotive fleet trace.</p>
 <h3 id="kelmarsh-wind-farm-alarm-logs-production-per-turbine">3.1
 Kelmarsh wind-farm alarm logs (production, per-turbine)</h3>
 <p>Six Senvion MM92 wind turbines at the Kelmarsh site, released by
-Plumley 2022 <span class="citation" data-cites="plumley2022kelmarsh">(Plumley 2022a)</span> via Zenodo
-record 5841834 under CC-BY-4.0. Each turbine’s status log carries every
-alarm/event that the SCADA emitted over the year, together with an IEC
-category (<code>Full Performance</code>, <code>Forced outage</code>,
+Plumley 2022 <span class="citation" data-cites="plumley2022kelmarsh">[<a href="#ref-plumley2022kelmarsh" role="doc-biblioref">45</a>]</span> via
+Zenodo record 5841834 under CC-BY-4.0. Each turbine’s status log carries
+every alarm/event that the SCADA emitted over the year, together with an
+IEC category (<code>Full Performance</code>, <code>Forced outage</code>,
 <code>Out of Environmental Specification</code>, …).</p>
 <p>Across 2016-2017 the six turbines produced 63,633 status events, of
 which 482 were tagged <code>Forced outage</code> (real physical
@@ -588,16 +549,16 @@ Forced outage.</p>
 <h3 id="penmanshiel-wind-farm-alarm-logs-production-per-turbine">3.2
 Penmanshiel wind-farm alarm logs (production, per-turbine)</h3>
 <p>Nine of the fourteen Senvion MM82 turbines at the Penmanshiel site
-(Cubico Sustainable Investments; Plumley 2022 <span class="citation" data-cites="plumley2022penmanshiel">(Plumley 2022b)</span> Zenodo record
-5946808 under CC-BY-4.0), same Greenbyte SCADA schema as Kelmarsh. For
-the second half of 2016 (2016-06 through 2016-12, when the site went
-live) the nine turbines produced 15,388 status events, of which 790 were
-tagged <code>Forced outage</code>. This is the paper’s largest
-single-year forced-outage count on a physical cascade trace, and the
-alarm vocabulary is Senvion-shared with Kelmarsh, so Penmanshiel is an
-independent replication of the Kelmarsh cascade finding on turbines of a
-different rotor size (MM82 vs MM92) at a site with different terrain and
-weather.</p>
+(Cubico Sustainable Investments; Plumley 2022 <span class="citation" data-cites="plumley2022penmanshiel">[<a href="#ref-plumley2022penmanshiel" role="doc-biblioref">46</a>]</span>
+Zenodo record 5946808 under CC-BY-4.0), same Greenbyte SCADA schema as
+Kelmarsh. For the second half of 2016 (2016-06 through 2016-12, when the
+site went live) the nine turbines produced 15,388 status events, of
+which 790 were tagged <code>Forced outage</code>. This is the paper’s
+largest single-year forced-outage count on a physical cascade trace, and
+the alarm vocabulary is Senvion-shared with Kelmarsh, so Penmanshiel is
+an independent replication of the Kelmarsh cascade finding on turbines
+of a different rotor size (MM82 vs MM92) at a site with different
+terrain and weather.</p>
 <p>Entity is the turbine (<code>P01</code>..<code>P15</code>,
 <code>P03</code> is not in the release), subtype is the numeric fault
 code.</p>
@@ -618,16 +579,16 @@ for subsequent real failures.</p>
 <code>maintenance</code>, <code>component_replacement</code>,
 <code>terminal_failure</code>, each with a subtype
 (<code>error1..error5</code>, <code>comp1..comp4</code>). Entity is
-<code>machineID</code>. Source: <span class="citation" data-cites="azurepdm">(Microsoft 2016)</span>.</p>
+<code>machineID</code>. Source: <span class="citation" data-cites="azurepdm">[<a href="#ref-azurepdm" role="doc-biblioref">47</a>]</span>.</p>
 <h3 id="alibaba-cluster-trace-v2018-production-cloud-per-job">3.4
 Alibaba cluster-trace-v2018 (production cloud, per-job)</h3>
-<p><code>batch_task.csv</code> from the public Alibaba trace <span class="citation" data-cites="alibaba2018repo alibaba2018trace">(Alibaba
-2018; Lu et al. 2017)</span>, 14,295,731 tasks across 4,201,014 jobs,
-8.9 days (2018-01-01 through 2018-01-09 by trace clock). 83,207 jobs
-contain at least one <code>Failed</code> task.
-<code>batch_instance.csv</code> (21 GB compressed) is not used in this
-pass; the per-job analysis on <code>batch_task</code> alone is
-sufficient to answer the ordering question.</p>
+<p><code>batch_task.csv</code> from the public Alibaba trace <span class="citation" data-cites="alibaba2018repo alibaba2018trace">[<a href="#ref-alibaba2018repo" role="doc-biblioref">48</a>, <a href="#ref-alibaba2018trace" role="doc-biblioref">49</a>]</span>,
+14,295,731 tasks across 4,201,014 jobs, 8.9 days (2018-01-01 through
+2018-01-09 by trace clock). 83,207 jobs contain at least one
+<code>Failed</code> task. <code>batch_instance.csv</code> (21 GB
+compressed) is not used in this pass; the per-job analysis on
+<code>batch_task</code> alone is sufficient to answer the ordering
+question.</p>
 <p>Event vocabulary: <code>task_failure</code>,
 <code>task_success</code>, <code>task_waiting</code>,
 <code>task_running</code>, each with subtype = task_name letter prefix
@@ -637,21 +598,20 @@ sufficient to answer the ordering question.</p>
 <h3 id="llnl-blue-genel-syslogs-loghub-per-rack">3.5 LLNL Blue Gene/L
 syslogs (Loghub, per-rack)</h3>
 <p>4,747,963 syslog messages from LLNL Blue Gene/L, 214.7 days
-(2005-06-03 to 2006-01-04), from the Loghub archive <span class="citation" data-cites="zhu2023loghub oliner2007supercomputers">(Zhu et al. 2023;
-Oliner and Stearley 2007)</span>. 913,594 messages remain after dropping
-INFO-level noise; 348,189 (7.34%) are labelled alerts. Entity is the
-rack (top-level <code>R##</code> prefix of the node ID); 64 racks. Event
-vocabulary: <code>terminal_alert</code> (labelled alerts with 30+ alert
-codes such as KERNMNTF, APPTO, KERNSTOR), <code>system_error</code>
-(non-alert FATAL / ERROR / SEVERE / FAILURE),
+(2005-06-03 to 2006-01-04), from the Loghub archive <span class="citation" data-cites="zhu2023loghub oliner2007supercomputers">[<a href="#ref-zhu2023loghub" role="doc-biblioref">32</a>, <a href="#ref-oliner2007supercomputers" role="doc-biblioref">36</a>]</span>. 913,594 messages remain after
+dropping INFO-level noise; 348,189 (7.34%) are labelled alerts. Entity
+is the rack (top-level <code>R##</code> prefix of the node ID); 64
+racks. Event vocabulary: <code>terminal_alert</code> (labelled alerts
+with 30+ alert codes such as KERNMNTF, APPTO, KERNSTOR),
+<code>system_error</code> (non-alert FATAL / ERROR / SEVERE / FAILURE),
 <code>system_warning</code>. Component (RAS, KERNEL, APP, MMCS, …) is
 used as an additional subtype axis.</p>
 <h3 id="scania-component-x-production-automotive-per-vehicle">3.6 SCANIA
 Component X (production automotive, per-vehicle)</h3>
-<p>Real fleet telematics dataset released 2025 <span class="citation" data-cites="kharazian2025scania">(Kharazian et al. 2025)</span>, 23,550
-trucks over 1.5 years (2019-01 through 2020-05 in study clock),
-1,122,452 readouts of 105 numeric counter and histogram features. 2,272
-vehicles (9.65%) undergo a component X repair during the study.</p>
+<p>Real fleet telematics dataset released 2025 <span class="citation" data-cites="kharazian2025scania">[<a href="#ref-kharazian2025scania" role="doc-biblioref">40</a>]</span>, 23,550 trucks over 1.5 years
+(2019-01 through 2020-05 in study clock), 1,122,452 readouts of 105
+numeric counter and histogram features. 2,272 vehicles (9.65%) undergo a
+component X repair during the study.</p>
 <p>Because features are numeric counters rather than native discrete
 events, we derive tokens: for each (vehicle, feature) we compute
 inter-readout deltas and emit a <code>counter_surprise</code> token per
@@ -720,7 +680,7 @@ or per-episode observations).</p>
 <p>Items are <code>event_type:event_subtype</code> strings. FP-Growth
 (<code>mlxtend.frequent_patterns.fpgrowth</code>) mines frequent
 itemsets on failure windows at minimum support 0.05. PrefixSpan (SPMF
-v2.64 <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span> via
+v2.64 <span class="citation" data-cites="fournier2016spmf">[<a href="#ref-fournier2016spmf" role="doc-biblioref">9</a>]</span> via
 subprocess) mines frequent ordered sequences at the same support.</p>
 <p>For each mined pattern P we compute support in failure windows
 (support_failure), support in control windows (support_control), lift =
@@ -752,12 +712,11 @@ we observe the truck”. Component X in §3.6 has exactly this problem:
 short-observation trucks have 12% failure rate; long-observation trucks
 have 5%.</p>
 <p>Following the epidemiological literature on incidence-density
-sampling <span class="citation" data-cites="prentice1978retrospective rothman2008modern">(Prentice and
-Breslow 1978; Rothman, Greenland, and Lash 2008)</span>, we replace
-§4.1’s sampler with a risk-set matched design: for each case with
-observed failure time T_f, controls are drawn from the risk set at T_f
-(the set of entities still under observation at that lifetime index) and
-their windows are aligned to T_f rather than to their own
+sampling <span class="citation" data-cites="prentice1978retrospective rothman2008modern">[<a href="#ref-prentice1978retrospective" role="doc-biblioref">43</a>, <a href="#ref-rothman2008modern" role="doc-biblioref">50</a>]</span>, we
+replace §4.1’s sampler with a risk-set matched design: for each case
+with observed failure time T_f, controls are drawn from the risk set at
+T_f (the set of entities still under observation at that lifetime index)
+and their windows are aligned to T_f rather than to their own
 end-of-observation. Both case and control windows use the last K events
 with time_step &lt; T_f. Under this sampling, the pooled 2×2 odds ratio
 of a mined pattern (case-in vs case-out; control-in vs control-out,
@@ -779,8 +738,7 @@ hypergeometric p-values on the same failure/control counts yields
 post-selection- invalid marginal p-values: the candidate set is chosen
 because it has high support in failure windows, so the fixed-hit-set
 null is not the null the pipeline actually operates under. BH or BY
-correction on those marginal p-values does not restore validity <span class="citation" data-cites="fithian2014optimal loftus2015selective">(Fithian, Sun, and
-Taylor 2014; Loftus and Taylor 2015)</span>.</p>
+correction on those marginal p-values does not restore validity <span class="citation" data-cites="fithian2014optimal loftus2015selective">[<a href="#ref-fithian2014optimal" role="doc-biblioref">23</a>, <a href="#ref-loftus2015selective" role="doc-biblioref">51</a>]</span>.</p>
 <p>Our fix, applied to every trace: split the training set entity-
 disjoint into a 50% <strong>discovery</strong> half and a 50%
 <strong>inference</strong> half. FP-Growth / PrefixSpan run on the
@@ -809,9 +767,8 @@ SCANIA patterns discards the matched-set structure that makes the
 estimator censoring-valid. The standard estimator under incidence-
 density (risk-set) sampling is a conditional logistic regression
 stratified by matched set, equivalent to the sampled Cox partial
-likelihood restricted to the pattern indicator <span class="citation" data-cites="prentice1978retrospective langholz1996risk">(Prentice and
-Breslow 1978; Langholz and Goldstein 1996)</span>. We estimate every
-SCANIA pattern’s coefficient with
+likelihood restricted to the pattern indicator <span class="citation" data-cites="prentice1978retrospective langholz1996risk">[<a href="#ref-prentice1978retrospective" role="doc-biblioref">43</a>, <a href="#ref-langholz1996risk" role="doc-biblioref">44</a>]</span>. We
+estimate every SCANIA pattern’s coefficient with
 <code>statsmodels.ConditionalLogit</code> stratified by
 <code>match_id</code>; each case and its three risk-set-matched controls
 form one stratum. Reported hazard ratios and 95% CIs are from that
@@ -839,9 +796,8 @@ null with the pattern hit-set fixed. Under H0 the number of hits landing
 in the failure class is Hypergeom(N_F+N_C, hit_F+hit_C, N_F); the
 upper-tail probability of the observed hit count <em>is</em> the
 label-permutation p-value, so we compute it in closed form.
-Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">(Benjamini and Hochberg
-1995)</span> is applied per (horizon × pattern class) to give
-q-values.</p>
+Benjamini-Hochberg FDR correction <span class="citation" data-cites="benjamini1995controlling">[<a href="#ref-benjamini1995controlling" role="doc-biblioref">41</a>]</span>
+is applied per (horizon × pattern class) to give q-values.</p>
 <h2 id="experiments">5 Experiments</h2>
 <p>Windows are split temporally by anchor timestamp. Cutoffs: Azure
 2015-09-01, Alibaba 2018-01-07, BGL 2005-11-01, SCANIA 2020-01-01.
@@ -883,6 +839,8 @@ sensitivity to minimum support (Azure)</h3>
 <p>A minimum support sweep over {0.02, 0.05, 0.10, 0.15} preserves the
 headline ordering at every operating point:</p>
 <table>
+<caption><strong>Table 1.</strong> Predictive AUROC on Azure by feature
+set across the FP-Growth minimum-support sweep.</caption>
 <thead>
 <tr class="header">
 <th>horizon</th>
@@ -992,6 +950,8 @@ Predictive evaluation (four temporally-split traces)</h3>
 farms are evaluated via the discovery/inference signature protocol of
 §6.4, not this temporal-split predictive table):</p>
 <table>
+<caption><strong>Table 2.</strong> Held-out AUROC / AUPRC by feature set
+on the four temporally-split traces.</caption>
 <colgroup>
 <col style="width: 11%" />
 <col style="width: 11%" />
@@ -1131,6 +1091,9 @@ contribution as
 <code>order effect = real_lift − mean(count-preserving-shuffle_lift)</code>.
 Top-20 sequences per horizon:</p>
 <table>
+<caption><strong>Table 3.</strong> Order effect under the
+count-preserving null: real lift, shuffled-null lift, and their
+difference.</caption>
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 12%" />
@@ -1216,90 +1179,92 @@ the inference half of the 2016-2017 fleet (233 fail / 699 ctrl windows
 at <code>last5</code>, same at <code>last10</code>), 30/35
 <code>last5</code> itemsets and 113/136 <code>last10</code> itemsets
 pass BY q&lt;0.05.</p>
-<table style="width:100%;">
+<table>
+<caption><strong>Table 4.</strong> Top Kelmarsh generator-fan signatures
+on the inference half.</caption>
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>horizon</th>
 <th>pattern (code:message)</th>
-<th>inf-half lift</th>
-<th>BY q</th>
-<th>n_case</th>
-<th>n_ctrl</th>
+<th style="text-align: right;">inf-half lift</th>
+<th style="text-align: right;">BY q</th>
+<th style="text-align: right;">n_case</th>
+<th style="text-align: right;">n_ctrl</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>last5</td>
 <td><code>terminal_failure:2550</code> (Overload gen fan 1)</td>
-<td>4.00</td>
-<td>1.4e-18</td>
-<td>32</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.4e-18</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last5</td>
 <td><code>system_warning:2550 + terminal_failure:2550</code></td>
-<td>4.00</td>
-<td>4.9e-16</td>
-<td>27</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">4.9e-16</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>last5</td>
 <td><code>system_warning:2655</code> (Overload gen fan 3)</td>
-<td>4.00</td>
-<td>1.9e-14</td>
-<td>24</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.9e-14</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last10</td>
 <td><code>terminal_failure:2550</code></td>
-<td>4.00</td>
-<td>1.9e-26</td>
-<td>45</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.9e-26</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>last10</td>
 <td><code>terminal_failure:2655</code></td>
-<td>4.00</td>
-<td>9.6e-25</td>
-<td>42</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">9.6e-25</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last10</td>
 <td><code>system_warning:2655 + terminal_failure:2655</code></td>
-<td>4.00</td>
-<td>2.7e-23</td>
-<td>39</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">2.7e-23</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>last10</td>
 <td><code>terminal_failure:2650 + terminal_failure:2655</code></td>
-<td>4.00</td>
-<td>2.1e-18</td>
-<td>31</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">2.1e-18</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>6h</td>
 <td><code>system_warning:2000 + terminal_failure:2550 + terminal_failure:2650</code>
 (long-fault-chain terminal group)</td>
-<td>4.00</td>
-<td>3.5e-12</td>
-<td>20</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">3.5e-12</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
@@ -1349,82 +1314,84 @@ cascades at lift 4.00) with a different code family driving the
 leaderboard (safety-system 9000/9210 codes and frequency-converter 3000
 codes), consistent with the Penmanshiel fleet’s known 2016
 commissioning-phase safety-system teething.</p>
-<table style="width:100%;">
+<table>
+<caption><strong>Table 5.</strong> Top Penmanshiel signatures on the
+inference half.</caption>
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>horizon</th>
 <th>pattern</th>
-<th>inf-half lift</th>
-<th>BY q</th>
-<th>n_case</th>
-<th>n_ctrl</th>
+<th style="text-align: right;">inf-half lift</th>
+<th style="text-align: right;">BY q</th>
+<th style="text-align: right;">n_case</th>
+<th style="text-align: right;">n_ctrl</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>last5</td>
 <td><code>system_warning:9000 + terminal_failure:9210</code></td>
-<td>4.00</td>
-<td>1.4e-43</td>
-<td>70</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.4e-43</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last5</td>
 <td><code>system_info:0 + system_warning:9000 + terminal_failure:9210</code></td>
-<td>4.00</td>
-<td>1.4e-43</td>
-<td>70</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.4e-43</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>last5</td>
 <td><code>system_stop:9210 + system_warning:9000</code></td>
-<td>4.00</td>
-<td>1.5e-34</td>
-<td>56</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.5e-34</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last10</td>
 <td><code>system_info:3543 + system_stop:3000 + terminal_failure:3000</code>
 (freq-converter chain)</td>
-<td>4.00</td>
-<td>2.2e-11</td>
-<td>19</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">2.2e-11</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>last10</td>
 <td><code>system_info:3543 + system_warning:5720 + terminal_failure:3000</code></td>
-<td>4.00</td>
-<td>2.2e-11</td>
-<td>19</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">2.2e-11</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>6h</td>
 <td><code>system_stop:9210</code> (safety-9210 group)</td>
-<td>4.00</td>
-<td>1.3e-98</td>
-<td>150</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.3e-98</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>6h</td>
 <td><code>system_stop:9210 + terminal_failure:9210</code></td>
-<td>4.00</td>
-<td>1.3e-98</td>
-<td>150</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">1.3e-98</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
@@ -1464,6 +1431,9 @@ window’s event count exceeds the median count of discovery-half failure
 windows.</li>
 </ol>
 <table style="width:100%;">
+<caption><strong>Table 6.</strong> Baseline comparison on the wind
+farms: the mined-itemset rule against most-recent-event and event-count
+baselines.</caption>
 <colgroup>
 <col style="width: 19%" />
 <col style="width: 13%" />
@@ -1599,17 +1569,19 @@ BY-significant closed itemsets on the inference half, not the raw miner
 output.</p>
 <h3 id="case-control-ratio-and-posterior-at-the-operational-base-rate">6.6
 Case-control ratio and posterior at the operational base rate</h3>
-<p>Every discovery/inference table above is scored on a matched-control
-sample built at case:control = 1:3, so the pipeline’s sample base rate
-is P(fail) = 0.25 by construction, and the precision numbers in the
-table above cannot be read directly as the operational posterior in a
-deployment where forced outages are much rarer. To turn the
+<p>Every discovery/inference signature table is scored on a
+matched-control sample built at case:control = 1:3, so the pipeline’s
+sample base rate is P(fail) = 0.25 by construction, and the precision
+numbers of Table 6 cannot be read directly as the operational posterior
+in a deployment where forced outages are much rarer. To turn the
 inference-half precision into an interpretable operational number, we
 invert the empirical sensitivity/specificity through Bayes at a
 realistic operational base rate of P(fail) = 0.01 (roughly 1
 forced-outage window per 100 arbitrary-time windows on a real wind
 farm), giving the calibrated PPV each rule delivers when deployed:</p>
 <table>
+<caption><strong>Table 7.</strong> Calibrated positive predictive value
+at the sample and operational base rates.</caption>
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 9%" />
@@ -1666,65 +1638,67 @@ often but is not as specific as the Kelmarsh generator-fan chain. The
 deployment decision is dataset-specific; neither the sample precision of
 0.89 nor the operational PPV of 0.20 suffices alone.</p>
 <p><strong>Azure PdM.</strong></p>
-<table style="width:100%;">
+<table>
+<caption><strong>Table 8.</strong> Top Azure PdM signatures on the
+inference half.</caption>
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>horizon</th>
 <th>pattern</th>
-<th>inf-half lift</th>
-<th>BY q</th>
-<th>n_case</th>
-<th>n_ctrl</th>
+<th style="text-align: right;">inf-half lift</th>
+<th style="text-align: right;">BY q</th>
+<th style="text-align: right;">n_case</th>
+<th style="text-align: right;">n_ctrl</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>24h</td>
 <td><code>{software_error:error2, software_error:error3}</code></td>
-<td>4.00</td>
-<td>4e-90</td>
-<td>135</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">4e-90</td>
+<td style="text-align: right;">135</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>24h</td>
 <td><code>{software_error:error3, software_error:error5}</code></td>
-<td>4.00</td>
-<td>8e-9</td>
-<td>14</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">8e-9</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>24h</td>
 <td><code>{software_error:error2, software_error:error5}</code></td>
-<td>4.00</td>
-<td>8e-9</td>
-<td>14</td>
-<td>0</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">8e-9</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last5</td>
 <td><code>{error2, error3, error4}</code></td>
-<td>2.82</td>
-<td>2e-18</td>
-<td>62</td>
-<td>26</td>
+<td style="text-align: right;">2.82</td>
+<td style="text-align: right;">2e-18</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">26</td>
 </tr>
 <tr class="odd">
 <td>last5</td>
 <td><code>{error2, error3, error5}</code></td>
-<td>2.63</td>
-<td>2e-6</td>
-<td>25</td>
-<td>13</td>
+<td style="text-align: right;">2.63</td>
+<td style="text-align: right;">2e-6</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">13</td>
 </tr>
 </tbody>
 </table>
@@ -1742,40 +1716,42 @@ within any rolling 24h window; escalate faster if the direction is
 <code>error2 → error3</code>.</p>
 <p><strong>Alibaba cluster-trace-v2018.</strong></p>
 <table>
+<caption><strong>Table 9.</strong> Top Alibaba cluster-trace signatures
+on the inference half.</caption>
 <thead>
 <tr class="header">
 <th>horizon</th>
 <th>pattern</th>
-<th>inf-half lift</th>
-<th>BY q</th>
-<th>n_case</th>
-<th>n_ctrl</th>
+<th style="text-align: right;">inf-half lift</th>
+<th style="text-align: right;">BY q</th>
+<th style="text-align: right;">n_case</th>
+<th style="text-align: right;">n_ctrl</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>last3</td>
 <td><code>{task_success:R, task_waiting:R}</code></td>
-<td>4.06</td>
-<td>1e-262</td>
-<td>426</td>
-<td>0</td>
+<td style="text-align: right;">4.06</td>
+<td style="text-align: right;">1e-262</td>
+<td style="text-align: right;">426</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>last3</td>
 <td><code>{task_success:M, task_waiting:R}</code></td>
-<td>4.04</td>
-<td>≈0</td>
-<td>587</td>
-<td>3</td>
+<td style="text-align: right;">4.04</td>
+<td style="text-align: right;">≈0</td>
+<td style="text-align: right;">587</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td>last5</td>
 <td><code>{task_waiting:R}</code> alone</td>
-<td>4.01</td>
-<td>≈0</td>
-<td>829</td>
-<td>9</td>
+<td style="text-align: right;">4.01</td>
+<td style="text-align: right;">≈0</td>
+<td style="text-align: right;">829</td>
+<td style="text-align: right;">9</td>
 </tr>
 </tbody>
 </table>
@@ -1792,6 +1768,8 @@ increases its retry budget.</p>
 <p><strong>SCANIA Component X (matched conditional
 logistic).</strong></p>
 <table>
+<caption><strong>Table 10.</strong> Top SCANIA Component X signatures by
+matched hazard ratio.</caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -1889,6 +1867,9 @@ label-dependent candidate selection.</p>
 FP-Growth candidate selection) and an inference half (for exact
 hypergeometric p-values and BH / BY correction).</p>
 <table>
+<caption><strong>Table 11.</strong> Post-selection-valid itemset
+significance by trace and horizon on the discovery/inference
+split.</caption>
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 10%" />
@@ -2032,6 +2013,8 @@ inference half via an exact hypergeometric test on windows that contain
 the sequence as an ordered subsequence, then corrected across all
 sequences tested at each horizon.</p>
 <table style="width:100%;">
+<caption><strong>Table 12.</strong> Post-selection-valid sequence
+significance by trace and horizon.</caption>
 <colgroup>
 <col style="width: 9%" />
 <col style="width: 9%" />
@@ -2173,16 +2156,15 @@ same 6,262-sequence mining run reduces to 3 BY-significant sequences, a
 strong post-selection-inflation warning that mirrors the itemset
 case.</p>
 <p>To measure the redundancy in the raw PrefixSpan output we also run
-CloSpan <span class="citation" data-cites="yan2003clospan">(Yan, Han,
-and Afshar 2003)</span>, as implemented in SPMF <span class="citation" data-cites="fournier2016spmf">(Fournier-Viger et al. 2016)</span>, at
-the same 5% minimum support: a closed sequential pattern is one whose
-support is strictly larger than any of its super-sequences. On Azure and
-SCANIA, PrefixSpan output is already tight (1:1 compression); on BGL and
-Alibaba, closed sequences compress the raw list by up to a factor of two
-(BGL <code>last5</code> 10/20, <code>last10</code> 26/39,
-<code>last20</code> 138/150; Alibaba <code>last3</code> 15/16). Closed
-sequences are the input the deployment-facing signature catalog
-uses.</p>
+CloSpan <span class="citation" data-cites="yan2003clospan">[<a href="#ref-yan2003clospan" role="doc-biblioref">52</a>]</span>, as
+implemented in SPMF <span class="citation" data-cites="fournier2016spmf">[<a href="#ref-fournier2016spmf" role="doc-biblioref">9</a>]</span>, at the same 5% minimum support: a
+closed sequential pattern is one whose support is strictly larger than
+any of its super-sequences. On Azure and SCANIA, PrefixSpan output is
+already tight (1:1 compression); on BGL and Alibaba, closed sequences
+compress the raw list by up to a factor of two (BGL <code>last5</code>
+10/20, <code>last10</code> 26/39, <code>last20</code> 138/150; Alibaba
+<code>last3</code> 15/16). Closed sequences are the input the
+deployment-facing signature catalog uses.</p>
 <h3 id="formal-significance-same-sample-marginal-counts">6.9 Formal
 significance (same-sample marginal counts)</h3>
 <p>The same-sample BH counts (mining and testing on the full training
@@ -2217,6 +2199,9 @@ bin combinations, consistent with the concentration of predictive signal
 in a small number of underlying histograms.</p>
 <p>Top 5 predictive Component X signatures (matched HR, 95% CI, p):</p>
 <table>
+<caption><strong>Table 13.</strong> Top five SCANIA Component X
+signatures with matched hazard ratios and 95% confidence
+intervals.</caption>
 <colgroup>
 <col style="width: 9%" />
 <col style="width: 27%" />
@@ -2294,6 +2279,9 @@ reading of the matched output must therefore be interpreted with
 awareness of this underlying feature-set concentration.</p>
 <p>Top 5 predictive Component X signatures (MH-OR, 95% CI):</p>
 <table>
+<caption><strong>Table 14.</strong> Pooled 2x2 odds ratios for the same
+SCANIA signatures, superseded by the matched estimates in Table
+13.</caption>
 <colgroup>
 <col style="width: 11%" />
 <col style="width: 12%" />
@@ -2386,6 +2374,8 @@ Formally, S is “full-sequence-dominant” iff lift(S) &gt; lift(S’) + 0.05
 for every proper subsequence S’ the miner also produced.</p>
 <p>Top-200 sequences per horizon:</p>
 <table style="width:100%;">
+<caption><strong>Table 15.</strong> Full-sequence-dominant versus
+subpart-dominant predictive sequences by trace.</caption>
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 12%" />
@@ -2546,16 +2536,16 @@ pipeline against a richer alternative representation.</p>
 <p><strong>Positive control on same-manufacturer data.</strong> To rule
 out the alternative explanation that SCANIA-family telemetry itself
 lacks predictive signal, we apply the same LightGBM ceiling test to
-SCANIA APS Failure at Scania Trucks <span class="citation" data-cites="costa2016ida">(Costa and Nascimento 2016)</span> (UCI 421,
-IDA 2016 industrial challenge). APS Failure uses the same anonymised
-histogram-encoded schema as Component X (7 histogram groups of 10 bins
-each + 100 single counters = 170 feature columns) but delivers one
-per-truck cross-sectional readout instead of a longitudinal readout
-stream, with a binary APS-system-failure label at a 1.67% positive rate.
-On the same LightGBM configuration our Component X ceiling used, APS
-Failure reaches AUROC 0.994 / AUPRC 0.934 on the canonical held-out test
-split (16,000 trucks, 375 positives); LR alone reaches 0.979 / 0.800.
-Same manufacturer, same anonymisation schema, different readout format,
+SCANIA APS Failure at Scania Trucks <span class="citation" data-cites="costa2016ida">[<a href="#ref-costa2016ida" role="doc-biblioref">39</a>]</span> (UCI 421, IDA 2016 industrial
+challenge). APS Failure uses the same anonymised histogram-encoded
+schema as Component X (7 histogram groups of 10 bins each + 100 single
+counters = 170 feature columns) but delivers one per-truck
+cross-sectional readout instead of a longitudinal readout stream, with a
+binary APS-system-failure label at a 1.67% positive rate. On the same
+LightGBM configuration our Component X ceiling used, APS Failure reaches
+AUROC 0.994 / AUPRC 0.934 on the canonical held-out test split (16,000
+trucks, 375 positives); LR alone reaches 0.979 / 0.800. Same
+manufacturer, same anonymisation schema, different readout format,
 near-perfect predictability. This excludes “SCANIA-family data is
 inherently weak” as an explanation for the Component X boundary.</p>
 <p><strong>Root-cause diagnosis: trajectory-signal absence, not signal
@@ -2704,308 +2694,299 @@ two boundary traces (BGL, SCANIA) where the pipeline does not find
 last-K-events signal, with a mechanistic explanation for each, and by a
 matched conditional- logistic analysis that recovers interpretable
 per-truck hazard ratios on SCANIA under right censoring.</p>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<h2 id="references">References</h2>
+<div id="refs" class="references csl-bib-body" role="list">
 <div id="ref-agrawal1994fast" class="csl-entry" role="listitem">
-Agrawal, Rakesh, and Ramakrishnan Srikant. 1994. <span>“Fast Algorithms
-for Mining Association Rules in Large Databases.”</span> In
-<em>Proceedings of the 20th International Conference on Very Large Data
-Bases (VLDB)</em>, 487–99.
-</div>
-<div id="ref-alibaba2018repo" class="csl-entry" role="listitem">
-Alibaba. 2018. <span>“<span class="nocase">Alibaba
-cluster-trace-v2018</span>.”</span> <a href="https://github.com/alibaba/clusterdata" class="uri">https://github.com/alibaba/clusterdata</a>.
-</div>
-<div id="ref-bay1999contrast" class="csl-entry" role="listitem">
-Bay, Stephen D., and Michael J. Pazzani. 1999. <span>“Detecting Change
-in Categorical Data: Mining Contrast Sets.”</span> In <em>Proceedings of
-the Fifth ACM SIGKDD International Conference on Knowledge Discovery and
-Data Mining (KDD)</em>, 302–6. <a href="https://doi.org/10.1145/312129.312263">https://doi.org/10.1145/312129.312263</a>.
-</div>
-<div id="ref-benjamini1995controlling" class="csl-entry" role="listitem">
-Benjamini, Yoav, and Yosef Hochberg. 1995. <span>“Controlling the False
-Discovery Rate: A Practical and Powerful Approach to Multiple
-Testing.”</span> <em>Journal of the Royal Statistical Society: Series B
-(Methodological)</em> 57 (1): 289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a>.
-</div>
-<div id="ref-benjamini2001control" class="csl-entry" role="listitem">
-Benjamini, Yoav, and Daniel Yekutieli. 2001. <span>“The Control of the
-False Discovery Rate in Multiple Testing Under Dependency.”</span>
-<em>The Annals of Statistics</em> 29 (4): 1165–88. <a href="https://doi.org/10.1214/aos/1013699998">https://doi.org/10.1214/aos/1013699998</a>.
-</div>
-<div id="ref-chatterjee2022deep" class="csl-entry" role="listitem">
-Chatterjee, Joyjit, and Nina Dethlefs. 2022. <span>“A Deep Learning
-Framework for Wind Turbine Repair Action Prediction Using Alarm
-Sequences and Long Short-Term Memory Algorithms.”</span> <a href="https://doi.org/10.1007/978-3-031-15842-1_14">https://doi.org/10.1007/978-3-031-15842-1_14</a>.
-</div>
-<div id="ref-cheng2018characterizing" class="csl-entry" role="listitem">
-Cheng, Yue, Zheng Chai, and Ali Anwar. 2018. <span>“Characterizing
-Co-Located Datacenter Workloads: An Alibaba Case Study.”</span> arXiv.
-<a href="https://arxiv.org/abs/1808.02919">https://arxiv.org/abs/1808.02919</a>.
-</div>
-<div id="ref-costa2016ida" class="csl-entry" role="listitem">
-Costa, Camila Ferreira, and Mario A. Nascimento. 2016.
-<span>“<span>IDA</span> 2016 Industrial Challenge: Using Machine
-Learning for Predicting Failures.”</span> In <em>Advances in Intelligent
-Data Analysis XV (IDA 2016)</em>, 9897:381–86. Lecture Notes in Computer
-Science. Springer. <a href="https://doi.org/10.1007/978-3-319-46349-0_33">https://doi.org/10.1007/978-3-319-46349-0_33</a>.
-</div>
-<div id="ref-dalleiger2022significant" class="csl-entry" role="listitem">
-Dalleiger, Sebastian, and Jilles Vreeken. 2022. <span>“Discovering
-Significant Patterns Under Sequential False Discovery Control.”</span>
-In <em>Proceedings of the 28th ACM SIGKDD Conference on Knowledge
-Discovery and Data Mining (KDD ’22)</em>. ACM. <a href="https://doi.org/10.1145/3534678.3539398">https://doi.org/10.1145/3534678.3539398</a>.
-</div>
-<div id="ref-dong1999emerging" class="csl-entry" role="listitem">
-Dong, Guozhu, and Jinyan Li. 1999. <span>“Efficient Mining of Emerging
-Patterns: Discovering Trends and Differences.”</span> In <em>Proceedings
-of the Fifth ACM SIGKDD International Conference on Knowledge Discovery
-and Data Mining (KDD)</em>, 43–52. <a href="https://doi.org/10.1145/312129.312191">https://doi.org/10.1145/312129.312191</a>.
-</div>
-<div id="ref-du2017deeplog" class="csl-entry" role="listitem">
-Du, Min, Feifei Li, Guineng Zheng, and Vivek Srikumar. 2017.
-<span>“<span>DeepLog</span>: Anomaly Detection and Diagnosis from System
-Logs Through Deep Learning.”</span> In <em>Proceedings of the 2017 ACM
-SIGSAC Conference on Computer and Communications Security (CCS)</em>,
-1285–98. <a href="https://doi.org/10.1145/3133956.3134015">https://doi.org/10.1145/3133956.3134015</a>.
-</div>
-<div id="ref-fithian2014optimal" class="csl-entry" role="listitem">
-Fithian, William, Dennis Sun, and Jonathan Taylor. 2014. <span>“Optimal
-Inference After Model Selection.”</span> <em>arXiv Preprint</em>. <a href="https://arxiv.org/abs/1410.2597">https://arxiv.org/abs/1410.2597</a>.
-</div>
-<div id="ref-fournierviger2022patternmining" class="csl-entry" role="listitem">
-Fournier-Viger, Philippe, Wensheng Gan, Youxi Wu, Mourad Nouioua, Wei
-Song, Tin Truong, and Hai Duong. 2022. <span>“Pattern Mining: Current
-Challenges and Opportunities.”</span> In <em>Database Systems for
-Advanced Applications (DASFAA 2022) International Workshops</em>,
-13248:34–49. Lecture Notes in Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-031-11217-1_3">https://doi.org/10.1007/978-3-031-11217-1_3</a>.
-</div>
-<div id="ref-fournierviger2014cmspade" class="csl-entry" role="listitem">
-Fournier-Viger, Philippe, Antonio Gomariz, Manuel Campos, and Rincy
-Thomas. 2014. <span>“Fast Vertical Mining of Sequential Patterns Using
-Co-Occurrence Information.”</span> In <em>Advances in Knowledge
-Discovery and Data Mining (PAKDD 2014)</em>, 8443:40–52. Lecture Notes
-in Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-319-06608-0_4">https://doi.org/10.1007/978-3-319-06608-0_4</a>.
-</div>
-<div id="ref-fournier2016spmf" class="csl-entry" role="listitem">
-Fournier-Viger, Philippe, Jerry Chun-Wei Lin, Antonio Gomariz, Ted
-Gueniche, Azadeh Soltani, Zhihong Deng, and Hoang Thanh Lam. 2016.
-<span>“The <span>SPMF</span> Open-Source Data Mining Library Version
-2.”</span> In <em>Joint European Conference on Machine Learning and
-Knowledge Discovery in Databases (ECML PKDD)</em>, 36–40. <a href="https://doi.org/10.1007/978-3-319-46131-1_8">https://doi.org/10.1007/978-3-319-46131-1_8</a>.
-</div>
-<div id="ref-fournierviger2014vmsp" class="csl-entry" role="listitem">
-Fournier-Viger, Philippe, Cheng-Wei Wu, Antonio Gomariz, and Vincent S.
-Tseng. 2014. <span>“<span>VMSP</span>: Efficient Vertical Mining of
-Maximal Sequential Patterns.”</span> In <em>Advances in Artificial
-Intelligence (Canadian AI 2014)</em>, 8436:83–94. Lecture Notes in
-Computer Science. Springer. <a href="https://doi.org/10.1007/978-3-319-06483-3_8">https://doi.org/10.1007/978-3-319-06483-3_8</a>.
-</div>
-<div id="ref-guo2021logbert" class="csl-entry" role="listitem">
-Guo, Haixuan, Shuhan Yuan, and Xintao Wu. 2021.
-<span>“<span>LogBERT</span>: Log Anomaly Detection via
-<span>BERT</span>.”</span> In <em>2021 International Joint Conference on
-Neural Networks (IJCNN)</em>. <a href="https://doi.org/10.1109/IJCNN52387.2021.9534113">https://doi.org/10.1109/IJCNN52387.2021.9534113</a>.
-</div>
-<div id="ref-guo2024logformer" class="csl-entry" role="listitem">
-Guo, Hongcheng, Jian Yang, Jiaheng Liu, Jiaqi Bai, Boyang Wang, Zhoujun
-Li, Tieqiao Zheng, Bo Zhang, Junran Peng, and Qi Tian. 2024.
-<span>“<span>LogFormer</span>: A Pre-Train and Tuning Pipeline for Log
-Anomaly Detection.”</span> arXiv. <a href="https://arxiv.org/abs/2401.04749">https://arxiv.org/abs/2401.04749</a>.
-</div>
-<div id="ref-hadadi2024systematic" class="csl-entry" role="listitem">
-Hadadi, Fatemeh, Joshua H. Dawes, Donghwan Shin, Domenico Bianculli, and
-Lionel Briand. 2024. <span>“Systematic Evaluation of Deep Learning
-Models for Log-Based Failure Prediction.”</span> <em>Empirical Software
-Engineering</em> 29. <a href="https://doi.org/10.1007/s10664-024-10501-4">https://doi.org/10.1007/s10664-024-10501-4</a>.
-</div>
-<div id="ref-hamalainen2019tutorial" class="csl-entry" role="listitem">
-Hämäläinen, Wilhelmiina, and Geoffrey I. Webb. 2019. <span>“A Tutorial
-on Statistically Sound Pattern Discovery.”</span> <em>Data Mining and
-Knowledge Discovery</em> 33 (2): 325–77. <a href="https://doi.org/10.1007/s10618-018-0590-x">https://doi.org/10.1007/s10618-018-0590-x</a>.
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Agrawal R, Srikant R (1994) Fast algorithms for
+mining association rules in large databases. In: Proceedings of the 20th
+international conference on very large data bases (VLDB). pp
+487–499</div>
 </div>
 <div id="ref-han2000mining" class="csl-entry" role="listitem">
-Han, Jiawei, Jian Pei, and Yiwen Yin. 2000. <span>“Mining Frequent
-Patterns Without Candidate Generation.”</span> In <em>Proceedings of the
-2000 ACM SIGMOD International Conference on Management of Data</em>,
-1–12. <a href="https://doi.org/10.1145/342009.335372">https://doi.org/10.1145/342009.335372</a>.
-</div>
-<div id="ref-hu2023frequent" class="csl-entry" role="listitem">
-Hu, Wenkai, Yue Gao, and Xu Chen. 2023. <span>“Frequent Alarm Pattern
-Mining of Industrial Alarm Flood Sequences by an Improved PrefixSpan
-Algorithm.”</span> <em>Processes</em> 11 (4): 1169. <a href="https://doi.org/10.3390/pr11041169">https://doi.org/10.3390/pr11041169</a>.
-</div>
-<div id="ref-hu2023priority" class="csl-entry" role="listitem">
-Hu, Wenkai, Zhuang Wang, and Jiandong Wang. 2023. <span>“A
-Priority-Aware Sequential Pattern Mining Method for Detection of Compact
-Patterns from Alarm Floods.”</span> <em>Journal of Process Control</em>
-129: 103041. <a href="https://doi.org/10.1016/j.jprocont.2023.103041">https://doi.org/10.1016/j.jprocont.2023.103041</a>.
-</div>
-<div id="ref-ifraz2024sequential" class="csl-entry" role="listitem">
-İfraz, Metin, and Süleyman Ersöz. 2024. <span>“Sequential Predictive
-Maintenance and Spare Parts Management with Data Mining Methods: A Case
-Study in Bus Fleet.”</span> <em>The Journal of Supercomputing</em>. <a href="https://doi.org/10.1007/s11227-024-06297-1">https://doi.org/10.1007/s11227-024-06297-1</a>.
-</div>
-<div id="ref-kharazian2025scania" class="csl-entry" role="listitem">
-Kharazian, Zahra, Tony Lindgren, Sindri Magnússon, Olof Steinert, and
-Reza Asadi Khoshkangini. 2025. <span>“<span>SCANIA</span>
-<span>Component X</span> Dataset: A Real-World Multivariate Time Series
-Dataset for Predictive Maintenance.”</span> <em>Scientific Data</em> 12:
-493. <a href="https://doi.org/10.1038/s41597-025-04802-6">https://doi.org/10.1038/s41597-025-04802-6</a>.
-</div>
-<div id="ref-landauer2023deep" class="csl-entry" role="listitem">
-Landauer, Max, Sebastian Onder, Florian Skopik, and Markus Wurzenberger.
-2023. <span>“Deep Learning for Anomaly Detection in Log Data: A
-Survey.”</span> <em>Machine Learning with Applications</em> 12: 100470.
-<a href="https://doi.org/10.1016/j.mlwa.2023.100470">https://doi.org/10.1016/j.mlwa.2023.100470</a>.
-</div>
-<div id="ref-langholz1996risk" class="csl-entry" role="listitem">
-Langholz, Bryan, and Larry Goldstein. 1996. <span>“Risk Set Sampling in
-Epidemiologic Cohort Studies.”</span> <em>Statistical Science</em> 11
-(1): 35–53. <a href="https://doi.org/10.1214/ss/1032209663">https://doi.org/10.1214/ss/1032209663</a>.
-</div>
-<div id="ref-loftus2015selective" class="csl-entry" role="listitem">
-Loftus, Joshua R., and Jonathan E. Taylor. 2015. <span>“Selective
-Inference in Regression Models with Groups of Variables.”</span>
-<em>arXiv Preprint arXiv:1511.01478</em>.
-</div>
-<div id="ref-alibaba2018trace" class="csl-entry" role="listitem">
-Lu, Chengzhi, Kejiang Ye, Guoyao Xu, Cheng-Zhong Xu, and Tongxin Bai.
-2017. <span>“Imbalance in the Cloud: An Analysis on Alibaba Cluster
-Trace.”</span> <em>2017 IEEE International Conference on Big Data (Big
-Data)</em>, 2884–92. <a href="https://doi.org/10.1109/BigData.2017.8258257">https://doi.org/10.1109/BigData.2017.8258257</a>.
-</div>
-<div id="ref-luo2021alibaba" class="csl-entry" role="listitem">
-Luo, Shutian, Huanle Xu, Chengzhi Lu, Kejiang Ye, Guoyao Xu, Liping
-Zhang, Yu Ding, Jian He, and Chengzhong Xu. 2021. <span>“Characterizing
-Microservice Dependency and Performance: <span>Alibaba</span> Trace
-Analysis.”</span> In <em>Proceedings of the ACM Symposium on Cloud
-Computing (SoCC)</em>, 412–26. <a href="https://doi.org/10.1145/3472883.3487003">https://doi.org/10.1145/3472883.3487003</a>.
-</div>
-<div id="ref-meng2019loganomaly" class="csl-entry" role="listitem">
-Meng, Weibin, Ying Liu, Yichen Zhu, Shenglin Zhang, Dan Pei, Yuqing Liu,
-Yihao Chen, et al. 2019. <span>“<span>LogAnomaly</span>: Unsupervised
-Detection of Sequential and Quantitative Anomalies in Unstructured
-Logs.”</span> In <em>Proceedings of the 28th International Joint
-Conference on Artificial Intelligence (IJCAI)</em>, 4739–45. <a href="https://doi.org/10.24963/ijcai.2019/658">https://doi.org/10.24963/ijcai.2019/658</a>.
-</div>
-<div id="ref-azurepdm" class="csl-entry" role="listitem">
-Microsoft. 2016. <span>“<span>Azure AI Gallery Predictive Maintenance
-Sample</span>.”</span> Kaggle mirror <a href="https://www.kaggle.com/datasets/arnabbiswas1/microsoft-azure-predictive-maintenance" class="uri">https://www.kaggle.com/datasets/arnabbiswas1/microsoft-azure-predictive-maintenance</a>.
-</div>
-<div id="ref-oliner2007supercomputers" class="csl-entry" role="listitem">
-Oliner, Adam, and Jon Stearley. 2007. <span>“What Supercomputers Say: A
-Study of Five System Logs.”</span> In <em>37th Annual IEEE/IFIP
-International Conference on Dependable Systems and Networks (DSN)</em>,
-575–84. <a href="https://doi.org/10.1109/DSN.2007.103">https://doi.org/10.1109/DSN.2007.103</a>.
-</div>
-<div id="ref-pei2001prefixspan" class="csl-entry" role="listitem">
-Pei, Jian, Jiawei Han, Behzad Mortazavi-Asl, Helen Pinto, Qiming Chen,
-Umeshwar Dayal, and Mei-Chun Hsu. 2001. <span>“<span>PrefixSpan</span>:
-Mining Sequential Patterns Efficiently by Prefix-Projected Pattern
-Growth.”</span> In <em>Proceedings 17th International Conference on Data
-Engineering (ICDE)</em>, 215–24. <a href="https://doi.org/10.1109/ICDE.2001.914830">https://doi.org/10.1109/ICDE.2001.914830</a>.
-</div>
-<div id="ref-pellegrina2024efficient" class="csl-entry" role="listitem">
-Pellegrina, Leonardo, and Fabio Vandin. 2024. <span>“Efficient Discovery
-of Significant Patterns with Few-Shot Resampling.”</span>
-<em>Proceedings of the VLDB Endowment</em> 17 (10). <a href="https://doi.org/10.14778/3675034.3675055">https://doi.org/10.14778/3675034.3675055</a>.
-</div>
-<div id="ref-plumley2022kelmarsh" class="csl-entry" role="listitem">
-Plumley, Charlie. 2022a. <span>“Kelmarsh Wind Farm Data.”</span> <a href="https://zenodo.org/records/5841834" class="uri">https://zenodo.org/records/5841834</a>; Zenodo. <a href="https://doi.org/10.5281/zenodo.5841834">https://doi.org/10.5281/zenodo.5841834</a>.
-</div>
-<div id="ref-plumley2022penmanshiel" class="csl-entry" role="listitem">
-———. 2022b. <span>“Penmanshiel Wind Farm Data.”</span> <a href="https://zenodo.org/records/5946808" class="uri">https://zenodo.org/records/5946808</a>; Zenodo. <a href="https://doi.org/10.5281/zenodo.5946808">https://doi.org/10.5281/zenodo.5946808</a>.
-</div>
-<div id="ref-prentice1978retrospective" class="csl-entry" role="listitem">
-Prentice, Ross L., and Norman E. Breslow. 1978. <span>“Retrospective
-Studies and Failure Time Models.”</span> <em>Biometrika</em> 65 (1):
-153–58. <a href="https://doi.org/10.1093/biomet/65.1.153">https://doi.org/10.1093/biomet/65.1.153</a>.
-</div>
-<div id="ref-raschka2018mlxtend" class="csl-entry" role="listitem">
-Raschka, Sebastian. 2018. <span>“<span>MLxtend</span>: Providing Machine
-Learning and Data Science Utilities and Extensions to Python Scientific
-Computing Stack.”</span> <em>Journal of Open Source Software</em> 3
-(24): 638. <a href="https://doi.org/10.21105/joss.00638">https://doi.org/10.21105/joss.00638</a>.
-</div>
-<div id="ref-ren2020failure" class="csl-entry" role="listitem">
-Ren, Rui, Jinheng Li, Yan Yin, and Shuai Tian. 2021. <span>“Failure
-Prediction for Large-Scale Clusters Logs via Mining Frequent
-Patterns.”</span> In <em>Future of Information and Communication
-Conference (FICC)</em>. Vol. 1385. Communications in Computer and
-Information Science. Springer. <a href="https://doi.org/10.1007/978-981-16-1160-5_13">https://doi.org/10.1007/978-981-16-1160-5_13</a>.
-</div>
-<div id="ref-rothman2008modern" class="csl-entry" role="listitem">
-Rothman, Kenneth J., Sander Greenland, and Timothy L. Lash. 2008.
-<em>Modern Epidemiology</em>. 3rd ed. Lippincott Williams; Wilkins.
-</div>
-<div id="ref-saxena2008cmapss" class="csl-entry" role="listitem">
-Saxena, Abhinav, Kai Goebel, Don Simon, and Neil Eklund. 2008.
-<span>“Damage Propagation Modeling for Aircraft Engine Run-to-Failure
-Simulation.”</span> In <em>2008 International Conference on Prognostics
-and Health Management (PHM)</em>. <a href="https://doi.org/10.1109/PHM.2008.4711414">https://doi.org/10.1109/PHM.2008.4711414</a>.
-</div>
-<div id="ref-serradilla2022pdmsurvey" class="csl-entry" role="listitem">
-Serradilla, Oscar, Ekhi Zugasti, Jon Rodriguez, and Urko Zurutuza. 2022.
-<span>“Deep Learning Models for Predictive Maintenance: A Survey,
-Comparison, Challenges and Prospects.”</span> <em>Applied
-Intelligence</em> 52 (10): 10934–64. <a href="https://doi.org/10.1007/s10489-021-03004-y">https://doi.org/10.1007/s10489-021-03004-y</a>.
-</div>
-<div id="ref-shah2025alarm" class="csl-entry" role="listitem">
-Shah, Syed Shazaib, and Daoliang Tan. 2025. <span>“Early Wind Turbine
-Alarm Prediction Based on Machine Learning:
-<span>AlarmForecasting</span>.”</span> <em>arXiv Preprint
-arXiv:2510.06831</em>.
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Han
+J, Pei J, Yin Y (2000) <a href="https://doi.org/10.1145/342009.335372">Mining frequent patterns
+without candidate generation</a>. In: Proceedings of the 2000 ACM SIGMOD
+international conference on management of data. pp 1–12</div>
 </div>
 <div id="ref-srikant1996gsp" class="csl-entry" role="listitem">
-Srikant, Ramakrishnan, and Rakesh Agrawal. 1996. <span>“Mining
-Sequential Patterns: Generalizations and Performance
-Improvements.”</span> In <em>Advances in Database Technology — EDBT
-1996</em>, 1057:1–17. Lecture Notes in Computer Science. Springer. <a href="https://doi.org/10.1007/BFb0014140">https://doi.org/10.1007/BFb0014140</a>.
-</div>
-<div id="ref-terada2013statssp" class="csl-entry" role="listitem">
-Terada, Aika, Mariko Okada-Hatakeyama, Koji Tsuda, and Jun Sese. 2013.
-<span>“Statistical Significance of Combinatorial Regulations.”</span>
-<em>Proceedings of the National Academy of Sciences</em> 110 (32):
-12996–3001. <a href="https://doi.org/10.1073/pnas.1302233110">https://doi.org/10.1073/pnas.1302233110</a>.
-</div>
-<div id="ref-yan2003clospan" class="csl-entry" role="listitem">
-Yan, Xifeng, Jiawei Han, and Ramin Afshar. 2003. <span>“CloSpan: Mining
-Closed Sequential Patterns in Large Datasets.”</span> In <em>Proceedings
-of the 2003 SIAM International Conference on Data Mining (SDM)</em>.
-SIAM. <a href="https://doi.org/10.1137/1.9781611972733.15">https://doi.org/10.1137/1.9781611972733.15</a>.
-</div>
-<div id="ref-yang2021plelog" class="csl-entry" role="listitem">
-Yang, Lin, Junjie Chen, Zan Wang, Weijing Wang, Jiajun Jiang, Xuyuan
-Dong, and Wenbin Zhang. 2021. <span>“Semi-Supervised Log-Based Anomaly
-Detection via Probabilistic Label Estimation.”</span> In <em>Proceedings
-of the 43rd International Conference on Software Engineering
-(ICSE)</em>, 1448–60. <a href="https://doi.org/10.1109/ICSE43902.2021.00130">https://doi.org/10.1109/ICSE43902.2021.00130</a>.
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Srikant R, Agrawal R (1996) <a href="https://doi.org/10.1007/BFb0014140">Mining sequential patterns:
+Generalizations and performance improvements</a>. In: Advances in
+database technology — EDBT 1996. Springer, pp 1–17</div>
 </div>
 <div id="ref-zaki2001spade" class="csl-entry" role="listitem">
-Zaki, Mohammed J. 2001. <span>“<span>SPADE</span>: An Efficient
-Algorithm for Mining Frequent Sequences.”</span> <em>Machine
-Learning</em> 42 (1/2): 31–60. <a href="https://doi.org/10.1023/A:1007652502315">https://doi.org/10.1023/A:1007652502315</a>.
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Zaki
+MJ (2001) <span>SPADE</span>: An efficient algorithm for mining frequent
+sequences. Machine Learning 42:31–60. <a href="https://doi.org/10.1023/A:1007652502315">https://doi.org/10.1023/A:1007652502315</a></div>
+</div>
+<div id="ref-pei2001prefixspan" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Pei
+J, Han J, Mortazavi-Asl B, et al (2001) <a href="https://doi.org/10.1109/ICDE.2001.914830"><span>PrefixSpan</span>:
+Mining sequential patterns efficiently by prefix-projected pattern
+growth</a>. In: Proceedings 17th international conference on data
+engineering (ICDE). pp 215–224</div>
+</div>
+<div id="ref-fournierviger2014cmspade" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Fournier-Viger P, Gomariz A, Campos M, Thomas R
+(2014) <a href="https://doi.org/10.1007/978-3-319-06608-0_4">Fast
+vertical mining of sequential patterns using co-occurrence
+information</a>. In: Advances in knowledge discovery and data mining
+(PAKDD 2014). Springer, pp 40–52</div>
+</div>
+<div id="ref-fournierviger2014vmsp" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Fournier-Viger P, Wu C-W, Gomariz A, Tseng VS
+(2014) <a href="https://doi.org/10.1007/978-3-319-06483-3_8"><span>VMSP</span>:
+Efficient vertical mining of maximal sequential patterns</a>. In:
+Advances in artificial intelligence (canadian AI 2014). Springer, pp
+83–94</div>
+</div>
+<div id="ref-fournierviger2022patternmining" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Fournier-Viger P, Gan W, Wu Y, et al (2022) <a href="https://doi.org/10.1007/978-3-031-11217-1_3">Pattern mining:
+Current challenges and opportunities</a>. In: Database systems for
+advanced applications (DASFAA 2022) international workshops. Springer,
+pp 34–49</div>
+</div>
+<div id="ref-fournier2016spmf" class="csl-entry" role="listitem">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Fournier-Viger P, Lin JC-W, Gomariz A, et al
+(2016) <a href="https://doi.org/10.1007/978-3-319-46131-1_8">The
+<span>SPMF</span> open-source data mining library version 2</a>. In:
+Joint european conference on machine learning and knowledge discovery in
+databases (ECML PKDD). pp 36–40</div>
+</div>
+<div id="ref-raschka2018mlxtend" class="csl-entry" role="listitem">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Raschka S (2018) <span>MLxtend</span>:
+Providing machine learning and data science utilities and extensions to
+python scientific computing stack. Journal of Open Source Software
+3:638. <a href="https://doi.org/10.21105/joss.00638">https://doi.org/10.21105/joss.00638</a></div>
+</div>
+<div id="ref-ren2020failure" class="csl-entry" role="listitem">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Ren
+R, Li J, Yin Y, Tian S (2021) <a href="https://doi.org/10.1007/978-981-16-1160-5_13">Failure prediction
+for large-scale clusters logs via mining frequent patterns</a>. In:
+Future of information and communication conference (FICC).
+Springer</div>
+</div>
+<div id="ref-ifraz2024sequential" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">İfraz M, Ersöz S (2024) Sequential predictive
+maintenance and spare parts management with data mining methods: A case
+study in bus fleet. The Journal of Supercomputing. <a href="https://doi.org/10.1007/s11227-024-06297-1">https://doi.org/10.1007/s11227-024-06297-1</a></div>
+</div>
+<div id="ref-hu2023priority" class="csl-entry" role="listitem">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Hu
+W, Wang Z, Wang J (2023) A priority-aware sequential pattern mining
+method for detection of compact patterns from alarm floods. Journal of
+Process Control 129:103041. <a href="https://doi.org/10.1016/j.jprocont.2023.103041">https://doi.org/10.1016/j.jprocont.2023.103041</a></div>
+</div>
+<div id="ref-hu2023frequent" class="csl-entry" role="listitem">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline">Hu
+W, Gao Y, Chen X (2023) Frequent alarm pattern mining of industrial
+alarm flood sequences by an improved PrefixSpan algorithm. Processes
+11:1169. <a href="https://doi.org/10.3390/pr11041169">https://doi.org/10.3390/pr11041169</a></div>
+</div>
+<div id="ref-chatterjee2022deep" class="csl-entry" role="listitem">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Chatterjee J, Dethlefs N (2022) <a href="https://doi.org/10.1007/978-3-031-15842-1_14">A deep learning
+framework for wind turbine repair action prediction using alarm
+sequences and long short-term memory algorithms</a>. In: Artificial
+neural networks and machine learning (ICANN 2022), LNCS 13531.
+Springer</div>
+</div>
+<div id="ref-shah2025alarm" class="csl-entry" role="listitem">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline">Shah SS, Tan D (2025) Early wind turbine alarm
+prediction based on machine learning: <span>AlarmForecasting</span>.
+arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2510.06831">https://doi.org/10.48550/arXiv.2510.06831</a></div>
+</div>
+<div id="ref-dong1999emerging" class="csl-entry" role="listitem">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline">Dong G, Li J (1999) <a href="https://doi.org/10.1145/312129.312191">Efficient mining of
+emerging patterns: Discovering trends and differences</a>. In:
+Proceedings of the fifth ACM SIGKDD international conference on
+knowledge discovery and data mining (KDD). pp 43–52</div>
+</div>
+<div id="ref-bay1999contrast" class="csl-entry" role="listitem">
+<div class="csl-left-margin">18. </div><div class="csl-right-inline">Bay
+SD, Pazzani MJ (1999) <a href="https://doi.org/10.1145/312129.312263">Detecting change in
+categorical data: Mining contrast sets</a>. In: Proceedings of the fifth
+ACM SIGKDD international conference on knowledge discovery and data
+mining (KDD). pp 302–306</div>
+</div>
+<div id="ref-terada2013statssp" class="csl-entry" role="listitem">
+<div class="csl-left-margin">19. </div><div class="csl-right-inline">Terada A, Okada-Hatakeyama M, Tsuda K, Sese J
+(2013) Statistical significance of combinatorial regulations.
+Proceedings of the National Academy of Sciences 110:12996–13001. <a href="https://doi.org/10.1073/pnas.1302233110">https://doi.org/10.1073/pnas.1302233110</a></div>
+</div>
+<div id="ref-hamalainen2019tutorial" class="csl-entry" role="listitem">
+<div class="csl-left-margin">20. </div><div class="csl-right-inline">Hämäläinen W, Webb GI (2019) A tutorial on
+statistically sound pattern discovery. Data Mining and Knowledge
+Discovery 33:325–377. <a href="https://doi.org/10.1007/s10618-018-0590-x">https://doi.org/10.1007/s10618-018-0590-x</a></div>
+</div>
+<div id="ref-dalleiger2022significant" class="csl-entry" role="listitem">
+<div class="csl-left-margin">21. </div><div class="csl-right-inline">Dalleiger S, Vreeken J (2022) <a href="https://doi.org/10.1145/3534678.3539398">Discovering significant
+patterns under sequential false discovery control</a>. In: Proceedings
+of the 28th ACM SIGKDD conference on knowledge discovery and data mining
+(KDD ’22). ACM</div>
+</div>
+<div id="ref-pellegrina2024efficient" class="csl-entry" role="listitem">
+<div class="csl-left-margin">22. </div><div class="csl-right-inline">Pellegrina L, Vandin F (2024) Efficient
+discovery of significant patterns with few-shot resampling. Proceedings
+of the VLDB Endowment 17: <a href="https://doi.org/10.14778/3675034.3675055">https://doi.org/10.14778/3675034.3675055</a></div>
+</div>
+<div id="ref-fithian2014optimal" class="csl-entry" role="listitem">
+<div class="csl-left-margin">23. </div><div class="csl-right-inline">Fithian W, Sun D, Taylor J (2014) Optimal
+inference after model selection. arXiv preprint. <a href="https://doi.org/10.48550/arXiv.1410.2597">https://doi.org/10.48550/arXiv.1410.2597</a></div>
+</div>
+<div id="ref-du2017deeplog" class="csl-entry" role="listitem">
+<div class="csl-left-margin">24. </div><div class="csl-right-inline">Du
+M, Li F, Zheng G, Srikumar V (2017) <a href="https://doi.org/10.1145/3133956.3134015"><span>DeepLog</span>:
+Anomaly detection and diagnosis from system logs through deep
+learning</a>. In: Proceedings of the 2017 ACM SIGSAC conference on
+computer and communications security (CCS). pp 1285–1298</div>
+</div>
+<div id="ref-meng2019loganomaly" class="csl-entry" role="listitem">
+<div class="csl-left-margin">25. </div><div class="csl-right-inline">Meng W, Liu Y, Zhu Y, et al (2019) <a href="https://doi.org/10.24963/ijcai.2019/658"><span>LogAnomaly</span>:
+Unsupervised detection of sequential and quantitative anomalies in
+unstructured logs</a>. In: Proceedings of the 28th international joint
+conference on artificial intelligence (IJCAI). pp 4739–4745</div>
 </div>
 <div id="ref-zhang2019logrobust" class="csl-entry" role="listitem">
-Zhang, Xu, Yong Xu, Qingwei Lin, Bo Qiao, Hongyu Zhang, Yingnong Dang,
-Chunyu Xie, et al. 2019. <span>“Robust Log-Based Anomaly Detection on
-Unstable Log Data.”</span> In <em>Proceedings of the 27th ACM Joint
-Meeting on European Software Engineering Conference and Symposium on the
-Foundations of Software Engineering (ESEC/FSE)</em>, 807–17. <a href="https://doi.org/10.1145/3338906.3338931">https://doi.org/10.1145/3338906.3338931</a>.
+<div class="csl-left-margin">26. </div><div class="csl-right-inline">Zhang X, Xu Y, Lin Q, et al (2019) <a href="https://doi.org/10.1145/3338906.3338931">Robust log-based anomaly
+detection on unstable log data</a>. In: Proceedings of the 27th ACM
+joint meeting on european software engineering conference and symposium
+on the foundations of software engineering (ESEC/FSE). pp 807–817</div>
+</div>
+<div id="ref-yang2021plelog" class="csl-entry" role="listitem">
+<div class="csl-left-margin">27. </div><div class="csl-right-inline">Yang L, Chen J, Wang Z, et al (2021) <a href="https://doi.org/10.1109/ICSE43902.2021.00130">Semi-supervised
+log-based anomaly detection via probabilistic label estimation</a>. In:
+Proceedings of the 43rd international conference on software engineering
+(ICSE). pp 1448–1460</div>
+</div>
+<div id="ref-guo2021logbert" class="csl-entry" role="listitem">
+<div class="csl-left-margin">28. </div><div class="csl-right-inline">Guo
+H, Yuan S, Wu X (2021) <a href="https://doi.org/10.1109/IJCNN52387.2021.9534113"><span>LogBERT</span>:
+Log anomaly detection via <span>BERT</span></a>. In: 2021 international
+joint conference on neural networks (IJCNN)</div>
+</div>
+<div id="ref-guo2024logformer" class="csl-entry" role="listitem">
+<div class="csl-left-margin">29. </div><div class="csl-right-inline">Guo
+H, Yang J, Liu J, et al (2024) <span>LogFormer</span>: A pre-train and
+tuning pipeline for log anomaly detection. arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2401.04749">https://doi.org/10.48550/arXiv.2401.04749</a></div>
+</div>
+<div id="ref-landauer2023deep" class="csl-entry" role="listitem">
+<div class="csl-left-margin">30. </div><div class="csl-right-inline">Landauer M, Onder S, Skopik F, Wurzenberger M
+(2023) Deep learning for anomaly detection in log data: A survey.
+Machine Learning with Applications 12:100470. <a href="https://doi.org/10.1016/j.mlwa.2023.100470">https://doi.org/10.1016/j.mlwa.2023.100470</a></div>
+</div>
+<div id="ref-hadadi2024systematic" class="csl-entry" role="listitem">
+<div class="csl-left-margin">31. </div><div class="csl-right-inline">Hadadi F, Dawes JH, Shin D, et al (2024)
+Systematic evaluation of deep learning models for log-based failure
+prediction. Empirical Software Engineering 29: <a href="https://doi.org/10.1007/s10664-024-10501-4">https://doi.org/10.1007/s10664-024-10501-4</a></div>
 </div>
 <div id="ref-zhu2023loghub" class="csl-entry" role="listitem">
-Zhu, Jieming, Shilin He, Pinjia He, Jinyang Liu, and Michael R. Lyu.
-2023. <span>“Loghub: A Large Collection of System Log Datasets for
-<span>AI</span>-Driven Log Analytics.”</span> In <em>2023 IEEE 34th
-International Symposium on Software Reliability Engineering
-(ISSRE)</em>. <a href="https://doi.org/10.1109/ISSRE59848.2023.00071">https://doi.org/10.1109/ISSRE59848.2023.00071</a>.
+<div class="csl-left-margin">32. </div><div class="csl-right-inline">Zhu
+J, He S, He P, et al (2023) <a href="https://doi.org/10.1109/ISSRE59848.2023.00071">Loghub: A large
+collection of system log datasets for <span>AI</span>-driven log
+analytics</a>. In: 2023 IEEE 34th international symposium on software
+reliability engineering (ISSRE)</div>
 </div>
 <div id="ref-zhu2019logparsing" class="csl-entry" role="listitem">
-Zhu, Jieming, Shilin He, Jinyang Liu, Pinjia He, Qi Xie, Zibin Zheng,
-and Michael R. Lyu. 2019. <span>“Tools and Benchmarks for Automated Log
-Parsing.”</span> In <em>2019 IEEE/ACM 41st International Conference on
-Software Engineering: Software Engineering in Practice (ICSE-SEIP)</em>,
-121–30. <a href="https://doi.org/10.1109/ICSE-SEIP.2019.00021">https://doi.org/10.1109/ICSE-SEIP.2019.00021</a>.
+<div class="csl-left-margin">33. </div><div class="csl-right-inline">Zhu
+J, He S, Liu J, et al (2019) <a href="https://doi.org/10.1109/ICSE-SEIP.2019.00021">Tools and benchmarks
+for automated log parsing</a>. In: 2019 IEEE/ACM 41st international
+conference on software engineering: Software engineering in practice
+(ICSE-SEIP). pp 121–130</div>
+</div>
+<div id="ref-cheng2018characterizing" class="csl-entry" role="listitem">
+<div class="csl-left-margin">34. </div><div class="csl-right-inline">Cheng Y, Chai Z, Anwar A (2018) Characterizing
+co-located datacenter workloads: An alibaba case study. arXiv preprint.
+<a href="https://doi.org/10.48550/arXiv.1808.02919">https://doi.org/10.48550/arXiv.1808.02919</a></div>
+</div>
+<div id="ref-luo2021alibaba" class="csl-entry" role="listitem">
+<div class="csl-left-margin">35. </div><div class="csl-right-inline">Luo
+S, Xu H, Lu C, et al (2021) <a href="https://doi.org/10.1145/3472883.3487003">Characterizing
+microservice dependency and performance: <span>Alibaba</span> trace
+analysis</a>. In: Proceedings of the ACM symposium on cloud computing
+(SoCC). pp 412–426</div>
+</div>
+<div id="ref-oliner2007supercomputers" class="csl-entry" role="listitem">
+<div class="csl-left-margin">36. </div><div class="csl-right-inline">Oliner A, Stearley J (2007) <a href="https://doi.org/10.1109/DSN.2007.103">What supercomputers say: A
+study of five system logs</a>. In: 37th annual IEEE/IFIP international
+conference on dependable systems and networks (DSN). pp 575–584</div>
+</div>
+<div id="ref-saxena2008cmapss" class="csl-entry" role="listitem">
+<div class="csl-left-margin">37. </div><div class="csl-right-inline">Saxena A, Goebel K, Simon D, Eklund N (2008) <a href="https://doi.org/10.1109/PHM.2008.4711414">Damage propagation
+modeling for aircraft engine run-to-failure simulation</a>. In: 2008
+international conference on prognostics and health management
+(PHM)</div>
+</div>
+<div id="ref-serradilla2022pdmsurvey" class="csl-entry" role="listitem">
+<div class="csl-left-margin">38. </div><div class="csl-right-inline">Serradilla O, Zugasti E, Rodriguez J, Zurutuza
+U (2022) Deep learning models for predictive maintenance: A survey,
+comparison, challenges and prospects. Applied Intelligence
+52:10934–10964. <a href="https://doi.org/10.1007/s10489-021-03004-y">https://doi.org/10.1007/s10489-021-03004-y</a></div>
+</div>
+<div id="ref-costa2016ida" class="csl-entry" role="listitem">
+<div class="csl-left-margin">39. </div><div class="csl-right-inline">Costa CF, Nascimento MA (2016) <a href="https://doi.org/10.1007/978-3-319-46349-0_33"><span>IDA</span>
+2016 industrial challenge: Using machine learning for predicting
+failures</a>. In: Advances in intelligent data analysis XV (IDA 2016).
+Springer, pp 381–386</div>
+</div>
+<div id="ref-kharazian2025scania" class="csl-entry" role="listitem">
+<div class="csl-left-margin">40. </div><div class="csl-right-inline">Kharazian Z, Lindgren T, Magnússon S, et al
+(2025) <span>SCANIA</span> <span>Component X</span> dataset: A
+real-world multivariate time series dataset for predictive maintenance.
+Scientific Data 12:493. <a href="https://doi.org/10.1038/s41597-025-04802-6">https://doi.org/10.1038/s41597-025-04802-6</a></div>
+</div>
+<div id="ref-benjamini1995controlling" class="csl-entry" role="listitem">
+<div class="csl-left-margin">41. </div><div class="csl-right-inline">Benjamini Y, Hochberg Y (1995) Controlling the
+false discovery rate: A practical and powerful approach to multiple
+testing. Journal of the Royal Statistical Society: Series B
+(Methodological) 57:289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a></div>
+</div>
+<div id="ref-benjamini2001control" class="csl-entry" role="listitem">
+<div class="csl-left-margin">42. </div><div class="csl-right-inline">Benjamini Y, Yekutieli D (2001) The control of
+the false discovery rate in multiple testing under dependency. The
+Annals of Statistics 29:1165–1188. <a href="https://doi.org/10.1214/aos/1013699998">https://doi.org/10.1214/aos/1013699998</a></div>
+</div>
+<div id="ref-prentice1978retrospective" class="csl-entry" role="listitem">
+<div class="csl-left-margin">43. </div><div class="csl-right-inline">Prentice RL, Breslow NE (1978) Retrospective
+studies and failure time models. Biometrika 65:153–158. <a href="https://doi.org/10.1093/biomet/65.1.153">https://doi.org/10.1093/biomet/65.1.153</a></div>
+</div>
+<div id="ref-langholz1996risk" class="csl-entry" role="listitem">
+<div class="csl-left-margin">44. </div><div class="csl-right-inline">Langholz B, Goldstein L (1996) Risk set
+sampling in epidemiologic cohort studies. Statistical Science 11:35–53.
+<a href="https://doi.org/10.1214/ss/1032209663">https://doi.org/10.1214/ss/1032209663</a></div>
+</div>
+<div id="ref-plumley2022kelmarsh" class="csl-entry" role="listitem">
+<div class="csl-left-margin">45. </div><div class="csl-right-inline">Plumley C (2022) <a href="https://doi.org/10.5281/zenodo.5841834">Kelmarsh wind farm
+data</a></div>
+</div>
+<div id="ref-plumley2022penmanshiel" class="csl-entry" role="listitem">
+<div class="csl-left-margin">46. </div><div class="csl-right-inline">Plumley C (2022) <a href="https://doi.org/10.5281/zenodo.5946808">Penmanshiel wind farm
+data</a></div>
+</div>
+<div id="ref-azurepdm" class="csl-entry" role="listitem">
+<div class="csl-left-margin">47. </div><div class="csl-right-inline">Microsoft (2016) <a href="https://www.kaggle.com/datasets/arnabbiswas1/microsoft-azure-predictive-maintenance"><span>Azure
+AI Gallery Predictive Maintenance Sample</span></a></div>
+</div>
+<div id="ref-alibaba2018repo" class="csl-entry" role="listitem">
+<div class="csl-left-margin">48. </div><div class="csl-right-inline">Alibaba (2018) <a href="https://github.com/alibaba/clusterdata"><span class="nocase">Alibaba cluster-trace-v2018</span></a></div>
+</div>
+<div id="ref-alibaba2018trace" class="csl-entry" role="listitem">
+<div class="csl-left-margin">49. </div><div class="csl-right-inline">Lu
+C, Ye K, Xu G, et al (2017) <a href="https://doi.org/10.1109/BigData.2017.8258257">Imbalance in the
+cloud: An analysis on alibaba cluster trace</a>. In: 2017 IEEE
+international conference on big data (big data). pp 2884–2892</div>
+</div>
+<div id="ref-rothman2008modern" class="csl-entry" role="listitem">
+<div class="csl-left-margin">50. </div><div class="csl-right-inline">Rothman KJ, Greenland S, Lash TL (2008) Modern
+epidemiology, 3rd ed. Lippincott Williams; Wilkins</div>
+</div>
+<div id="ref-loftus2015selective" class="csl-entry" role="listitem">
+<div class="csl-left-margin">51. </div><div class="csl-right-inline">Loftus JR, Taylor JE (2015) Selective inference
+in regression models with groups of variables. arXiv preprint. <a href="https://doi.org/10.48550/arXiv.1511.01478">https://doi.org/10.48550/arXiv.1511.01478</a></div>
+</div>
+<div id="ref-yan2003clospan" class="csl-entry" role="listitem">
+<div class="csl-left-margin">52. </div><div class="csl-right-inline">Yan
+X, Han J, Afshar R (2003) <a href="https://doi.org/10.1137/1.9781611972733.15">CloSpan: Mining closed
+sequential patterns in large datasets</a>. In: Proceedings of the 2003
+SIAM international conference on data mining (SDM). SIAM</div>
 </div>
 </div>
 </body>

@@ -150,20 +150,18 @@ td {
   border: none;
 }
 tbody tr:last-child td { padding-bottom: 0.55em; }
+/* Long pattern tokens wrap at + / : boundaries instead of forcing the whole
+   table into a horizontal scroll box (which also clips in the printed PDF). */
+table code { white-space: normal; overflow-wrap: anywhere; }
 
 /* ---- Figure and Table captions with automatic numbering ---------- */
 
-body { counter-reset: fig-counter tab-counter; }
+/* Figure and table numbers are hard-coded in the caption text (e.g.
+   "**Figure 1.**", ": **Table 1.** ...") so they survive into the DOCX and
+   match the manual section numbering; no CSS counter is used. */
 
 figure { margin: 1.4em 0; text-align: center; }
 figure img { max-width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 3px; }
-figure figcaption::before {
-  counter-increment: fig-counter;
-  content: "Figure " counter(fig-counter) ". ";
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  font-weight: 600;
-  color: var(--ink);
-}
 figure figcaption {
   font-size: 0.9em;
   color: var(--muted);
@@ -172,13 +170,6 @@ figure figcaption {
   padding: 0 1.5em;
 }
 
-table caption::before {
-  counter-increment: tab-counter;
-  content: "Table " counter(tab-counter) ". ";
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  font-weight: 600;
-  color: var(--ink);
-}
 table caption {
   caption-side: top;
   font-size: 0.9em;
@@ -201,28 +192,17 @@ blockquote {
 
 #refs {
   font-size: 0.9em;
-  border-top: 1px solid var(--rule);
-  padding-top: 1.1rem;
-  margin-top: 3.2rem;
   font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
 }
-#refs::before {
-  content: "References";
-  display: block;
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  color: var(--accent);
-  font-size: 1.22rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--hair);
-  padding-bottom: 0.18rem;
-  margin: 0 0 1rem;
-}
+/* Numeric CSL output: a left-margin number column and a right inline body. */
 #refs .csl-entry {
-  text-indent: -1.35em;
-  padding-left: 1.35em;
+  display: flex;
+  gap: 0.4em;
   margin: 0.5em 0;
   line-height: 1.5;
 }
+#refs .csl-left-margin { min-width: 2em; text-align: right; flex-shrink: 0; }
+#refs .csl-right-inline { flex: 1; }
 #refs a { color: var(--ink); text-decoration: none; }
 #refs a:hover { text-decoration: underline; }
 
