@@ -1,5 +1,7 @@
 # Mining Frequent Failure Sequences from Operational Event Logs
 
+**Paper (rendered):** https://apartsinprojects.github.io/FailurePatterns/
+
 Discover recurrent, ordered event sequences that precede operational failures in
 production system logs, and test whether they carry information beyond simple
 co-occurrence.
