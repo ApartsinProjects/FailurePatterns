@@ -372,26 +372,15 @@ def main() -> int:
           cat["bgl"]["n_signatures"], "0",
           cat["bgl"]["n_signatures"] == 0)
 
-    # 6.6 SCANIA matched conditional logistic (Path 1: W2 fix)
-    mch = _load_json(PATT / "scania_matched_hazard_summary.json")
-    check("6.6", "SCANIA matched conditional logistic: 121/200 top patterns significant",
-          mch["n_significant_conditional_logistic_005"], "121",
-          mch["n_significant_conditional_logistic_005"] == 121)
-
-    # 6.6 SCANIA matched hazards with FDR correction (BH and BY)
-    fdr = _load_json(PATT / "scania_matched_hazard_fdr.json")
-    check("6.6", "SCANIA matched BH q<0.05 and CI>1: 117/200",
-          fdr["bh_005_and_hr_gt1_ci_excl_1"], "117",
-          fdr["bh_005_and_hr_gt1_ci_excl_1"] == 117)
-    check("6.6", "SCANIA matched BY q<0.05 and CI>1: 108/200",
-          fdr["by_005_and_hr_gt1_ci_excl_1"], "108",
-          fdr["by_005_and_hr_gt1_ci_excl_1"] == 108)
-    check("6.6", "SCANIA matched BH q<0.01: 128/200",
-          fdr["bh_significant_001"], "128",
-          fdr["bh_significant_001"] == 128)
-    check("6.6", "SCANIA matched BY q<0.01: 117/200",
-          fdr["by_significant_001"], "117",
-          fdr["by_significant_001"] == 117)
+    # 6.10 SCANIA matched conditional logistic, POST-SELECTION-VALID (W2 fix):
+    # top-200 selected on discovery half, tested on disjoint inference half.
+    mch = _load_json(PATT / "scania_matched_hazard_split.json")
+    check("6.10", "SCANIA matched (valid) inference BH q<0.05 and CI>1: 93/200",
+          mch["inference_bh_005_ci_excl_1"], "93",
+          mch["inference_bh_005_ci_excl_1"] == 93)
+    check("6.10", "SCANIA matched (valid) inference BY q<0.05 and CI>1: 74/200",
+          mch["inference_by_005_ci_excl_1"], "74",
+          mch["inference_by_005_ci_excl_1"] == 74)
 
     # 6.5b post-selection sequence significance
     pss = json.loads((PATT / "post_selection_sequences.json").read_text(encoding="utf-8"))
@@ -436,15 +425,20 @@ def main() -> int:
           f"{ali_l3['n_closed_sequences_clospan']}/{ali_l3['n_prefixspan_patterns']}",
           "15/16",
           ali_l3["n_closed_sequences_clospan"] == 15 and ali_l3["n_prefixspan_patterns"] == 16)
-    check("6.6", "SCANIA matched top HR = 1.73",
-          round(mch["top10"][0]["hazard_ratio"], 2), "1.73",
-          approx(mch["top10"][0]["hazard_ratio"], 1.73, tol=0.02))
-    check("6.6", "SCANIA matched top HR CI low = 1.53",
-          round(mch["top10"][0]["hr_ci_low"], 2), "1.53",
-          approx(mch["top10"][0]["hr_ci_low"], 1.53, tol=0.02))
-    check("6.6", "SCANIA matched top HR CI high = 1.96",
-          round(mch["top10"][0]["hr_ci_high"], 2), "1.96",
-          approx(mch["top10"][0]["hr_ci_high"], 1.96, tol=0.02))
+    check("6.10", "SCANIA matched (valid) top inference HR = 1.60",
+          round(mch["top_hr"]["hr"], 2), "1.60",
+          approx(mch["top_hr"]["hr"], 1.60, tol=0.02))
+    check("6.10", "SCANIA matched (valid) top HR CI = [1.35, 1.91]",
+          f"[{mch['top_hr']['ci'][0]}, {mch['top_hr']['ci'][1]}]", "[1.35, 1.91]",
+          approx(mch["top_hr"]["ci"][0], 1.35, tol=0.02) and approx(mch["top_hr"]["ci"][1], 1.91, tol=0.02))
+
+    # W1 cluster-preserving (within-entity permutation + LOTO) on wind farms
+    for trace, nturb in [("kelmarsh", 3), ("penmanshiel", 5)]:
+        ci = _load_json(PATT / f"{trace}_cluster_inference.json")
+        check("6.4", f"{trace} within-entity-perm BY-significant = tested count",
+              f"{ci['n_within_entity_perm_by_sig_005']}/{ci['n_precursor_signatures_tested']}",
+              f"{ci['n_precursor_signatures_tested']}/{ci['n_precursor_signatures_tested']}",
+              ci["n_within_entity_perm_by_sig_005"] == ci["n_precursor_signatures_tested"])
 
     # 6.4 post-selection-valid significance (W1 fix)
     ps = json.loads((PATT / "post_selection_significance.json").read_text(encoding="utf-8"))

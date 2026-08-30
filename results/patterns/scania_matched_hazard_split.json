@@ -1,0 +1,178 @@
+{
+  "design": "entity-disjoint matched-set split; top-200 selected on discovery case-hits; conditional logistic tested on inference half",
+  "n_discovery_sets": 1136,
+  "n_inference_sets": 1136,
+  "n_patterns_tested": 200,
+  "n_hr_gt1": 133,
+  "inference_bh_005_ci_excl_1": 93,
+  "inference_by_005_ci_excl_1": 74,
+  "top_hr": {
+    "itemset": [
+      "counter_surprise:397_22",
+      "counter_surprise:397_10"
+    ],
+    "hr": 1.605,
+    "ci": [
+      1.348,
+      1.911
+    ],
+    "p": 1.0623727926288542e-07,
+    "q_bh": 5.4383048099353786e-06,
+    "q_by": 3.1966523978117865e-05,
+    "n_case_hits": 229
+  },
+  "top10": [
+    {
+      "itemset": [
+        "counter_surprise:397_22",
+        "counter_surprise:397_10"
+      ],
+      "hr": 1.605,
+      "ci": [
+        1.348,
+        1.911
+      ],
+      "p": 1.0623727926288542e-07,
+      "q_bh": 5.4383048099353786e-06,
+      "q_by": 3.1966523978117865e-05,
+      "n_case_hits": 229
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_28",
+        "counter_surprise:397_27"
+      ],
+      "hr": 1.583,
+      "ci": [
+        1.323,
+        1.895
+      ],
+      "p": 5.468660445322387e-07,
+      "q_bh": 1.2876573980769135e-05,
+      "q_by": 7.568890036473632e-05,
+      "n_case_hits": 213
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_27"
+      ],
+      "hr": 1.57,
+      "ci": [
+        1.333,
+        1.85
+      ],
+      "p": 6.98693119825392e-08,
+      "q_bh": 5.4383048099353786e-06,
+      "q_by": 3.1966523978117865e-05,
+      "n_case_hits": 267
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_35",
+        "counter_surprise:397_29",
+        "counter_surprise:397_34"
+      ],
+      "hr": 1.545,
+      "ci": [
+        1.299,
+        1.837
+      ],
+      "p": 8.598453212703494e-07,
+      "q_bh": 1.6217902972096604e-05,
+      "q_by": 9.53293355836146e-05,
+      "n_case_hits": 233
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29"
+      ],
+      "hr": 1.54,
+      "ci": [
+        1.344,
+        1.764
+      ],
+      "p": 5.152855696796583e-10,
+      "q_bh": 1.0305711393593166e-07,
+      "q_by": 6.05772905139484e-07,
+      "n_case_hits": 487
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_17",
+        "counter_surprise:397_22"
+      ],
+      "hr": 1.536,
+      "ci": [
+        1.294,
+        1.822
+      ],
+      "p": 8.919846634653133e-07,
+      "q_bh": 1.6217902972096604e-05,
+      "q_by": 9.53293355836146e-05,
+      "n_case_hits": 244
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_34"
+      ],
+      "hr": 1.532,
+      "ci": [
+        1.309,
+        1.794
+      ],
+      "p": 1.0876609619870758e-07,
+      "q_bh": 5.4383048099353786e-06,
+      "q_by": 3.1966523978117865e-05,
+      "n_case_hits": 297
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_22"
+      ],
+      "hr": 1.531,
+      "ci": [
+        1.303,
+        1.799
+      ],
+      "p": 2.1922600897813137e-07,
+      "q_bh": 7.307533632604379e-06,
+      "q_by": 4.295390884688686e-05,
+      "n_case_hits": 277
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_29",
+        "counter_surprise:397_28",
+        "counter_surprise:397_34"
+      ],
+      "hr": 1.523,
+      "ci": [
+        1.28,
+        1.812
+      ],
+      "p": 2.158310201922935e-06,
+      "q_bh": 2.91480821526524e-05,
+      "q_by": 0.00017133332897167715,
+      "n_case_hits": 235
+    },
+    {
+      "itemset": [
+        "counter_surprise:397_15",
+        "counter_surprise:397_28"
+      ],
+      "hr": 1.517,
+      "ci": [
+        1.279,
+        1.799
+      ],
+      "p": 1.6605093441107557e-06,
+      "q_bh": 2.5546297601703937e-05,
+      "q_by": 0.00015016192791273637,
+      "n_case_hits": 237
+    }
+  ]
+}

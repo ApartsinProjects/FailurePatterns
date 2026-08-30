@@ -1,0 +1,139 @@
+{
+  "trace": "penmanshiel",
+  "horizon": "last5",
+  "n_turbines": 5,
+  "n_inf_fail": 448,
+  "n_inf_ctrl": 1344,
+  "n_precursor_signatures_tested": 12,
+  "n_within_entity_perm_by_sig_005": 12,
+  "permutations": 2000,
+  "signatures": [
+    {
+      "itemset": [
+        "system_stop:9210",
+        "system_warning:9000"
+      ],
+      "inf_lift": 4.0,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_info:0",
+        "system_stop:9210",
+        "system_warning:9000"
+      ],
+      "inf_lift": 4.0,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_stop:3000"
+      ],
+      "inf_lift": 4.0,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_stop:3000",
+        "system_warning:5720"
+      ],
+      "inf_lift": 4.0,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_info:0",
+        "system_stop:3000"
+      ],
+      "inf_lift": 4.0,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_stop:9210"
+      ],
+      "inf_lift": 3.961,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_info:0",
+        "system_stop:9210"
+      ],
+      "inf_lift": 3.961,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_warning:5720"
+      ],
+      "inf_lift": 3.185,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_info:6410"
+      ],
+      "inf_lift": 2.27,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_info:0",
+        "system_warning:9000"
+      ],
+      "inf_lift": 1.952,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_warning:9000"
+      ],
+      "inf_lift": 1.835,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    },
+    {
+      "itemset": [
+        "system_stop:20"
+      ],
+      "inf_lift": 1.651,
+      "hypergeom_q_by": null,
+      "within_entity_perm_p": 0.0005,
+      "loto_folds_enriched": "5/5",
+      "within_entity_perm_q_by": 0.0016
+    }
+  ]
+}

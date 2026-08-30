@@ -48,8 +48,9 @@ PdM and Alibaba v2018 reproduce the effect in cloud and maintenance
 logs, with ordering adding no signal on Alibaba once event
 multiplicity is controlled. SCANIA Component X, right-censored,
 yields interpretable per-truck hazard ratios under matched
-conditional logistic regression (108 of 200 top patterns survive the
-arbitrary-dependence FDR; top HR 1.73). BGL is the mapped boundary
+conditional logistic regression on a disjoint inference half (74 of
+200 discovery-selected patterns survive the arbitrary-dependence FDR;
+top HR 1.60). BGL is the mapped boundary
 case where the only surviving pattern is a barely-enriched fatal-error
 marker (lift 1.16), so no deployable non-alert precursor reaches the
 catalog. Mining code, splits,
@@ -314,9 +315,12 @@ subtype is the numeric fault code. Failure event = `terminal_failure`
 placed at each Forced-outage timestamp.
 
 This trace is the paper's cleanest realisation of the physical-
-cascade shape: continuous mechanical wear produces discrete alarm
-codes at intermediate stages, and a specific alarm terminates the
-cascade as a Forced outage.
+cascade shape: the alarm-code progression is consistent with a
+physical fault cascade, in which intermediate warning codes precede
+a specific alarm that terminates as a Forced outage. We report the
+statistical enrichment and the code semantics; the underlying wear
+mechanism is an engineering interpretation, not something the logs
+alone establish.
 
 ### 3.2 Penmanshiel wind-farm alarm logs (production, per-turbine)
 
@@ -556,9 +560,10 @@ one stratum. Reported hazard ratios and 95% CIs are from that
 matched fit.
 
 Compared to the pooled 2×2 Woolf-Haldane analysis, the matched
-estimator is roughly 1.6× more conservative on this data: the same
-top pattern that scores MH-OR 2.72 [2.10, 3.51] under pooling scores
-HR 1.73 [1.53, 1.96] under proper matched conditional logistic.
+estimator is more conservative on this data: a top pattern that
+scores MH-OR 2.72 [2.10, 3.51] under pooling scores a matched HR in
+the 1.6-1.7 range under conditional logistic, and the honest
+inference-half estimate (§6.10) is a top HR of 1.60 [1.35, 1.91].
 
 ### 4.7 Count-preserving order comparator
 
@@ -828,6 +833,22 @@ Use: **safety-9210 warning triggers immediate turbine curtailment,
 regardless of grid conditions**; **freq-converter 3543 informational
 message triggers converter service order within 6h at Penmanshiel**.
 
+**Cluster-aware validation.** Each wind farm has only a handful of
+turbines, so the hundreds of windows they generate are clustered and
+the window-level hypergeometric q-values overstate the population-level
+evidence. We therefore validate the precursor signatures (pure warning
+and info-to-stop patterns, with prior `terminal_failure` tokens
+excluded) with two entity-respecting tests on the inference half. A
+**within-turbine label permutation** (2,000 permutations that shuffle
+the failure/control label within each turbine, preserving its clustering
+and case/control counts) leaves every one of the top 12 precursor
+signatures significant on both farms after BY correction (permutation
+q = 0.0016, the floor at 2,000 permutations). A **leave-one-turbine-out**
+check finds every one of those signatures still enriched in all held-out
+folds (3/3 turbines on Kelmarsh, 5/5 on Penmanshiel). Cross-turbine
+consistency, not a small window-level p-value, is the load-bearing
+evidence here.
+
 ### 6.5 Baseline comparison and closed-signature deduplication
 
 The lift-4.00 zero-control rows above are benchmarked against three
@@ -889,7 +910,7 @@ inference-half precision into an interpretable operational number,
 we invert the empirical sensitivity/specificity through Bayes at a
 realistic operational base rate of P(fail) = 0.01 (roughly 1
 forced-outage window per 100 arbitrary-time windows on a real wind
-farm), giving the calibrated PPV each rule delivers when deployed (Table 7):
+farm), giving the scenario PPV each rule delivers under an assumed 1% deployment prevalence (Table 7):
 
 | trace       | horizon | rule                | PPV at sample (0.25) | PPV at operational (0.01) |
 |-------------|---------|---------------------|--------------------:|--------------------------:|
@@ -927,11 +948,12 @@ inference-half lift and BY q, and the intended deployment rule.
 
 : **Table 8.** Top Azure PdM signatures on the inference half.
 
-Interpretation: **machines showing any pair of `{error2, error3,
-error5}` co-occurring within a 24h window are on a near-certain path
-to component replacement**. The pattern `{error2, error3}` has zero
-occurrences in the 1,113 control windows on the 24h inference half,
-which makes it a decision rule, not just a correlation. Ordering carries additional
+Interpretation: **on the synthetic Azure PdM generator, any pair of
+`{error2, error3, error5}` co-occurring within a 24h window is
+strongly enriched in failure windows**. The pattern `{error2, error3}`
+has zero occurrences in the 1,113 control windows on the 24h inference
+half, which makes it a high-specificity candidate rule on this
+inference sample and motivates prospective replay. Ordering carries additional
 signal (§6.3, count-preserving effect +0.52 to +1.09), so
 `error2 → error3` in that specific direction is a stronger alarm
 than the reverse.
@@ -962,10 +984,12 @@ Waiting state is flagged; the scheduler either preemptively
 reschedules the Reduce onto a more reliable machine or increases its
 retry budget.
 
-**SCANIA Component X (matched conditional logistic).** The top five
-matched hazard ratios are listed with full confidence intervals in
-Table 12 (§6.10); the headline signature `counter_surprise:397_{27,
-28, 29}` has matched HR 1.73 (95% CI [1.53, 1.96]).
+**SCANIA Component X (matched conditional logistic).** Patterns are
+selected on a discovery half and estimated on a disjoint inference
+half (§6.10); the top five inference-half hazard ratios are listed
+with full confidence intervals in Table 12. The headline signature
+`counter_surprise:397_{10, 22}` has matched HR 1.60 (95% CI
+[1.35, 1.91]).
 
 Interpretation: **sustained anomalies concentrated in the histogram-
 397 bin range 27-35 double the near-term hazard of Component X
@@ -1047,7 +1071,7 @@ on inference half); the extra patterns were selection artefacts. Second,
 the SCANIA `last20` fraction drops from 6.0% (naive) to 0% (post-
 selection valid): the 37,797-pattern discovery-half mining run at
 minimum support 0.05 does not survive an honest inference test. Both direction and
-magnitude of these shifts match the pre-registered concern about
+magnitude of these shifts match the pre-specified concern about
 mining-and-testing on the same sample.
 
 The Azure and Alibaba results persist in weaker but still substantive
@@ -1125,35 +1149,44 @@ Component X (2,272 cases x 3 controls each drawn from the risk set at
 each case's failure lifetime), FP-Growth at minimum support 0.05 mines
 42,453 candidate itemsets from the `counter_surprise` event stream.
 
-We estimate the per-pattern hazard ratio via **conditional logistic
-regression stratified by matched risk set** (§4.6), fitted with
-`statsmodels.ConditionalLogit`. On the top-200 patterns by
-case-hit count, **117 (58.5%) pass the joint criterion HR CI
-excludes 1 AND BH q < 0.05, and 108 (54.0%) survive the stricter
-Benjamini-Yekutieli arbitrary-dependence FDR at q < 0.05** (BH
-q < 0.01: 128; BY q < 0.01: 117); all p-values are `ConditionalLogit`
-Wald p-values, corrected across the 200 patterns actually tested.
+To avoid selecting the tested family with the outcome, we use a
+strict two-stage design that matches the paper's own post-selection
+discipline: the 2,272 matched sets are split 50/50 into a discovery
+and an inference half; the top-200 patterns are ranked by
+**discovery-half case-hit count only**, and those 200 fixed patterns
+are then estimated on the **inference half** via conditional logistic
+regression stratified by matched set (§4.6), fitted with
+`statsmodels.ConditionalLogit`. On the inference half, **93 of 200
+pass the joint criterion HR CI excludes 1 AND BH q < 0.05, and 74
+(37%) survive the stricter Benjamini-Yekutieli arbitrary-dependence
+FDR at q < 0.05**; all p-values are `ConditionalLogit` Wald p-values,
+corrected across the 200 preselected patterns.
 
-Top 5 predictive Component X signatures (matched HR, 95% CI, p):
+Top 5 predictive Component X signatures on the inference half
+(matched HR, 95% CI, p):
 
-| HR   | 95% CI          | p        | n_case | n_control | pattern |
-|-----:|:---------------:|---------:|-------:|----------:|---------|
-| 1.73 | [1.53, 1.96]    | 1.0e-17  | 456    | (matched) | `counter_surprise:397_{27, 28, 29}` |
-| 1.69 | [1.50, 1.91]    | 4.1e-17  | 479    | (matched) | `counter_surprise:397_{29, 34, 35}` |
-| 1.69 | [1.49, 1.91]    | 3.7e-17  | 495    | (matched) | `counter_surprise:397_{28, 29, 34}` |
-| 1.67 | [1.50, 1.87]    | 2.1e-19  | 611    | (matched) | `counter_surprise:397_{29, 34}` |
-| 1.66 | [1.48, 1.85]    | 2.1e-19  | 630    | (matched) | `counter_surprise:397_{28, 29}` |
+| HR   | 95% CI          | p        | n_case | pattern |
+|-----:|:---------------:|---------:|-------:|---------|
+| 1.60 | [1.35, 1.91]    | 1.1e-07  | 229    | `counter_surprise:397_{10, 22}` |
+| 1.58 | [1.32, 1.90]    | 4.7e-07  | 213    | `counter_surprise:397_{27, 28, 29}` |
+| 1.57 | [1.33, 1.85]    | 6.9e-08  | 267    | `counter_surprise:397_{27, 29}` |
+| 1.55 | [1.30, 1.84]    | 8.9e-07  | 233    | `counter_surprise:397_{29, 34, 35}` |
+| 1.54 | [1.34, 1.76]    | 5.0e-10  | 487    | `counter_surprise:397_{29}` |
 
-: **Table 12.** Top five SCANIA Component X signatures with matched hazard ratios and 95% confidence intervals.
+: **Table 12.** Top five SCANIA Component X signatures by matched hazard ratio, selected on the discovery half and estimated on the disjoint inference half with 95% confidence intervals.
 
-The **pooled 2×2 analysis (Table 13) inflates these effects by
-roughly 1.6×** (top pooled MH-OR 2.72 [2.10, 3.51] for the same
-pattern), because pooling discards the matched-set structure that the
-incidence-density sampling design creates. The matched HR
-of 1.73 is the correct estimator under Prentice-Breslow, and its
-tighter CI reflects that the matched design conditions out
-inter-vehicle heterogeneity the pooled analysis conflated with the
-pattern effect.
+Two effects push the honest estimates below the naive ones. The
+**pooled 2×2 analysis (Table 13) inflates the effect** (top pooled
+MH-OR 2.72 [2.10, 3.51]) because it discards the matched-set structure
+that the incidence-density sampling design creates; the matched
+conditional logistic is the correct estimator under Prentice-Breslow.
+The **discovery/inference split removes the post-selection inflation**
+that ranking the top-200 by case-hits on the test sample would
+otherwise introduce: the same top-200-by-hits procedure evaluated
+in-sample reports 108 BY-significant patterns and a top HR near 1.7,
+whereas the honest inference-half estimate is 74 BY-significant with a
+top HR of 1.60 [1.35, 1.91]. The matched signal is real but smaller
+than the in-sample figure suggests.
 
 Top hazard ratios are concentrated in histogram-397 bin combinations.
 Grouping matched-significant patterns by their dominant histogram
@@ -1244,11 +1277,15 @@ The finding is trace-dependent:
   adding subsequent Success events to the pattern does not lift it
   further. Operationally, the useful alarm is short.
 
-This resolves an ambiguity the raw order-gain distribution left open.
-Order helps on both traces (§6.3), but for different reasons: on
-Azure the full ordering contributes signal beyond every subpart, and
-on Alibaba the ordering just distinguishes one privileged short prefix
-from bag-of-items noise.
+These two traces separate order from multiplicity (§6.3). On Azure,
+the count-preserving null confirms a genuine ordering effect: the full
+ordered chain adds signal beyond any of its subparts, and the exact
+within-window order matters. On Alibaba, the count-preserving null is
+approximately zero, so the exact order does not matter; the sequence
+representation helps only because it retains event multiplicity and a
+privileged short prefix (`task_waiting:R`) that the binary itemset
+discards. The correct reading of Alibaba is a multiplicity-and-prefix
+effect, not a pure-ordering effect.
 
 ### 7.2 What each mined signature means operationally
 
@@ -1506,11 +1543,13 @@ recovers zero-control cascade signatures at inference-half lift 4.00,
 where a mechanical wear process generates the intermediate alarm
 codes that terminate as Forced outages, and the mined-itemset rule
 strictly dominates a most-recent-event baseline. On the two cloud /
-maintenance traces (Azure PdM, Alibaba v2018), sequences add real
-predictive information beyond itemsets when window definitions are
-rich enough for order to be a real degree of freedom; at those
-horizons, combining itemset and sequence features improves failure
-prediction by 5-10 AUROC points over either alone. The method's
+maintenance traces (Azure PdM, Alibaba v2018), the sequence
+representation adds predictive information beyond binary itemsets, but
+for different reasons: on Azure the count-preserving null shows a
+genuine ordering effect, whereas on Alibaba it is event multiplicity
+and a short leading prefix, not exact order, that carries the signal.
+Combining itemset and sequence features improves failure prediction
+by 3-10 AUROC points over either alone at the rich horizons. The method's
 regime of validity is mapped by two boundary traces (BGL, SCANIA)
 where the pipeline does not find last-K-events signal, with a
 mechanistic explanation for each, and by a matched conditional-
