@@ -382,6 +382,33 @@ def main() -> int:
           mch["inference_by_005_ci_excl_1"], "74",
           mch["inference_by_005_ci_excl_1"] == 74)
 
+    # W6/W7 prospective alarm replay (wind farms)
+    pr = {r["farm"]: r for r in _load_json(PATT / "prospective_alarm_replay.json")}
+    check("6.4", "Prospective Kelmarsh recall = 0.95",
+          pr["Kelmarsh"]["recall"], "0.95", approx(pr["Kelmarsh"]["recall"], 0.95, tol=0.02))
+    check("6.4", "Prospective Kelmarsh median lead = 198 min",
+          round(pr["Kelmarsh"]["lead_median_min"]), "198",
+          approx(pr["Kelmarsh"]["lead_median_min"], 198.2, tol=3))
+    check("6.4", "Prospective Penmanshiel precision = 0.78",
+          pr["Penmanshiel"]["precision"], "0.78", approx(pr["Penmanshiel"]["precision"], 0.78, tol=0.02))
+
+    # W16 landmarked SCANIA (no rep clears 0.75)
+    lm = _load_json(PATT / "scania_landmarked.json")["landmarked_auroc"]
+    check("8", "Landmarked SCANIA token_counts AUROC = 0.62",
+          lm["token_counts"], "0.62", approx(lm["token_counts"], 0.615, tol=0.02))
+    check("8", "Landmarked SCANIA: no representation clears 0.75",
+          max(v for v in lm.values() if v), "<0.75",
+          max(v for v in lm.values() if v) < 0.75)
+
+    # W18 validation comparison: split controls false discoveries, naive does not
+    vc = _load_json(PATT / "validation_comparison.json")
+    check("6.7", "Validation: split false discoveries on permuted labels = 0",
+          vc["max_false_discoveries_permuted_labels"]["split_bh"], "0",
+          vc["max_false_discoveries_permuted_labels"]["split_bh"] == 0)
+    check("6.7", "Validation: naive BH false discoveries on permuted labels > 0",
+          vc["max_false_discoveries_permuted_labels"]["naive_bh"], ">0",
+          vc["max_false_discoveries_permuted_labels"]["naive_bh"] > 0)
+
     # 6.5b post-selection sequence significance
     pss = json.loads((PATT / "post_selection_sequences.json").read_text(encoding="utf-8"))
     def _pss(trace, horizon):

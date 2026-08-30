@@ -1435,6 +1435,24 @@ the floor at 2,000 permutations). A
 signatures still enriched in all held-out folds (3/3 turbines on
 Kelmarsh, 5/5 on Penmanshiel). Cross-turbine consistency, not a small
 window-level p-value, is the load-bearing evidence here.</p>
+<p><strong>Prospective alarm replay.</strong> To measure deployment
+value directly rather than infer it from an assumed base rate, we replay
+each turbine chronologically. A precursor rule (the non-terminal codes
+whose firing is followed by a forced outage within 24h at more than
+three times the per-firing base rate) is learned only from the other
+turbines, then applied to the held-out turbine’s real event stream with
+a 24h alarm cooldown; an alarm is a true positive if a forced outage
+follows within 24h. The two farms occupy two operating points. On
+<strong>Kelmarsh the rule detects 457 of 482 forced outages (recall
+0.95) at a median lead of 3.3 hours</strong> (68% of detections at least
+1h early, 43% at least 6h), at precision 0.20 and 2.7 false alarms per
+turbine-month. On <strong>Penmanshiel it runs at precision 0.78 and 0.31
+false alarms per turbine-month</strong>, detecting half the outages
+(recall 0.50) at a shorter median lead of 5.7 minutes. This is a
+measured prospective result: the Kelmarsh generator-fan cascade gives
+hours of actionable warning at a tolerable alarm burden, while the
+Penmanshiel safety-system cascade is precise but fires close to the
+outage.</p>
 <h3 id="baseline-comparison-and-closed-signature-deduplication">6.5
 Baseline comparison and closed-signature deduplication</h3>
 <p>The lift-4.00 zero-control rows above are benchmarked against three
@@ -1979,6 +1997,18 @@ discovery-half mining run at minimum support 0.05 does not survive an
 honest inference test. Both direction and magnitude of these shifts
 match the pre-specified concern about mining-and-testing on the same
 sample.</p>
+<p>A permuted-label stress test confirms that the split, and not merely
+the FDR correction, is what controls error. On Azure <code>last5</code>,
+the same 79-candidate set validated three ways yields a similar number
+of discoveries on the real labels (naive same-sample BH 55; our
+discovery/inference split 52; Westfall-Young minP FWER 52), but under 20
+label permutations that destroy all signal the naive same-sample BH
+still reports false discoveries (mean 0.3, up to 6 in a single
+permutation) whereas the discovery/inference split reports
+<strong>zero</strong> (mean 0, maximum 0), matching the
+family-wise-error-controlled Westfall-Young procedure. The split
+therefore buys honest error control at almost no loss of real-label
+power.</p>
 <p>The Azure and Alibaba results persist in weaker but still substantive
 form (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate “some fraction is predictive”
@@ -2537,22 +2567,25 @@ trucks, 375 positives); LR alone reaches 0.979 / 0.800. Same
 manufacturer, same anonymisation schema, different readout format,
 near-perfect predictability. This excludes “SCANIA-family data is
 inherently weak” as an explanation for the Component X boundary.</p>
-<p><strong>Root-cause diagnosis: trajectory-signal absence, not signal
-absence.</strong> A stratified 5-fold cross-validation on the same 420
+<p><strong>Root-cause diagnosis under a fair prospective
+landmark.</strong> A stratified 5-fold cross-validation on full-history
 aggregated Component X features (mean / max / std / last of each of the
-105 columns per vehicle), with each column linearly residualised against
-<code>length_of_study_time_step</code> inside every fold, reaches AUROC
-0.826 ± 0.005, comparable to Alibaba’s <code>last3</code> combined score
-(0.81) and well above BGL’s chance level (0.51). The same LightGBM
-configuration under the temporal split used elsewhere in the paper only
-reaches 0.67, and the pattern-mining pipeline reaches 0.60. Component X
-features therefore carry substantial per-truck failure signal, but the
-signal is a static per-vehicle profile (aggregate usage, cumulative
-counter shape) rather than a temporal degradation trajectory.
-Last-K-events windows and the ordered-pattern mining built on them
-cannot see it, because there is no pre-failure event ordering to catch;
-the discriminative information is spread across the truck’s entire
-operating history.</p>
+105 columns per vehicle) reaches AUROC 0.826, but this number is not a
+prospective ceiling: full-history aggregates under random CV can leak
+end-of-history and censoring information that is not available at a
+prediction landmark. The fair test is a <strong>landmarked,
+entity-disjoint evaluation</strong> in which every feature is computed
+strictly from the pre-anchor risk-set window and trained and tested on
+disjoint vehicle sets. Under that test no representation clears 0.75:
+token counts reach AUROC 0.62, LightGBM on token counts 0.60, simple
+counts 0.54, and the significant pattern features 0.51. Even a richer
+descriptor model at the honest landmark stays near 0.60, matching the
+last-K pattern pipeline. The conclusion is therefore that <strong>no
+strong prospective last-K trajectory signal is recoverable at Component
+X’s readout cadence under the representations and landmarks
+tested</strong>; the 0.826 reflects a static per-vehicle profile that is
+visible across a truck’s whole history but not at a prospective decision
+point.</p>
 <p>This gives a sharper three-way regime-of-validity: (i) four positive
 traces (Kelmarsh, Penmanshiel, Azure PdM, Alibaba v2018), where target
 failure is preceded by a discriminable ordered event trajectory, with

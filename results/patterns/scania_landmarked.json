@@ -1,0 +1,14 @@
+{
+  "design": "landmarked risk-set windows, entity-disjoint vehicle split",
+  "n_train": 4519,
+  "n_test": 4567,
+  "n_train_vehicles": 3682,
+  "n_test_vehicles": 3682,
+  "landmarked_auroc": {
+    "counts": 0.536,
+    "token_counts": 0.615,
+    "patterns": 0.514,
+    "lgbm_tokens": 0.604
+  },
+  "reads_as": "no representation clears 0.75 at this cadence"
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "farm": "Kelmarsh",
+    "n_turbines": 6,
+    "n_learned_precursor_codes_union": 68,
+    "horizon_hours": 24,
+    "cooldown_hours": 24,
+    "n_alarms": 473,
+    "tp_alarms": 96,
+    "fp_alarms": 377,
+    "n_outages": 482,
+    "outages_detected": 457,
+    "precision": 0.203,
+    "recall": 0.948,
+    "false_alarms_per_turbine_month": 2.68,
+    "alarms_per_outage": 0.981,
+    "lead_median_min": 198.2,
+    "lead_iqr_min": [
+      30.7,
+      983.0
+    ],
+    "frac_lead_ge_10min": 0.927,
+    "frac_lead_ge_1h": 0.677,
+    "frac_lead_ge_6h": 0.427,
+    "frac_lead_ge_24h": 0.0
+  },
+  {
+    "farm": "Penmanshiel",
+    "n_turbines": 9,
+    "n_learned_precursor_codes_union": 11,
+    "horizon_hours": 24,
+    "cooldown_hours": 24,
+    "n_alarms": 82,
+    "tp_alarms": 64,
+    "fp_alarms": 18,
+    "n_outages": 790,
+    "outages_detected": 393,
+    "precision": 0.78,
+    "recall": 0.497,
+    "false_alarms_per_turbine_month": 0.306,
+    "alarms_per_outage": 0.104,
+    "lead_median_min": 5.7,
+    "lead_iqr_min": [
+      4.0,
+      81.2
+    ],
+    "frac_lead_ge_10min": 0.469,
+    "frac_lead_ge_1h": 0.266,
+    "frac_lead_ge_6h": 0.141,
+    "frac_lead_ge_24h": 0.0
+  }
+]

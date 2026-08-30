@@ -1,0 +1,21 @@
+{
+  "trace": "Azure",
+  "horizon": "last5",
+  "n_candidate_patterns": 79,
+  "n_label_permutations": 20,
+  "discoveries_real_labels": {
+    "naive_bh": 55,
+    "split_bh": 52,
+    "wy_minp": 52
+  },
+  "mean_false_discoveries_permuted_labels": {
+    "naive_bh": 0.3,
+    "split_bh": 0.0,
+    "wy_minp": 0.0
+  },
+  "max_false_discoveries_permuted_labels": {
+    "naive_bh": 6,
+    "split_bh": 0,
+    "wy_minp": 0
+  }
+}
