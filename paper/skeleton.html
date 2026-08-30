@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Alexander Apartsin" />
-  <meta name="dcterms.date" content="2026-08-29" />
+  <meta name="author" content="Alexander Apartsin1" />
+  <meta name="author" content="Yehudit Aperstein2" />
+  <meta name="dcterms.date" content="2026-08-30" />
   <meta name="keywords" content="failure prediction, frequent itemset
 mining, sequential pattern mining, post-selection inference, false
 discovery rate, predictive maintenance, operational event logs" />
@@ -95,6 +96,15 @@ margin: 0.05rem 0;
 letter-spacing: 0.02em;
 text-transform: uppercase;
 }
+.author { text-transform: none; font-size: 0.95rem; color: var(--ink); }
+.affiliations {
+font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+font-size: 0.82rem;
+color: var(--muted);
+line-height: 1.45;
+margin: 0.2rem 0 1.6rem;
+}
+.affiliations sup { font-weight: 600; }
 h1 {
 font-size: 1.5rem;
 color: var(--accent);
@@ -259,9 +269,16 @@ table { font-size: 0.86em; }
 <header id="title-block-header">
 <h1 class="title">Mining and Validating Pre-Failure Signatures in
 Operational Event Logs</h1>
-<p class="author">Alexander Apartsin</p>
-<p class="date">2026-08-29</p>
+<p class="author">Alexander Apartsin<sup>1</sup></p>
+<p class="author">Yehudit Aperstein<sup>2</sup></p>
+<p class="date">2026-08-30</p>
 </header>
+<div class="affiliations">
+<p><sup>1</sup> School of Computer Science, Faculty of Sciences, Holon
+Institute of Technology (HIT), Holon, Israel<br />
+<sup>2</sup> Intelligent Systems, Afeka Academic College of Engineering,
+Tel-Aviv, Israel</p>
+</div>
 <h2 id="abstract">Abstract</h2>
 <p>Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining (FP-Growth,

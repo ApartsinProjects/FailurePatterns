@@ -1,7 +1,8 @@
 ---
 title: "Mining and Validating Pre-Failure Signatures in Operational Event Logs"
 author:
-  - Alexander Apartsin
+  - Alexander Apartsin^1^
+  - Yehudit Aperstein^2^
 lang: en-US
 link-citations: true
 keywords:
@@ -13,6 +14,11 @@ keywords:
   - predictive maintenance
   - operational event logs
 ---
+
+::: {.affiliations}
+^1^ School of Computer Science, Faculty of Sciences, Holon Institute of Technology (HIT), Holon, Israel\
+^2^ Intelligent Systems, Afeka Academic College of Engineering, Tel-Aviv, Israel
+:::
 
 ## Abstract
 
