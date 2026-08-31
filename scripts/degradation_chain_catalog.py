@@ -31,11 +31,18 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.eval.discovery_inference_split import bh_qvalues, by_qvalues
 
-H = pd.Timedelta(hours=24)
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--hours", type=int, default=24)
+_ap.add_argument("--maxlen", type=int, default=4)
+_ap.add_argument("--out", default="degradation_chain_catalog.json")
+_ARGS, _ = _ap.parse_known_args()
+
+H = pd.Timedelta(hours=_ARGS.hours)
 SEED = 20260828
 MIN_SUPPORT = 0.05          # fraction of discovery case windows
 MAX_CTRL_FRAC = 0.02        # candidate must be rare in discovery controls
-MIN_LEN, MAX_LEN = 3, 4
+MIN_LEN, MAX_LEN = 3, _ARGS.maxlen
 
 
 def _distinct_seq(win: pd.DataFrame):
@@ -207,7 +214,7 @@ def main():
             print(f"  {c['chain']}  lift {c['lift']}  span {c['median_span_min']}min  "
                   f"lead {c['median_lead_min']}min  case {c['inf_case']}/{c['inf_case_n']} "
                   f"ctrl {c['inf_ctrl']}/{c['inf_ctrl_n']}  q_by {c['q_by']:.1e}")
-    (ROOT / "results/patterns/degradation_chain_catalog.json").write_text(
+    (ROOT / "results/patterns" / _ARGS.out).write_text(
         json.dumps(out, indent=2, default=str), encoding="utf-8")
     return 0
 

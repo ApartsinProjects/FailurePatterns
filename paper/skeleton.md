@@ -563,7 +563,7 @@ Compared to the pooled 2×2 Woolf-Haldane analysis, the matched
 estimator is more conservative on this data: a top pattern that
 scores MH-OR 2.72 [2.10, 3.51] under pooling scores a matched HR in
 the 1.6-1.7 range under conditional logistic, and the honest
-inference-half estimate (§6.10) is a top HR of 1.60 [1.35, 1.91].
+inference-half estimate (§6.11) is a top HR of 1.60 [1.35, 1.91].
 
 ### 4.7 Count-preserving order comparator
 
@@ -1072,7 +1072,7 @@ is not as specific as the Kelmarsh generator-fan chain. The
 deployment decision is dataset-specific; neither the sample precision
 of 0.89 nor the operational PPV of 0.20 suffices alone.
 
-#### 6.6.1 Signature catalog: cloud, HPC, and automotive traces
+### 6.7 Signature catalog: cloud, HPC, and automotive traces
 
 The catalog of §6.4 resumes with the four traces beyond the two wind
 farms. Each entry carries the same evidence structure: mined patterns,
@@ -1119,7 +1119,7 @@ separation here is partly a property of the synthetic generator.
 Interpretation: **a Reduce task entering Waiting state is the dominant
 single marker of subsequent job failure**. The near-certain posterior
 holds at the 1:3 sample base rate; the operational posterior is lower
-and base-rate dependent (§6.8). Longer patterns add no signal beyond
+and base-rate dependent (§6.9). Longer patterns add no signal beyond
 the presence of `task_waiting:R`, and the count-preserving order
 comparator (§6.3) shows the Alibaba ordering effect is essentially
 zero after multiplicity control, so the single-marker reading holds.
@@ -1131,7 +1131,7 @@ retry budget.
 
 **SCANIA Component X (matched conditional logistic).** Patterns are
 selected on a discovery half and estimated on a disjoint inference
-half (§6.10); the top five inference-half hazard ratios are listed
+half (§6.11); the top five inference-half hazard ratios are listed
 with full confidence intervals in Table 14. The headline signature
 `counter_surprise:397_{10, 22}` has matched HR 1.60 (95% CI
 [1.35, 1.91]).
@@ -1170,13 +1170,13 @@ use of pattern mining on this trace is post-hoc cascade taxonomy
 (which alert codes cluster together within an episode) rather than
 prediction.
 
-Sections 6.7 through 6.11 present the aggregate evidence behind these
-signatures: the predictive-vs-frequent-noise separation (§6.7),
-post-selection-valid sequence significance (§6.8), the same-sample
-marginal baseline (§6.9), the SCANIA matched hazard-ratio analysis
-(§6.10), and lead time on true positives (§6.11).
+Sections 6.8 through 6.12 present the aggregate evidence behind these
+signatures: the predictive-vs-frequent-noise separation (§6.8),
+post-selection-valid sequence significance (§6.9), the same-sample
+marginal baseline (§6.10), the SCANIA matched hazard-ratio analysis
+(§6.11), and lead time on true positives (§6.12).
 
-### 6.7 Predictive vs frequent-noise separation across traces
+### 6.8 Predictive vs frequent-noise separation across traces
 
 The paper's central object is the fraction of mined frequent patterns
 that pass the per-pattern statistical significance test on an
@@ -1248,12 +1248,12 @@ The Azure and Alibaba results persist in weaker but still substantive
 form (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate "some fraction is
 predictive" claim on this mining threshold and requires the matched
-conditional-logistic analysis in §6.10 instead. On Azure and Alibaba
+conditional-logistic analysis in §6.11 instead. On Azure and Alibaba
 the majority of frequent patterns are also predictive; on BGL and
 SCANIA the majority are frequent-but-noise, and the paper's concrete
 predictive-pattern list is short.
 
-### 6.8 Post-selection-valid sequence significance and closed-sequence compression
+### 6.9 Post-selection-valid sequence significance and closed-sequence compression
 
 We extend the discovery/inference split to sequences: PrefixSpan runs
 on the 50% discovery half, and each mined sequence is scored on the
@@ -1297,13 +1297,13 @@ sequences compress the raw list by up to a factor of two
 15/16). Closed sequences are the input the deployment-facing signature
 catalog uses.
 
-### 6.9 Formal significance (same-sample marginal counts)
+### 6.10 Formal significance (same-sample marginal counts)
 
 The same-sample BH counts (mining and testing on the full training
 sample) quantify the post-selection inflation that the §4.5
 discovery/inference design removes: they are the naive marginal-p
 baseline, and the gap between them and the post-selection-valid
-counts in §6.7 and §6.8 is the size of the selection artefact. At
+counts in §6.8 and §6.9 is the size of the selection artefact. At
 BH q < 0.05: every Azure 24h
 itemset (6/6) and every Azure 24h sequence (7/7) is significant;
 53/77 Azure `last5` itemsets and 55/67 Azure `last5` sequences;
@@ -1312,7 +1312,7 @@ flag zero patterns as expected (0/3 sequences at 1h, 0/5 at 6h). On
 Alibaba: 6/10 `last3` itemsets, 9/16 `last3` sequences, 59/109
 `last10` sequences.
 
-### 6.10 SCANIA risk-set matched patterns (Component X)
+### 6.11 SCANIA risk-set matched patterns (Component X)
 
 Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases x 3 controls each drawn from the risk set at
@@ -1389,7 +1389,7 @@ distinction is important operationally: hazard-ratio-scored patterns
 support cohort-level fleet triage (which trucks warrant closer
 inspection), not next-event alerting.
 
-### 6.11 Lead time on true positives
+### 6.12 Lead time on true positives
 
 - **Alibaba** (operational lead time): median 0 s across horizons,
   IQR 0-2 min. Task boundaries are the practical alarm resolution;
@@ -1600,7 +1600,7 @@ physical mechanical-wear cascade that produces the intermediate codes
 the mining recovers, though the logs alone do not establish the
 mechanism.
 
-The two lead-time regimes in §6.11 speak to deployment. Azure inherits
+The two lead-time regimes in §6.12 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
 be read as a real-world warning interval; Alibaba's median 0-second
 lead time is the honest one, and a per-job classifier there must be

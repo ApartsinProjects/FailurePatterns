@@ -801,7 +801,7 @@ matched fit.</p>
 estimator is more conservative on this data: a top pattern that scores
 MH-OR 2.72 [2.10, 3.51] under pooling scores a matched HR in the 1.6-1.7
 range under conditional logistic, and the honest inference-half estimate
-(§6.10) is a top HR of 1.60 [1.35, 1.91].</p>
+(§6.11) is a top HR of 1.60 [1.35, 1.91].</p>
 <h3 id="count-preserving-order-comparator">4.7 Count-preserving order
 comparator</h3>
 <p>The naive <code>order_gain = sequence_lift − itemset_lift</code>
@@ -1922,8 +1922,8 @@ much smaller (~1.5%, a ~1.5× lift): the safety-9000/9210 cascade fires
 often but is not as specific as the Kelmarsh generator-fan chain. The
 deployment decision is dataset-specific; neither the sample precision of
 0.89 nor the operational PPV of 0.20 suffices alone.</p>
-<h4 id="signature-catalog-cloud-hpc-and-automotive-traces">6.6.1
-Signature catalog: cloud, HPC, and automotive traces</h4>
+<h3 id="signature-catalog-cloud-hpc-and-automotive-traces">6.7 Signature
+catalog: cloud, HPC, and automotive traces</h3>
 <p>The catalog of §6.4 resumes with the four traces beyond the two wind
 farms. Each entry carries the same evidence structure: mined patterns,
 inference-half lift and BY q, and the intended deployment rule.</p>
@@ -2050,7 +2050,7 @@ on the inference half.</caption>
 <p>Interpretation: <strong>a Reduce task entering Waiting state is the
 dominant single marker of subsequent job failure</strong>. The
 near-certain posterior holds at the 1:3 sample base rate; the
-operational posterior is lower and base-rate dependent (§6.8). Longer
+operational posterior is lower and base-rate dependent (§6.9). Longer
 patterns add no signal beyond the presence of
 <code>task_waiting:R</code>, and the count-preserving order comparator
 (§6.3) shows the Alibaba ordering effect is essentially zero after
@@ -2061,7 +2061,7 @@ preemptively reschedules the Reduce onto a more reliable machine or
 increases its retry budget.</p>
 <p><strong>SCANIA Component X (matched conditional logistic).</strong>
 Patterns are selected on a discovery half and estimated on a disjoint
-inference half (§6.10); the top five inference-half hazard ratios are
+inference half (§6.11); the top five inference-half hazard ratios are
 listed with full confidence intervals in Table 14. The headline
 signature <code>counter_surprise:397_{10, 22}</code> has matched HR 1.60
 (95% CI [1.35, 1.91]).</p>
@@ -2095,12 +2095,12 @@ pipeline on HPC-syslog data as an alert-cascade early-warning system. A
 better use of pattern mining on this trace is post-hoc cascade taxonomy
 (which alert codes cluster together within an episode) rather than
 prediction.</p>
-<p>Sections 6.7 through 6.11 present the aggregate evidence behind these
-signatures: the predictive-vs-frequent-noise separation (§6.7),
-post-selection-valid sequence significance (§6.8), the same-sample
-marginal baseline (§6.9), the SCANIA matched hazard-ratio analysis
-(§6.10), and lead time on true positives (§6.11).</p>
-<h3 id="predictive-vs-frequent-noise-separation-across-traces">6.7
+<p>Sections 6.8 through 6.12 present the aggregate evidence behind these
+signatures: the predictive-vs-frequent-noise separation (§6.8),
+post-selection-valid sequence significance (§6.9), the same-sample
+marginal baseline (§6.10), the SCANIA matched hazard-ratio analysis
+(§6.11), and lead time on true positives (§6.12).</p>
+<h3 id="predictive-vs-frequent-noise-separation-across-traces">6.8
 Predictive vs frequent-noise separation across traces</h3>
 <p>The paper’s central object is the fraction of mined frequent patterns
 that pass the per-pattern statistical significance test on an inference
@@ -2272,11 +2272,11 @@ a fragile basis for the headline signatures.</p>
 form (46-100% at rich horizons); SCANIA under post-selection-valid
 inference no longer supports an aggregate “some fraction is predictive”
 claim on this mining threshold and requires the matched
-conditional-logistic analysis in §6.10 instead. On Azure and Alibaba the
+conditional-logistic analysis in §6.11 instead. On Azure and Alibaba the
 majority of frequent patterns are also predictive; on BGL and SCANIA the
 majority are frequent-but-noise, and the paper’s concrete
 predictive-pattern list is short.</p>
-<h3 id="post-selection-valid-sequence-significance-and-closed-sequence-compression">6.8
+<h3 id="post-selection-valid-sequence-significance-and-closed-sequence-compression">6.9
 Post-selection-valid sequence significance and closed-sequence
 compression</h3>
 <p>We extend the discovery/inference split to sequences: PrefixSpan runs
@@ -2437,13 +2437,13 @@ compress the raw list by up to a factor of two (BGL <code>last5</code>
 10/20, <code>last10</code> 26/39, <code>last20</code> 138/150; Alibaba
 <code>last3</code> 15/16). Closed sequences are the input the
 deployment-facing signature catalog uses.</p>
-<h3 id="formal-significance-same-sample-marginal-counts">6.9 Formal
+<h3 id="formal-significance-same-sample-marginal-counts">6.10 Formal
 significance (same-sample marginal counts)</h3>
 <p>The same-sample BH counts (mining and testing on the full training
 sample) quantify the post-selection inflation that the §4.5
 discovery/inference design removes: they are the naive marginal-p
 baseline, and the gap between them and the post-selection-valid counts
-in §6.7 and §6.8 is the size of the selection artefact. At BH q &lt;
+in §6.8 and §6.9 is the size of the selection artefact. At BH q &lt;
 0.05: every Azure 24h itemset (6/6) and every Azure 24h sequence (7/7)
 is significant; 53/77 Azure <code>last5</code> itemsets and 55/67 Azure
 <code>last5</code> sequences; 562/657 Azure <code>last10</code>
@@ -2451,7 +2451,7 @@ sequences. Both 1h and 6h Azure horizons flag zero patterns as expected
 (0/3 sequences at 1h, 0/5 at 6h). On Alibaba: 6/10 <code>last3</code>
 itemsets, 9/16 <code>last3</code> sequences, 59/109 <code>last10</code>
 sequences.</p>
-<h3 id="scania-risk-set-matched-patterns-component-x">6.10 SCANIA
+<h3 id="scania-risk-set-matched-patterns-component-x">6.11 SCANIA
 risk-set matched patterns (Component X)</h3>
 <p>Applying the risk-set matched-sampling extension from §4.4 to SCANIA
 Component X (2,272 cases x 3 controls each drawn from the risk set at
@@ -2620,7 +2620,7 @@ next-K-event alarm can act on. The distinction is important
 operationally: hazard-ratio-scored patterns support cohort-level fleet
 triage (which trucks warrant closer inspection), not next-event
 alerting.</p>
-<h3 id="lead-time-on-true-positives">6.11 Lead time on true
+<h3 id="lead-time-on-true-positives">6.12 Lead time on true
 positives</h3>
 <ul>
 <li><strong>Alibaba</strong> (operational lead time): median 0 s across
@@ -2865,7 +2865,7 @@ strongest members of the positive group because the alarm-code
 progression is consistent with a physical mechanical-wear cascade that
 produces the intermediate codes the mining recovers, though the logs
 alone do not establish the mechanism.</p>
-<p>The two lead-time regimes in §6.11 speak to deployment. Azure
+<p>The two lead-time regimes in §6.12 speak to deployment. Azure
 inherits a structural 24h clock from the synthetic generator and should
 not be read as a real-world warning interval; Alibaba’s median 0-second
 lead time is the honest one, and a per-job classifier there must be
