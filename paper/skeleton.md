@@ -763,11 +763,17 @@ single CI; only Azure and Alibaba combine a large presence effect with
 exactly one further channel that excludes zero.
 
 Against non-degenerate baselines the mined-pattern features do not win
-on raw accuracy, and we do not claim they do. On Azure `last5` a
-gradient-boosted model on event counts and a binary-bigram logistic
-regression both reach AUROC 0.845, above the mined-itemset features
-(0.778); on Alibaba `last3` the gradient-boosted count model reaches
-0.883, well above the mined-itemset features (0.695). The recency
+on raw accuracy, and we do not claim they do. All numbers in this
+paragraph and in Table 3 come from one internally consistent
+evaluation pass (the same windows, temporal split, and vocabulary for
+every representation), which differs slightly from the separate
+predictive pipeline of Table 2, so its mined-itemset AUROC (0.778 on
+Azure `last5`) is not identical to Table 2's (0.75); the comparison
+that matters is between representations computed together. On Azure
+`last5` a gradient-boosted model on event counts and a binary-bigram
+logistic regression both reach AUROC 0.845, above the mined-itemset
+features (0.778); on Alibaba `last3` the gradient-boosted count model
+reaches 0.883, well above the mined-itemset features (0.695). The recency
 baseline (event count plus window time span) stays near 0.57-0.70. The
 value of the mined patterns is therefore not that they maximise a
 held-out score, which a count-vector gradient-boosted model already
@@ -1094,9 +1100,11 @@ signal (§6.3, count-preserving effect +0.52 to +1.09), so
 `error2 → error3` in that specific direction is a stronger alarm
 than the reverse.
 
-Use: **alarm rule**. Raise a component-replacement work order whenever
-a machine's log shows `error2 AND error3` within any rolling 24h
-window; escalate faster if the direction is `error2 → error3`.
+Use (illustrative, on synthetic Azure PdM data): an alarm rule would
+raise a component-replacement work order whenever a machine's log
+shows `error2 AND error3` within any rolling 24h window, escalating
+faster for the direction `error2 → error3`. The near-perfect
+separation here is partly a property of the synthetic generator.
 
 **Alibaba cluster-trace-v2018** (Table 11).
 
@@ -1108,12 +1116,13 @@ window; escalate faster if the direction is `error2 → error3`.
 
 : **Table 11.** Top Alibaba cluster-trace signatures on the inference half.
 
-Interpretation: **once a Reduce task enters Waiting state, job
-failure risk jumps to near-certain**. Longer patterns add no signal
-beyond the presence of `task_waiting:R`. The count-preserving order
+Interpretation: **a Reduce task entering Waiting state is the dominant
+single marker of subsequent job failure**. The near-certain posterior
+holds at the 1:3 sample base rate; the operational posterior is lower
+and base-rate dependent (§6.8). Longer patterns add no signal beyond
+the presence of `task_waiting:R`, and the count-preserving order
 comparator (§6.3) shows the Alibaba ordering effect is essentially
-zero after multiplicity control, so the single-marker interpretation
-is correct.
+zero after multiplicity control, so the single-marker reading holds.
 
 Use: **real-time job triage**. Any job with a Reduce task entering
 Waiting state is flagged; the scheduler either preemptively
@@ -1586,9 +1595,10 @@ self-triggering AND readout-cadence signal capacity exceeds the
 target AUROC bar". BGL fails the second condition; SCANIA fails the
 third; the two wind farms, Azure PdM, and Alibaba v2018 satisfy all
 three. The wind farms are the strongest members of the positive
-group because the cascade is literally physical: a mechanical wear
-process generates the intermediate alarm codes that the mining
-recovers.
+group because the alarm-code progression is consistent with a
+physical mechanical-wear cascade that produces the intermediate codes
+the mining recovers, though the logs alone do not establish the
+mechanism.
 
 The two lead-time regimes in §6.11 speak to deployment. Azure inherits
 a structural 24h clock from the synthetic generator and should not
@@ -1703,16 +1713,17 @@ interpretable pre-failure signatures on four of six traces studied.
 The cleanest evidence is a physical cascade replicated across two
 independent Senvion wind farms: on Kelmarsh and Penmanshiel, mining
 recovers zero-control cascade signatures at inference-half lift 4.00,
-where a mechanical wear process generates the intermediate alarm
-codes that terminate as Forced outages, and the mined-itemset rule
-strictly dominates a most-recent-event baseline. On the two cloud /
-maintenance traces (Azure PdM, Alibaba v2018), the sequence
-representation adds predictive information beyond binary itemsets, but
-for different reasons: on Azure the count-preserving null shows a
-genuine ordering effect, whereas on Alibaba it is event multiplicity
-and a short leading prefix, not exact order, that carries the signal.
-Combining itemset and sequence features improves failure prediction
-by 3-10 AUROC points over either alone at the rich horizons. The method's
+with an alarm-code progression consistent with a mechanical wear
+process that terminates as Forced outages, and validated distinct-code
+degradation chains that complete a median two-to-four hours before the
+outage. Beyond the co-located catalog, the presence / multiplicity /
+order decomposition places the two cloud/maintenance traces in
+opposite corners: on Azure the distinguishing held-out increment is
+event order, on Alibaba it is event multiplicity, not exact order. On
+raw accuracy the mined-pattern features do not beat a gradient-boosted
+count model; their contribution is validated, human-readable
+signatures and the decomposition itself, not a maximal predictive
+score. The method's
 regime of validity is mapped by two boundary traces (BGL, SCANIA)
 where the pipeline does not find last-K-events signal, with a
 mechanistic explanation for each, and by a matched conditional-
