@@ -1,0 +1,236 @@
+{
+  "Kelmarsh": {
+    "farm": "Kelmarsh",
+    "n_outage_windows_24h": 433,
+    "n_control_windows_24h": 229,
+    "fan_family_colocation_median_span_min": 0.16,
+    "fan_family_span_frac_under_1min": 0.519,
+    "top_distinct_3chains": [
+      {
+        "chain": "system_info:100180 -> system_info:100190 -> system_info:100200",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 113,
+        "support_frac_outage": 0.261,
+        "support_control_windows": 160,
+        "support_frac_control": 0.699,
+        "median_span_min": 2.5
+      },
+      {
+        "chain": "system_info:100190 -> system_info:100200 -> system_info:100210",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 112,
+        "support_frac_outage": 0.259,
+        "support_control_windows": 157,
+        "support_frac_control": 0.686,
+        "median_span_min": 0.7
+      },
+      {
+        "chain": "system_info:0 -> system_stop:20 -> system_info:6410",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 100,
+        "support_frac_outage": 0.231,
+        "support_control_windows": 3,
+        "support_frac_control": 0.013,
+        "median_span_min": 241.4
+      },
+      {
+        "chain": "system_info:0 -> system_info:100130 -> system_info:100180",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 98,
+        "support_frac_outage": 0.226,
+        "support_control_windows": 154,
+        "support_frac_control": 0.672,
+        "median_span_min": 9.0
+      },
+      {
+        "chain": "system_info:100130 -> system_info:100180 -> system_info:100190",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 97,
+        "support_frac_outage": 0.224,
+        "support_control_windows": 150,
+        "support_frac_control": 0.655,
+        "median_span_min": 12.1
+      },
+      {
+        "chain": "system_info:100100 -> system_info:100110 -> system_info:100130",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 76,
+        "support_frac_outage": 0.176,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 0.1
+      },
+      {
+        "chain": "system_info:10 -> system_info:0 -> system_stop:20",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 73,
+        "support_frac_outage": 0.169,
+        "support_control_windows": 2,
+        "support_frac_control": 0.009,
+        "median_span_min": 241.4
+      },
+      {
+        "chain": "system_info:100050 -> system_info:100100 -> system_info:100110",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 73,
+        "support_frac_outage": 0.169,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 0.2
+      },
+      {
+        "chain": "system_info:100070 -> system_info:0 -> system_info:100130",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 63,
+        "support_frac_outage": 0.145,
+        "support_control_windows": 147,
+        "support_frac_control": 0.642,
+        "median_span_min": 0.8
+      },
+      {
+        "chain": "system_warning:2650 -> system_warning:2655 -> system_warning:2550",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 60,
+        "support_frac_outage": 0.139,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 0.0
+      },
+      {
+        "chain": "system_info:100210 -> system_info:10 -> system_info:100070",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 60,
+        "support_frac_outage": 0.139,
+        "support_control_windows": 146,
+        "support_frac_control": 0.638,
+        "median_span_min": 14.0
+      },
+      {
+        "chain": "system_info:100200 -> system_info:100210 -> system_info:10",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 57,
+        "support_frac_outage": 0.132,
+        "support_control_windows": 146,
+        "support_frac_control": 0.638,
+        "median_span_min": 14.1
+      }
+    ]
+  },
+  "Penmanshiel": {
+    "farm": "Penmanshiel",
+    "n_outage_windows_24h": 778,
+    "n_control_windows_24h": 242,
+    "fan_family_colocation_median_span_min": 0.28,
+    "fan_family_span_frac_under_1min": 0.577,
+    "top_distinct_3chains": [
+      {
+        "chain": "system_stop:9210 -> system_info:0 -> system_warning:9000",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 2211,
+        "support_frac_outage": 2.842,
+        "support_control_windows": 6,
+        "support_frac_control": 0.025,
+        "median_span_min": 5.9
+      },
+      {
+        "chain": "system_warning:9000 -> system_stop:9210 -> system_info:0",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 2084,
+        "support_frac_outage": 2.679,
+        "support_control_windows": 1,
+        "support_frac_control": 0.004,
+        "median_span_min": 4.6
+      },
+      {
+        "chain": "system_info:0 -> system_warning:9000 -> system_stop:9210",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 2068,
+        "support_frac_outage": 2.658,
+        "support_control_windows": 1,
+        "support_frac_control": 0.004,
+        "median_span_min": 9.8
+      },
+      {
+        "chain": "system_info:10 -> system_stop:9210 -> system_info:0",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 231,
+        "support_frac_outage": 0.297,
+        "support_control_windows": 2,
+        "support_frac_control": 0.008,
+        "median_span_min": 608.1
+      },
+      {
+        "chain": "system_stop:9210 -> system_info:0 -> system_stop:455",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 191,
+        "support_frac_outage": 0.246,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 8.1
+      },
+      {
+        "chain": "system_stop:455 -> system_info:0 -> system_warning:9000",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 183,
+        "support_frac_outage": 0.235,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 16.4
+      },
+      {
+        "chain": "system_warning:716 -> system_warning:717 -> system_warning:718",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 153,
+        "support_frac_outage": 0.197,
+        "support_control_windows": 3,
+        "support_frac_control": 0.012,
+        "median_span_min": 0.0
+      },
+      {
+        "chain": "system_info:0 -> system_warning:9000 -> system_info:10",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 136,
+        "support_frac_outage": 0.175,
+        "support_control_windows": 9,
+        "support_frac_control": 0.037,
+        "median_span_min": 239.8
+      },
+      {
+        "chain": "system_warning:9000 -> system_info:10 -> system_stop:9210",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 94,
+        "support_frac_outage": 0.121,
+        "support_control_windows": 1,
+        "support_frac_control": 0.004,
+        "median_span_min": 964.0
+      },
+      {
+        "chain": "system_info:0 -> system_warning:5720 -> system_stop:3000",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 90,
+        "support_frac_outage": 0.116,
+        "support_control_windows": 3,
+        "support_frac_control": 0.012,
+        "median_span_min": 2.1
+      },
+      {
+        "chain": "system_warning:9000 -> system_info:0 -> system_stop:9210",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 88,
+        "support_frac_outage": 0.113,
+        "support_control_windows": 1,
+        "support_frac_control": 0.004,
+        "median_span_min": 11.0
+      },
+      {
+        "chain": "system_warning:717 -> system_warning:718 -> system_warning:716",
+        "n_distinct_codes": 3,
+        "support_outage_windows": 68,
+        "support_frac_outage": 0.087,
+        "support_control_windows": 0,
+        "support_frac_control": 0.0,
+        "median_span_min": 5.5
+      }
+    ]
+  }
+}

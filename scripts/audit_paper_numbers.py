@@ -392,6 +392,30 @@ def main() -> int:
     check("6.4", "Prospective Penmanshiel precision = 0.78",
           pr["Penmanshiel"]["precision"], "0.78", approx(pr["Penmanshiel"]["precision"], 0.78, tol=0.02))
 
+    # degradation-chain catalog (long distinct-code trajectories)
+    dcc = _load_json(PATT / "degradation_chain_catalog.json")
+    check("6.4", "Kelmarsh degradation chains BY-validated = 115",
+          dcc["Kelmarsh"]["n_validated_by"], "115",
+          dcc["Kelmarsh"]["n_validated_by"] == 115)
+    check("6.4", "Penmanshiel degradation chains BY-validated = 184",
+          dcc["Penmanshiel"]["n_validated_by"], "184",
+          dcc["Penmanshiel"]["n_validated_by"] == 184)
+
+    # cross-farm transfer
+    cft = {r["direction"]: r for r in _load_json(PATT / "cross_farm_transfer.json")["transfer"]}
+    check("6.4", "Kelmarsh->Penmanshiel transfer recall = 0.95",
+          cft["Kelmarsh->Penmanshiel"]["recall"], "0.95",
+          approx(cft["Kelmarsh->Penmanshiel"]["recall"], 0.952, tol=0.02))
+    check("6.4", "Penmanshiel->Kelmarsh transfer recall = 0.50",
+          cft["Penmanshiel->Kelmarsh"]["recall"], "0.50",
+          approx(cft["Penmanshiel->Kelmarsh"]["recall"], 0.498, tol=0.03))
+
+    # co-location diagnostic (fan burst fires within seconds)
+    dch = _load_json(PATT / "degradation_chains.json")
+    check("6.4", "Kelmarsh fan-family co-location span < 1 min",
+          dch["Kelmarsh"]["fan_family_colocation_median_span_min"], "0.16",
+          dch["Kelmarsh"]["fan_family_colocation_median_span_min"] < 1.0)
+
     # W4 presence/multiplicity/order decomposition
     dec = {r["trace"]: r["decomposition"] for r in _load_json(PATT / "representation_experiment.json")}
     az_o = dec["Azure"]["order_increment"]; az_m = dec["Azure"]["multiplicity_increment"]

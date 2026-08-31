@@ -1518,10 +1518,114 @@ two different turbine models on two different sites both produce
 lift-4.00 cascade signatures under the same mining protocol, with
 vendor-shared alarm codes indexing genuinely mechanical failure
 modes.</p>
-<p>Use: <strong>safety-9210 warning triggers immediate turbine
-curtailment, regardless of grid conditions</strong>;
-<strong>freq-converter 3543 informational message triggers converter
-service order within 6h at Penmanshiel</strong>.</p>
+<p>Candidate rules (pending prospective trial): the safety-9210 warning
+is a candidate curtailment trigger and the frequency-converter 3543
+informational message a candidate converter-service trigger. The short
+median lead of the co-located Penmanshiel burst (§6.4, replay below)
+means such a burst alone often fires too late for curtailment; the
+multi-hour degradation chains next provide the actionable lead.</p>
+<p><strong>Co-located bursts versus temporal degradation
+chains.</strong> The generator-fan and safety-system signatures above
+are co-located alarm bursts: the constituent codes fire within a median
+of 0.16 min (Kelmarsh) and 0.28 min (Penmanshiel) of each other, so they
+mark a single instant, not a trajectory. A separate signature class
+captures genuine degradation. Collapsing each 24h pre-outage window to
+its ordered sequence of <strong>distinct</strong> codes (co-located
+repeats merged) and mining ordered chains of three-to-four distinct
+codes under the same entity-disjoint discovery/inference protocol yields
+a validated degradation-chain catalog (Table 7): 115 chains on Kelmarsh
+and 184 on Penmanshiel pass BY q &lt; 0.05 on the inference half, each
+with zero control-window hits.</p>
+<table>
+<caption><strong>Table 7.</strong> Validated temporal degradation chains
+(ordered distinct-code sequences over 24h) on the two wind farms, with
+median trajectory span, median lead time to the outage, and
+inference-half support.</caption>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>farm</th>
+<th>degradation chain</th>
+<th style="text-align: right;">median span</th>
+<th style="text-align: right;">median lead</th>
+<th style="text-align: right;">inf case</th>
+<th style="text-align: right;">inf ctrl</th>
+<th style="text-align: right;">BY q</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td><code>stop:20 → info:6410 → warning:2550</code></td>
+<td style="text-align: right;">59 min</td>
+<td style="text-align: right;">189 min</td>
+<td style="text-align: right;">54/208</td>
+<td style="text-align: right;">0/113</td>
+<td style="text-align: right;">1e-8</td>
+</tr>
+<tr class="even">
+<td>Kelmarsh</td>
+<td><code>stop:20 → info:6410 → warning:2650 → warning:2655</code></td>
+<td style="text-align: right;">59 min</td>
+<td style="text-align: right;">226 min</td>
+<td style="text-align: right;">43/208</td>
+<td style="text-align: right;">0/113</td>
+<td style="text-align: right;">5e-7</td>
+</tr>
+<tr class="odd">
+<td>Kelmarsh</td>
+<td><code>info:0 → stop:20 → warning:2550</code></td>
+<td style="text-align: right;">605 min</td>
+<td style="text-align: right;">140 min</td>
+<td style="text-align: right;">42/208</td>
+<td style="text-align: right;">0/113</td>
+<td style="text-align: right;">7e-7</td>
+</tr>
+<tr class="even">
+<td>Penmanshiel</td>
+<td><code>warning:9000 → stop:9210 → info:0</code></td>
+<td style="text-align: right;">20 min</td>
+<td style="text-align: right;">182 min</td>
+<td style="text-align: right;">144/442</td>
+<td style="text-align: right;">0/133</td>
+<td style="text-align: right;">6e-17</td>
+</tr>
+<tr class="odd">
+<td>Penmanshiel</td>
+<td><code>info:10 → stop:9210 → info:0 → warning:9000</code></td>
+<td style="text-align: right;">613 min</td>
+<td style="text-align: right;">133 min</td>
+<td style="text-align: right;">129/442</td>
+<td style="text-align: right;">0/133</td>
+<td style="text-align: right;">2e-15</td>
+</tr>
+</tbody>
+</table>
+<p>Unlike the co-located bursts, these chains unfold over tens of
+minutes to ten hours and complete a median two-to-four hours before the
+outage, so they are the operationally actionable signatures: a
+generator-fan overload on Kelmarsh is preceded by a stop, a status code,
+and then the fan warning over roughly an hour, three hours ahead of the
+forced outage. The chain lift equals the inference-half ceiling (all
+controls clean) at the 2:1 case:control ratio these 24h windows
+produce.</p>
+<p><strong>Cross-farm transfer.</strong> Learning the precursor rule on
+one farm and replaying it, unchanged, on the other (shared Senvion code
+vocabulary) transfers asymmetrically: a Kelmarsh-trained rule detects
+95% of Penmanshiel forced outages (median lead 72 min), while a
+Penmanshiel-trained rule detects 50% of Kelmarsh outages; the
+generator-fan code 2650 is among the precursors shared by both farms.
+The generator-fan family transfers; the Penmanshiel safety-system 9000
+family, tied to that site’s 2016 commissioning phase, does not, which is
+consistent with the boundary condition stated in §8.</p>
 <p><strong>Cluster-aware validation.</strong> Each wind farm has only a
 handful of turbines, so the hundreds of windows they generate are
 clustered and the window-level hypergeometric q-values overstate the
@@ -1573,7 +1677,7 @@ window’s event count exceeds the median count of discovery-half failure
 windows.</li>
 </ol>
 <table style="width:100%;">
-<caption><strong>Table 7.</strong> Baseline comparison on the wind
+<caption><strong>Table 8.</strong> Baseline comparison on the wind
 farms: the mined-itemset rule against most-recent-event and event-count
 baselines.</caption>
 <colgroup>
@@ -1714,16 +1818,16 @@ Case-control ratio and posterior at the operational base rate</h3>
 <p>Every discovery/inference signature table is scored on a
 matched-control sample built at case:control = 1:3, so the pipeline’s
 sample base rate is P(fail) = 0.25 by construction, and the precision
-numbers of Table 7 cannot be read directly as the operational posterior
+numbers of Table 8 cannot be read directly as the operational posterior
 in a deployment where forced outages are much rarer. To turn the
 inference-half precision into an interpretable operational number, we
 invert the empirical sensitivity/specificity through Bayes at a
 realistic operational base rate of P(fail) = 0.01 (roughly 1
 forced-outage window per 100 arbitrary-time windows on a real wind
 farm), giving the scenario PPV each rule delivers under an assumed 1%
-deployment prevalence (Table 8):</p>
+deployment prevalence (Table 9):</p>
 <table>
-<caption><strong>Table 8.</strong> Calibrated positive predictive value
+<caption><strong>Table 9.</strong> Calibrated positive predictive value
 at the sample and operational base rates.</caption>
 <colgroup>
 <col style="width: 14%" />
@@ -1785,9 +1889,9 @@ Signature catalog: cloud, HPC, and automotive traces</h4>
 <p>The catalog of §6.4 resumes with the four traces beyond the two wind
 farms. Each entry carries the same evidence structure: mined patterns,
 inference-half lift and BY q, and the intended deployment rule.</p>
-<p><strong>Azure PdM</strong> (Table 9).</p>
+<p><strong>Azure PdM</strong> (Table 10).</p>
 <table>
-<caption><strong>Table 9.</strong> Top Azure PdM signatures on the
+<caption><strong>Table 10.</strong> Top Azure PdM signatures on the
 inference half.</caption>
 <colgroup>
 <col style="width: 13%" />
@@ -1863,9 +1967,9 @@ direction is a stronger alarm than the reverse.</p>
 order whenever a machine’s log shows <code>error2 AND error3</code>
 within any rolling 24h window; escalate faster if the direction is
 <code>error2 → error3</code>.</p>
-<p><strong>Alibaba cluster-trace-v2018</strong> (Table 10).</p>
+<p><strong>Alibaba cluster-trace-v2018</strong> (Table 11).</p>
 <table>
-<caption><strong>Table 10.</strong> Top Alibaba cluster-trace signatures
+<caption><strong>Table 11.</strong> Top Alibaba cluster-trace signatures
 on the inference half.</caption>
 <thead>
 <tr class="header">
@@ -1917,7 +2021,7 @@ increases its retry budget.</p>
 <p><strong>SCANIA Component X (matched conditional logistic).</strong>
 Patterns are selected on a discovery half and estimated on a disjoint
 inference half (§6.10); the top five inference-half hazard ratios are
-listed with full confidence intervals in Table 13. The headline
+listed with full confidence intervals in Table 14. The headline
 signature <code>counter_surprise:397_{10, 22}</code> has matched HR 1.60
 (95% CI [1.35, 1.91]).</p>
 <p>Interpretation: <strong>sustained anomalies concentrated in the
@@ -1966,12 +2070,12 @@ matched controls under an inference regime not contaminated by the
 label-dependent candidate selection.</p>
 <p>Every trace is split 50/50 entity-disjoint into a discovery half (for
 FP-Growth candidate selection) and an inference half (for exact
-hypergeometric p-values and BH / BY correction). Table 11 covers the
+hypergeometric p-values and BH / BY correction). Table 12 covers the
 four non-wind traces; the two wind farms carry the same analysis with
 the catalog in §6.4 (Kelmarsh 30/35 and Penmanshiel 27/30 BY-significant
 itemsets at <code>last5</code>).</p>
 <table>
-<caption><strong>Table 11.</strong> Post-selection-valid itemset
+<caption><strong>Table 12.</strong> Post-selection-valid itemset
 significance by trace and horizon on the discovery/inference
 split.</caption>
 <colgroup>
@@ -2138,9 +2242,9 @@ compression</h3>
 on the 50% discovery half, and each mined sequence is scored on the 50%
 inference half via an exact hypergeometric test on windows that contain
 the sequence as an ordered subsequence, then corrected across all
-sequences tested at each horizon (Table 12).</p>
+sequences tested at each horizon (Table 13).</p>
 <table style="width:100%;">
-<caption><strong>Table 12.</strong> Post-selection-valid sequence
+<caption><strong>Table 13.</strong> Post-selection-valid sequence
 significance by trace and horizon.</caption>
 <colgroup>
 <col style="width: 9%" />
@@ -2329,7 +2433,7 @@ preselected patterns.</p>
 <p>Top 5 predictive Component X signatures on the inference half
 (matched HR, 95% CI, p):</p>
 <table>
-<caption><strong>Table 13.</strong> Top five SCANIA Component X
+<caption><strong>Table 14.</strong> Top five SCANIA Component X
 signatures by matched hazard ratio, selected on the discovery half and
 estimated on the disjoint inference half with 95% confidence
 intervals.</caption>
@@ -2388,7 +2492,7 @@ intervals.</caption>
 </tbody>
 </table>
 <p>Two effects push the honest estimates below the naive ones. The
-<strong>pooled 2×2 analysis (Table 14) inflates the effect</strong> (top
+<strong>pooled 2×2 analysis (Table 15) inflates the effect</strong> (top
 pooled MH-OR 2.72 [2.10, 3.51]) because it discards the matched-set
 structure that the incidence-density sampling design creates; the
 matched conditional logistic is the correct estimator under
@@ -2408,9 +2512,9 @@ reading of the matched output must therefore be interpreted with
 awareness of this underlying feature-set concentration.</p>
 <p>Top 5 predictive Component X signatures (MH-OR, 95% CI):</p>
 <table>
-<caption><strong>Table 14.</strong> Pooled 2x2 odds ratios for the same
+<caption><strong>Table 15.</strong> Pooled 2x2 odds ratios for the same
 SCANIA signatures, superseded by the matched estimates in Table
-13.</caption>
+14.</caption>
 <colgroup>
 <col style="width: 11%" />
 <col style="width: 12%" />
@@ -2501,9 +2605,9 @@ predictor lives in the subpart and S is redundant; if no proper
 subsequence matches, the FULL ordered sequence is the minimal predictor.
 Formally, S is “full-sequence-dominant” iff lift(S) &gt; lift(S’) + 0.05
 for every proper subsequence S’ the miner also produced.</p>
-<p>Top-200 sequences per horizon (Table 15):</p>
+<p>Top-200 sequences per horizon (Table 16):</p>
 <table style="width:100%;">
-<caption><strong>Table 15.</strong> Full-sequence-dominant versus
+<caption><strong>Table 16.</strong> Full-sequence-dominant versus
 subpart-dominant predictive sequences by trace.</caption>
 <colgroup>
 <col style="width: 12%" />

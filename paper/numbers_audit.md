@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 128. Pass: 128. Mismatch: 0.
+Total claims audited: 133. Pass: 133. Mismatch: 0.
 
 ## Full audit trail
 
@@ -73,6 +73,11 @@ Total claims audited: 128. Pass: 128. Mismatch: 0.
 | 6.4               | Prospective Kelmarsh recall = 0.95                            | 0.95         | 0.948           | PASS        |
 | 6.4               | Prospective Kelmarsh median lead = 198 min                    | 198          | 198             | PASS        |
 | 6.4               | Prospective Penmanshiel precision = 0.78                      | 0.78         | 0.78            | PASS        |
+| 6.4               | Kelmarsh degradation chains BY-validated = 115                | 115          | 115             | PASS        |
+| 6.4               | Penmanshiel degradation chains BY-validated = 184             | 184          | 184             | PASS        |
+| 6.4               | Kelmarsh->Penmanshiel transfer recall = 0.95                  | 0.95         | 0.952           | PASS        |
+| 6.4               | Penmanshiel->Kelmarsh transfer recall = 0.50                  | 0.50         | 0.498           | PASS        |
+| 6.4               | Kelmarsh fan-family co-location span < 1 min                  | 0.16         | 0.16            | PASS        |
 | 6.3               | Azure order increment +0.032 CI excludes 0                    | +0.032       | 0.032           | PASS        |
 | 6.3               | Azure multiplicity increment CI includes 0                    | incl 0       | [-0.015, 0.034] | PASS        |
 | 6.3               | Alibaba multiplicity increment +0.029 CI excludes 0           | +0.029       | 0.029           | PASS        |
