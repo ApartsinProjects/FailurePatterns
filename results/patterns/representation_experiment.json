@@ -1,5 +1,131 @@
 [
   {
+    "trace": "Kelmarsh",
+    "horizon": "last5",
+    "n_train": 1349,
+    "n_test": 579,
+    "n_test_entities": 6,
+    "auroc": {
+      "event_count": 0.5,
+      "presence": 0.744,
+      "multiset": 0.74,
+      "bigram": 0.722,
+      "recency": 0.617,
+      "lgbm_multiset": 0.689,
+      "mined_itemset": 0.661,
+      "mined_sequence": null,
+      "combined": 0.661
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.5,
+        0.5
+      ],
+      "presence": [
+        0.695,
+        0.815
+      ],
+      "multiset": [
+        0.67,
+        0.831
+      ],
+      "mined_itemset": [
+        0.548,
+        0.719
+      ],
+      "combined": [
+        0.545,
+        0.719
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.244,
+        "ci95": [
+          0.195,
+          0.315
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": -0.004,
+        "ci95": [
+          -0.038,
+          0.021
+        ]
+      },
+      "order_increment": {
+        "delta": -0.018,
+        "ci95": [
+          -0.023,
+          0.002
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Penmanshiel",
+    "horizon": "last5",
+    "n_train": 2212,
+    "n_test": 948,
+    "n_test_entities": 9,
+    "auroc": {
+      "event_count": 0.5,
+      "presence": 0.826,
+      "multiset": 0.829,
+      "bigram": 0.831,
+      "recency": 0.679,
+      "lgbm_multiset": 0.821,
+      "mined_itemset": 0.59,
+      "mined_sequence": null,
+      "combined": 0.59
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.5,
+        0.5
+      ],
+      "presence": [
+        0.782,
+        0.874
+      ],
+      "multiset": [
+        0.802,
+        0.861
+      ],
+      "mined_itemset": [
+        0.558,
+        0.623
+      ],
+      "combined": [
+        0.558,
+        0.623
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.326,
+        "ci95": [
+          0.282,
+          0.374
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.003,
+        "ci95": [
+          -0.016,
+          0.023
+        ]
+      },
+      "order_increment": {
+        "delta": 0.002,
+        "ci95": [
+          -0.048,
+          0.037
+        ]
+      }
+    }
+  },
+  {
     "trace": "Azure",
     "horizon": "last5",
     "n_train": 2080,

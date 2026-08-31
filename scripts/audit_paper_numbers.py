@@ -431,6 +431,16 @@ def main() -> int:
 
     # W4 presence/multiplicity/order decomposition
     dec = {r["trace"]: r["decomposition"] for r in _load_json(PATT / "representation_experiment.json")}
+    # wind farms: pure presence (large presence, no further channel)
+    for farm, pres in [("Kelmarsh", 0.244), ("Penmanshiel", 0.326)]:
+        pe = dec[farm]["presence_effect"]
+        check("6.3", f"{farm} presence effect ~{pres} CI excludes 0",
+              round(pe["delta"], 3), f"~{pres}",
+              approx(pe["delta"], pres, tol=0.01) and pe["ci95"][0] > 0)
+        ordc = dec[farm]["order_increment"]; mc = dec[farm]["multiplicity_increment"]
+        check("6.3", f"{farm} order + multiplicity both CI-include-0 (presence only)",
+              "both incl 0", "both incl 0",
+              ordc["ci95"][0] < 0 < ordc["ci95"][1] and mc["ci95"][0] < 0 < mc["ci95"][1])
     az_o = dec["Azure"]["order_increment"]; az_m = dec["Azure"]["multiplicity_increment"]
     check("6.3", "Azure order increment +0.032 CI excludes 0",
           f"{az_o['delta']:.3f}", "+0.032",

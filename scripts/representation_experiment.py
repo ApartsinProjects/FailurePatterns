@@ -51,10 +51,12 @@ TOP_BIGRAMS = 200
 MAX_WINDOWS = 8000  # entity-stratified cap so bootstrap stays tractable
 
 CONFIGS = [
-    ("Azure",   "azure_windows.parquet",   "last5"),
-    ("Alibaba", "alibaba_windows.parquet", "last3"),
-    ("BGL",     "bgl_windows.parquet",     "last20"),
-    ("SCANIA",  "scania_windows.parquet",  "last20"),
+    ("Kelmarsh",    "kelmarsh_windows.parquet",    "last5"),
+    ("Penmanshiel", "penmanshiel_windows.parquet", "last5"),
+    ("Azure",       "azure_windows.parquet",       "last5"),
+    ("Alibaba",     "alibaba_windows.parquet",     "last3"),
+    ("BGL",         "bgl_windows.parquet",         "last20"),
+    ("SCANIA",      "scania_windows.parquet",      "last20"),
 ]
 
 

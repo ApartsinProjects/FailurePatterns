@@ -729,6 +729,8 @@ the **order increment** (bigrams over counts) (Table 3).
 
 | trace   | presence effect | multiplicity increment | order increment |
 |---------|----------------:|-----------------------:|----------------:|
+| Kelmarsh    | **+0.244 [0.195, 0.315]** | -0.004 [-0.038, 0.021] | -0.018 [-0.023, 0.002] |
+| Penmanshiel | **+0.326 [0.282, 0.374]** | +0.003 [-0.016, 0.023] | +0.002 [-0.048, 0.037] |
 | Azure   | +0.301 [0.258, 0.332] | +0.012 [-0.015, 0.034] | **+0.032 [0.003, 0.061]** |
 | Alibaba | +0.149 [0.128, 0.171] | **+0.029 [0.018, 0.040]** | -0.006 [-0.022, 0.013] |
 | BGL     | -0.015 [-0.032, -0.001] | +0.000 [-0.001, 0.001] | +0.024 [0.002, 0.044] |
@@ -736,19 +738,22 @@ the **order increment** (bigrams over counts) (Table 3).
 
 : **Table 3.** Presence / multiplicity / order decomposition of held-out AUROC, with entity-bootstrap 95% CIs. A component whose interval excludes zero is a distinguishable channel of signal.
 
-On both positive traces the largest lever is event **presence** (which
-event types occur at all: +0.30 on Azure, +0.15 on Alibaba). What
-distinguishes them is the second channel. **On Azure the order
-increment is +0.032 with a CI that excludes zero while the
-multiplicity increment does not; on Alibaba the reverse holds, a
-multiplicity increment of +0.029 excluding zero and an order increment
-indistinguishable from zero** (Figure 6). The two positive traces
-therefore occupy opposite corners of the decomposition: Azure carries
-a genuine ordering signal, Alibaba a multiplicity signal that binary
-itemsets discard but exact order does not recover. This resolves the
-apparent tension with the count-preserving lift analysis below: the
-Alibaba sequence advantage is repeated-event information, not exact
-within-window order.
+The decomposition separates the traces into three clean regimes.
+**On the two wind farms the entire signal is event presence**
+(+0.244 on Kelmarsh, +0.326 on Penmanshiel, both large and with CIs
+far from zero), and both the multiplicity and order increments are
+indistinguishable from zero: which alarm codes occur is what predicts
+the outage, not how many times or in what order. This is the
+decomposition's account of the co-located burst, and it is exactly why
+the search for ordered degradation trajectories below returns so
+little. **On Azure and Alibaba a large presence effect is joined by
+exactly one further channel: order on Azure (+0.032, CI excludes
+zero, multiplicity does not), multiplicity on Alibaba (+0.029,
+excludes zero, order does not)** (Figure 6). Azure carries a genuine
+ordering signal; Alibaba a multiplicity signal that binary itemsets
+discard but exact order does not recover, which resolves the tension
+with the count-preserving lift analysis below (the Alibaba sequence
+advantage is repeated-event information, not exact order).
 
 An increment channel is only meaningful when it sits on a presence
 base that itself clears the floor: a channel CI that excludes zero on
@@ -762,8 +767,10 @@ failure: a significantly negative order increment (-0.075), meaning
 bigram features actively hurt once counts are included, on a presence
 base (+0.06) that is itself near the floor. The distinguishing-channel
 claim is therefore made jointly with the presence base, not from a
-single CI; only Azure and Alibaba combine a large presence effect with
-exactly one further channel that excludes zero.
+single CI: the two wind farms have a large presence base and no
+further channel, Azure and Alibaba have a large presence base and
+exactly one further channel each, and BGL and SCANIA have no usable
+presence base for any channel to build on.
 
 Against non-degenerate baselines the mined-pattern features do not win
 on raw accuracy, and we do not claim they do. All numbers in this
@@ -785,7 +792,7 @@ significance-tested signatures that occupy a specific point on the
 accuracy-interpretability frontier and expose the presence /
 multiplicity / order structure a black-box score hides.
 
-![**Figure 6.** Presence / multiplicity / order decomposition of held-out AUROC per trace, with entity-bootstrap 95% CIs. Solid bars have a CI excluding zero; hatched bars are indistinguishable from no effect. Azure's distinguishing increment is order; Alibaba's is multiplicity.](../results/figures/decomposition.png)
+![**Figure 6.** Presence / multiplicity / order decomposition of held-out AUROC across all six traces, with entity-bootstrap 95% CIs. Solid bars have a CI excluding zero; hatched bars are indistinguishable from no effect. The two wind farms are pure presence; Azure adds an order increment, Alibaba a multiplicity increment; BGL and SCANIA have no usable presence base.](../results/figures/decomposition.png)
 
 The count-preserving comparator of §4.7 isolates the pure ordering
 contribution at the level of individual pattern lift as
