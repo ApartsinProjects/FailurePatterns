@@ -1,0 +1,315 @@
+[
+  {
+    "trace": "Azure",
+    "horizon": "last5",
+    "n_splits": 20,
+    "sig_fraction_median": 0.596,
+    "sig_fraction_iqr": [
+      0.56,
+      0.618
+    ],
+    "mean_pairwise_jaccard": 0.758,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "maintenance:comp3 + software_error:error2 + software_error:error3",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "maintenance:comp1 + software_error:error5",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error3 + software_error:error4",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error2",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error1 + software_error:error3",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error1 + software_error:error2 + software_error:error4",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error2 + software_error:error4",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "software_error:error5",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "maintenance:comp4 + software_error:error3",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "maintenance:comp2 + software_error:error5",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      }
+    ]
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last3",
+    "n_splits": 20,
+    "sig_fraction_median": 0.545,
+    "sig_fraction_iqr": [
+      0.534,
+      0.6
+    ],
+    "mean_pairwise_jaccard": 0.934,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "task_success:M",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "task_waiting:R",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "task_success:M + task_waiting:R",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "task_success:M + task_success:R + task_waiting:R",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "task_success:R + task_waiting:R",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "task_success:M + task_success:R",
+        "selected_in": "15/20",
+        "frequency": 0.75
+      }
+    ]
+  },
+  {
+    "trace": "BGL",
+    "horizon": "last20",
+    "n_splits": 20,
+    "sig_fraction_median": 0.333,
+    "sig_fraction_iqr": [
+      0.333,
+      0.333
+    ],
+    "mean_pairwise_jaccard": 0.663,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "system_error:RAS:FATAL",
+        "selected_in": "16/20",
+        "frequency": 0.8
+      }
+    ]
+  },
+  {
+    "trace": "SCANIA",
+    "horizon": "last5",
+    "n_splits": 20,
+    "sig_fraction_median": 0.177,
+    "sig_fraction_iqr": [
+      0.155,
+      0.2
+    ],
+    "mean_pairwise_jaccard": 0.648,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "counter_surprise:397_28 + counter_surprise:397_34",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "counter_surprise:397_27",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "counter_surprise:397_28",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "counter_surprise:397_27 + counter_surprise:397_28",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "counter_surprise:397_27 + counter_surprise:397_34",
+        "selected_in": "19/20",
+        "frequency": 0.95
+      },
+      {
+        "signature": "counter_surprise:397_28 + counter_surprise:397_29",
+        "selected_in": "19/20",
+        "frequency": 0.95
+      },
+      {
+        "signature": "counter_surprise:397_29",
+        "selected_in": "19/20",
+        "frequency": 0.95
+      },
+      {
+        "signature": "counter_surprise:397_29 + counter_surprise:397_34",
+        "selected_in": "14/20",
+        "frequency": 0.7
+      },
+      {
+        "signature": "counter_surprise:397_22 + counter_surprise:397_28",
+        "selected_in": "13/20",
+        "frequency": 0.65
+      },
+      {
+        "signature": "counter_surprise:397_27 + counter_surprise:397_29",
+        "selected_in": "12/20",
+        "frequency": 0.6
+      }
+    ]
+  },
+  {
+    "trace": "Kelmarsh",
+    "horizon": "last5",
+    "n_splits": 20,
+    "sig_fraction_median": 0.633,
+    "sig_fraction_iqr": [
+      0.441,
+      0.709
+    ],
+    "mean_pairwise_jaccard": 0.819,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "system_info:6410 + system_stop:20",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:2125",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:2550",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_stop:20",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0 + system_info:6410",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:6410",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:2650",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0 + system_info:6410 + system_stop:20",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0 + system_stop:20",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:2655",
+        "selected_in": "20/20",
+        "frequency": 1.0
+      }
+    ]
+  },
+  {
+    "trace": "Penmanshiel",
+    "horizon": "last5",
+    "n_splits": 30,
+    "sig_fraction_median": 0.789,
+    "sig_fraction_iqr": [
+      0.762,
+      0.824
+    ],
+    "mean_pairwise_jaccard": 0.793,
+    "top_signatures_by_selection_frequency": [
+      {
+        "signature": "system_info:0 + system_warning:9000",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:6410",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_stop:9210",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0 + system_stop:9210 + system_warning:9000",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0 + system_stop:9210",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:5720",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_stop:3000 + system_warning:5720",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_info:0",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_warning:9000",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      },
+      {
+        "signature": "system_stop:3000",
+        "selected_in": "30/30",
+        "frequency": 1.0
+      }
+    ]
+  }
+]

@@ -392,6 +392,30 @@ def main() -> int:
     check("6.4", "Prospective Penmanshiel precision = 0.78",
           pr["Penmanshiel"]["precision"], "0.78", approx(pr["Penmanshiel"]["precision"], 0.78, tol=0.02))
 
+    # W4 presence/multiplicity/order decomposition
+    dec = {r["trace"]: r["decomposition"] for r in _load_json(PATT / "representation_experiment.json")}
+    az_o = dec["Azure"]["order_increment"]; az_m = dec["Azure"]["multiplicity_increment"]
+    check("6.3", "Azure order increment +0.032 CI excludes 0",
+          f"{az_o['delta']:.3f}", "+0.032",
+          approx(az_o["delta"], 0.032, tol=0.005) and az_o["ci95"][0] > 0)
+    check("6.3", "Azure multiplicity increment CI includes 0",
+          f"{az_m['ci95']}", "incl 0", az_m["ci95"][0] < 0 < az_m["ci95"][1])
+    al_o = dec["Alibaba"]["order_increment"]; al_m = dec["Alibaba"]["multiplicity_increment"]
+    check("6.3", "Alibaba multiplicity increment +0.029 CI excludes 0",
+          f"{al_m['delta']:.3f}", "+0.029",
+          approx(al_m["delta"], 0.029, tol=0.005) and al_m["ci95"][0] > 0)
+    check("6.3", "Alibaba order increment CI includes 0",
+          f"{al_o['ci95']}", "incl 0", al_o["ci95"][0] < 0 < al_o["ci95"][1])
+
+    # W10 repeated-split stability
+    st = {r["trace"]: r for r in _load_json(PATT / "repeated_split_stability.json")}
+    check("6.7", "Kelmarsh headline signature selected in 20/20 splits",
+          st["Kelmarsh"]["top_signatures_by_selection_frequency"][0]["selected_in"], "20/20",
+          st["Kelmarsh"]["top_signatures_by_selection_frequency"][0]["frequency"] == 1.0)
+    check("6.7", "Penmanshiel Jaccard stability >= 0.75",
+          round(st["Penmanshiel"]["mean_pairwise_jaccard"], 2), ">=0.75",
+          st["Penmanshiel"]["mean_pairwise_jaccard"] >= 0.75)
+
     # W16 landmarked SCANIA (no rep clears 0.75)
     lm = _load_json(PATT / "scania_landmarked.json")["landmarked_auroc"]
     check("8", "Landmarked SCANIA token_counts AUROC = 0.62",

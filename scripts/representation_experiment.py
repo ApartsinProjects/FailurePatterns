@@ -247,9 +247,10 @@ def run_trace(name, path, horizon):
         d = round(aurocs[rep_hi] - aurocs[rep_lo], 3)
         _, dci = _boot_ci(yte, scores[rep_hi], ent, B, paired=scores[rep_lo])
         return d, dci
+    # clean nested decomposition: presence -> counts (multiplicity) -> bigram (order)
     pres_eff, pres_ci = paired("presence", "event_count")
     mult_inc, mult_ci = paired("multiset", "presence")
-    order_inc, order_ci = paired("mined_sequence", "mined_itemset")
+    order_inc, order_ci = paired("bigram", "multiset")
 
     return {
         "trace": name, "horizon": horizon,
@@ -276,7 +277,7 @@ def main() -> int:
               f"presence={r['auroc']['presence']} multiset={r['auroc']['multiset']} "
               f"bigram={r['auroc']['bigram']} lgbm={r['auroc']['lgbm_multiset']} "
               f"itemset={r['auroc']['mined_itemset']} seq={r['auroc']['mined_sequence']} "
-              f"combined={r['auroc']['combined']}")
+              f"combined={r["auroc"]["combined"]}", flush=True)
         print(f"        decomposition: presence={d['presence_effect']['delta']} "
               f"(CI {d['presence_effect']['ci95']})  "
               f"mult+={d['multiplicity_increment']['delta']} (CI {d['multiplicity_increment']['ci95']})  "

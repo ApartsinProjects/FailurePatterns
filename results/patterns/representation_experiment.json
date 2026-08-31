@@ -1,0 +1,270 @@
+[
+  {
+    "trace": "Azure",
+    "horizon": "last5",
+    "n_train": 2080,
+    "n_test": 892,
+    "n_test_entities": 98,
+    "auroc": {
+      "event_count": 0.5,
+      "presence": 0.801,
+      "multiset": 0.813,
+      "bigram": 0.845,
+      "recency": 0.569,
+      "lgbm_multiset": 0.845,
+      "mined_itemset": 0.778,
+      "mined_sequence": 0.655,
+      "combined": 0.817
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.5,
+        0.5
+      ],
+      "presence": [
+        0.758,
+        0.832
+      ],
+      "multiset": [
+        0.784,
+        0.841
+      ],
+      "mined_itemset": [
+        0.739,
+        0.813
+      ],
+      "mined_sequence": [
+        0.631,
+        0.685
+      ],
+      "combined": [
+        0.787,
+        0.846
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.301,
+        "ci95": [
+          0.258,
+          0.332
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.012,
+        "ci95": [
+          -0.015,
+          0.034
+        ]
+      },
+      "order_increment": {
+        "delta": 0.032,
+        "ci95": [
+          0.003,
+          0.061
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last3",
+    "n_train": 5600,
+    "n_test": 2400,
+    "n_test_entities": 2400,
+    "auroc": {
+      "event_count": 0.688,
+      "presence": 0.837,
+      "multiset": 0.866,
+      "bigram": 0.86,
+      "recency": 0.698,
+      "lgbm_multiset": 0.883,
+      "mined_itemset": 0.695,
+      "mined_sequence": 0.535,
+      "combined": 0.804
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.667,
+        0.711
+      ],
+      "presence": [
+        0.819,
+        0.855
+      ],
+      "multiset": [
+        0.849,
+        0.884
+      ],
+      "mined_itemset": [
+        0.673,
+        0.717
+      ],
+      "mined_sequence": [
+        0.525,
+        0.548
+      ],
+      "combined": [
+        0.788,
+        0.824
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.149,
+        "ci95": [
+          0.128,
+          0.171
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.029,
+        "ci95": [
+          0.018,
+          0.04
+        ]
+      },
+      "order_increment": {
+        "delta": -0.006,
+        "ci95": [
+          -0.022,
+          0.013
+        ]
+      }
+    }
+  },
+  {
+    "trace": "BGL",
+    "horizon": "last20",
+    "n_train": 5600,
+    "n_test": 2400,
+    "n_test_entities": 64,
+    "auroc": {
+      "event_count": 0.5,
+      "presence": 0.485,
+      "multiset": 0.485,
+      "bigram": 0.509,
+      "recency": 0.414,
+      "lgbm_multiset": 0.508,
+      "mined_itemset": 0.478,
+      "mined_sequence": 0.498,
+      "combined": 0.514
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.5,
+        0.5
+      ],
+      "presence": [
+        0.468,
+        0.499
+      ],
+      "multiset": [
+        0.467,
+        0.5
+      ],
+      "mined_itemset": [
+        0.462,
+        0.494
+      ],
+      "mined_sequence": [
+        0.496,
+        0.501
+      ],
+      "combined": [
+        0.497,
+        0.531
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": -0.015,
+        "ci95": [
+          -0.032,
+          -0.001
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.0,
+        "ci95": [
+          -0.001,
+          0.001
+        ]
+      },
+      "order_increment": {
+        "delta": 0.024,
+        "ci95": [
+          0.002,
+          0.044
+        ]
+      }
+    }
+  },
+  {
+    "trace": "SCANIA",
+    "horizon": "last20",
+    "n_train": 5598,
+    "n_test": 2402,
+    "n_test_entities": 2402,
+    "auroc": {
+      "event_count": 0.5,
+      "presence": 0.562,
+      "multiset": 0.582,
+      "bigram": 0.507,
+      "recency": 0.537,
+      "lgbm_multiset": 0.566,
+      "mined_itemset": 0.507,
+      "mined_sequence": 0.502,
+      "combined": 0.508
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.5,
+        0.5
+      ],
+      "presence": [
+        0.528,
+        0.597
+      ],
+      "multiset": [
+        0.548,
+        0.614
+      ],
+      "mined_itemset": [
+        0.486,
+        0.528
+      ],
+      "mined_sequence": [
+        0.484,
+        0.521
+      ],
+      "combined": [
+        0.485,
+        0.533
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.062,
+        "ci95": [
+          0.028,
+          0.097
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.02,
+        "ci95": [
+          0.007,
+          0.036
+        ]
+      },
+      "order_increment": {
+        "delta": -0.075,
+        "ci95": [
+          -0.109,
+          -0.037
+        ]
+      }
+    }
+  }
+]
