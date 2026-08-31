@@ -401,6 +401,20 @@ def main() -> int:
           dcc["Penmanshiel"]["n_validated_by"], "184",
           dcc["Penmanshiel"]["n_validated_by"] == 184)
 
+    # 72h degradation horizon
+    d72 = _load_json(PATT / "degradation_chain_catalog_72h.json")
+    check("6.4", "72h Kelmarsh validated chains = 1319",
+          d72["Kelmarsh"]["n_validated_by"], "1319",
+          d72["Kelmarsh"]["n_validated_by"] == 1319)
+    check("6.4", "72h Penmanshiel validated chains = 188",
+          d72["Penmanshiel"]["n_validated_by"], "188",
+          d72["Penmanshiel"]["n_validated_by"] == 188)
+    _maxlead72 = max(c["median_lead_min"] for c in d72["Penmanshiel"]["validated_chains"]
+                     if c["median_lead_min"])
+    check("6.4", "72h Penmanshiel longest chain lead ~19h",
+          round(_maxlead72 / 60, 1), "~19.3",
+          approx(_maxlead72 / 60, 19.3, tol=0.5))
+
     # cross-farm transfer
     cft = {r["direction"]: r for r in _load_json(PATT / "cross_farm_transfer.json")["transfer"]}
     check("6.4", "Kelmarsh->Penmanshiel transfer recall = 0.95",

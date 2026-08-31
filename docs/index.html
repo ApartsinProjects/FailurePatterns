@@ -1655,6 +1655,17 @@ and then the fan warning over roughly an hour, three hours ahead of the
 forced outage. The chain lift equals the inference-half ceiling (all
 controls clean) at the 2:1 case:control ratio these 24h windows
 produce.</p>
+<p>Widening the horizon to 72h enlarges the validated catalog to 1,319
+chains on Kelmarsh and 188 on Penmanshiel and extends the trajectory
+length: Kelmarsh chains now span up to 46 hours, and on Penmanshiel a
+safety-stop chain
+<code>system_stop:9210 → system_info:0 → system_stop:455</code>
+completes a median 19 hours before the outage in 86 of 445 inference
+windows with zero control-window hits, a lead long enough for scheduled
+maintenance rather than reactive curtailment. The chains remain short in
+code count (three to four distinct codes) but sparse in time, so the
+degradation is a slow multi-hour progression of a few marker codes, not
+a dense burst.</p>
 <p><strong>Cross-farm transfer.</strong> Learning the precursor rule on
 one farm and replaying it, unchanged, on the other (shared Senvion code
 vocabulary) transfers asymmetrically: a Kelmarsh-trained rule detects

@@ -118,7 +118,7 @@ def _chain_stats(chain, win_seq):
 
 
 def _candidates(case_wins, ctrl_wins):
-    """Length-3/4 ordered distinct-code chains frequent in cases, rare in ctrl."""
+    """Length-3..MAX_LEN ordered distinct-code chains frequent in cases, rare in ctrl."""
     n_case = len(case_wins)
     case_counts = Counter()
     for seq, _ in case_wins:

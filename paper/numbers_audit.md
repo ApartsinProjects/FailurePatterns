@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 133. Pass: 133. Mismatch: 0.
+Total claims audited: 136. Pass: 136. Mismatch: 0.
 
 ## Full audit trail
 
@@ -75,6 +75,9 @@ Total claims audited: 133. Pass: 133. Mismatch: 0.
 | 6.4               | Prospective Penmanshiel precision = 0.78                      | 0.78         | 0.78            | PASS        |
 | 6.4               | Kelmarsh degradation chains BY-validated = 115                | 115          | 115             | PASS        |
 | 6.4               | Penmanshiel degradation chains BY-validated = 184             | 184          | 184             | PASS        |
+| 6.4               | 72h Kelmarsh validated chains = 1319                          | 1319         | 1319            | PASS        |
+| 6.4               | 72h Penmanshiel validated chains = 188                        | 188          | 188             | PASS        |
+| 6.4               | 72h Penmanshiel longest chain lead ~19h                       | ~19.3        | 19.3            | PASS        |
 | 6.4               | Kelmarsh->Penmanshiel transfer recall = 0.95                  | 0.95         | 0.952           | PASS        |
 | 6.4               | Penmanshiel->Kelmarsh transfer recall = 0.50                  | 0.50         | 0.498           | PASS        |
 | 6.4               | Kelmarsh fan-family co-location span < 1 min                  | 0.16         | 0.16            | PASS        |
