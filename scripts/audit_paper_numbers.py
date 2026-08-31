@@ -392,28 +392,27 @@ def main() -> int:
     check("6.4", "Prospective Penmanshiel precision = 0.78",
           pr["Penmanshiel"]["precision"], "0.78", approx(pr["Penmanshiel"]["precision"], 0.78, tol=0.02))
 
-    # degradation-chain catalog (long distinct-code trajectories)
+    # degradation-chain catalog (contamination-guarded, closed, incremental)
     dcc = _load_json(PATT / "degradation_chain_catalog.json")
-    check("6.4", "Kelmarsh degradation chains BY-validated = 115",
-          dcc["Kelmarsh"]["n_validated_by"], "115",
-          dcc["Kelmarsh"]["n_validated_by"] == 115)
-    check("6.4", "Penmanshiel degradation chains BY-validated = 184",
-          dcc["Penmanshiel"]["n_validated_by"], "184",
-          dcc["Penmanshiel"]["n_validated_by"] == 184)
+    check("6.4", "Kelmarsh clean degradation chains = 3",
+          dcc["Kelmarsh"]["n_validated_closed"], "3",
+          dcc["Kelmarsh"]["n_validated_closed"] == 3)
+    check("6.4", "Penmanshiel clean degradation chains = 2",
+          dcc["Penmanshiel"]["n_validated_closed"], "2",
+          dcc["Penmanshiel"]["n_validated_closed"] == 2)
+    _pen_lead = max(c["median_lead_min"] for c in dcc["Penmanshiel"]["validated_chains"])
+    check("6.4", "Penmanshiel longest clean chain lead ~11.4h",
+          round(_pen_lead / 60, 1), "~11.4",
+          approx(_pen_lead / 60, 11.4, tol=0.3))
 
-    # 72h degradation horizon
+    # 72h guarded degradation horizon adds nothing on Penmanshiel
     d72 = _load_json(PATT / "degradation_chain_catalog_72h.json")
-    check("6.4", "72h Kelmarsh validated chains = 1319",
-          d72["Kelmarsh"]["n_validated_by"], "1319",
-          d72["Kelmarsh"]["n_validated_by"] == 1319)
-    check("6.4", "72h Penmanshiel validated chains = 188",
-          d72["Penmanshiel"]["n_validated_by"], "188",
-          d72["Penmanshiel"]["n_validated_by"] == 188)
-    _maxlead72 = max(c["median_lead_min"] for c in d72["Penmanshiel"]["validated_chains"]
-                     if c["median_lead_min"])
-    check("6.4", "72h Penmanshiel longest chain lead ~19h",
-          round(_maxlead72 / 60, 1), "~19.3",
-          approx(_maxlead72 / 60, 19.3, tol=0.5))
+    check("6.4", "72h guarded Penmanshiel chains = 0",
+          d72["Penmanshiel"]["n_validated_closed"], "0",
+          d72["Penmanshiel"]["n_validated_closed"] == 0)
+
+    # prior-outage contamination rate (motivates the guard)
+    # (checked qualitatively in prose; not a stored artifact)
 
     # cross-farm transfer
     cft = {r["direction"]: r for r in _load_json(PATT / "cross_farm_transfer.json")["transfer"]}

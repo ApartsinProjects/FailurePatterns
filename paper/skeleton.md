@@ -112,8 +112,11 @@ We contribute:
 5. A **validated signature catalog anchored by a replicated physical
    cascade**: two independent Senvion wind farms (Kelmarsh,
    Penmanshiel) produce zero-control cascade signatures at
-   inference-half lift 4.00 under one mining protocol (§6.4), the
-   closest the study comes to a controlled cross-site replication.
+   inference-half lift 4.00 under one mining protocol (§6.4), a rule
+   learned on one farm transfers to the other (95% of outages detected
+   in one direction), and the transfer is mechanistically selective,
+   the vendor-shared generator-fan family carries across sites while
+   the site-phase-specific safety family does not.
 
 ## 2  Background and related work
 
@@ -279,7 +282,7 @@ event-count baseline and each pattern family in turn on a temporally-
 held-out split. To our knowledge, this package has not been applied
 head-to-head to Alibaba `batch_task` status transitions or to Azure
 PdM `errorID → failure` sequences, and the six-trace regime-of-
-validity study of §7.3, anchored by a cascade replicated across two
+validity study of §7.2, anchored by a cascade replicated across two
 independent wind farms, is likewise unprecedented in the
 pattern-mining log-analysis literature.
 
@@ -911,59 +914,66 @@ codes indexing genuinely mechanical failure modes.
 Candidate rules (pending prospective trial): the safety-9210 warning
 is a candidate curtailment trigger and the frequency-converter 3543
 informational message a candidate converter-service trigger. The
-short median lead of the co-located Penmanshiel burst (§6.4, replay
-below) means such a burst alone often fires too late for curtailment;
-the multi-hour degradation chains next provide the actionable lead.
+co-located Penmanshiel burst has a short median lead, so it often
+fires too late for curtailment; the small number of validated
+degradation chains next, and the prospective replay below, are where a
+longer actionable lead has to come from.
 
 **Co-located bursts versus temporal degradation chains.** The
 generator-fan and safety-system signatures above are co-located
 alarm bursts: the constituent codes fire within a median of 0.16 min
 (Kelmarsh) and 0.28 min (Penmanshiel) of each other, so they mark a
-single instant, not a trajectory. A separate signature class captures
-genuine degradation. Collapsing each 24h pre-outage window to its
-ordered sequence of **distinct** codes (co-located repeats merged) and
-mining ordered chains of three-to-four distinct codes under the same
-entity-disjoint discovery/inference protocol yields a validated
-degradation-chain catalog (Table 7): 115 chains on Kelmarsh and 184 on
-Penmanshiel pass BY q < 0.05 on the inference half, each with zero
-control-window hits.
+single instant, not a trajectory. We asked whether a separate class of
+genuine multi-hour degradation trajectories also exists, and the
+honest answer is that they are rare once two artifacts are removed.
+Collapsing each 24h pre-outage window to its ordered sequence of
+**distinct** codes and mining ordered chains of three-to-four distinct
+codes produces hundreds of BY-significant chains, but two-thirds to
+five-sixths of pre-outage windows contain a *previous* forced outage
+within the horizon (65% of Kelmarsh and 75% of Penmanshiel 24h
+windows), so most such chains are the aftermath of an earlier outage,
+repeat-outage clustering rather than precursor degradation. After
+(i) excluding every window that contains a prior outage, (ii) closed-
+chain filtering, and (iii) requiring each chain to add control-side
+specificity or lead over its own terminal code, only **3 chains on
+Kelmarsh and 2 on Penmanshiel** survive on the inference half, reducing
+to three and one distinct code sets respectively (Table 7).
 
-| farm | degradation chain | median span | median lead | inf case | inf ctrl | BY q |
-|------|-------------------|------------:|------------:|---------:|---------:|-----:|
-| Kelmarsh | `stop:20 → info:6410 → warning:2550` | 59 min | 189 min | 54/208 | 0/113 | 1e-8 |
-| Kelmarsh | `stop:20 → info:6410 → warning:2650 → warning:2655` | 59 min | 226 min | 43/208 | 0/113 | 5e-7 |
-| Kelmarsh | `info:0 → stop:20 → warning:2550` | 605 min | 140 min | 42/208 | 0/113 | 7e-7 |
-| Penmanshiel | `warning:9000 → stop:9210 → info:0` | 20 min | 182 min | 144/442 | 0/133 | 6e-17 |
-| Penmanshiel | `info:10 → stop:9210 → info:0 → warning:9000` | 613 min | 133 min | 129/442 | 0/133 | 2e-15 |
+| farm | degradation chain (24h, contamination-guarded) | median lead | terminal code alone | chain ctrl | inf case |
+|------|-----------------------------------------------|------------:|---------------------|-----------:|---------:|
+| Kelmarsh | `info:10 → info:0 → stop:20` | 74 min | stop:20 (2 ctrl) | 1/113 | 12/60 |
+| Kelmarsh | `info:10 → info:0 → info:6410` | 73 min | info:6410 (2 ctrl) | 1/113 | 11/60 |
+| Penmanshiel | `info:0 → stop:3500 → info:3543` | 685 min | info:3543 (4 ctrl) | 0/133 | 8/111 |
+| Penmanshiel | `stop:3500 → info:3543 → info:0` | 2 min | info:0 (103 ctrl) | 0/133 | 9/111 |
 
-: **Table 7.** Validated temporal degradation chains (ordered distinct-code sequences over 24h) on the two wind farms, with median trajectory span, median lead time to the outage, and inference-half support.
+: **Table 7.** The degradation chains that survive prior-outage exclusion, closed-chain filtering, and the incremental-over-terminal-code test on the 24h inference half. Each chain is more control-specific than its own terminal code; the lift equals the inference-half ceiling (2.9 on Kelmarsh at 60 cases to 113 controls, 2.2 on Penmanshiel), because every listed chain has zero or one control hit.
 
-Unlike the co-located bursts, these chains unfold over tens of minutes
-to ten hours and complete a median two-to-four hours before the
-outage, so they are the operationally actionable signatures: a
-generator-fan overload on Kelmarsh is preceded by a stop, a status
-code, and then the fan warning over roughly an hour, three hours
-ahead of the forced outage. The chain lift equals the inference-half
-ceiling (all controls clean) at the 2:1 case:control ratio these 24h
-windows produce.
-
-Widening the horizon to 72h enlarges the validated catalog to 1,319
-chains on Kelmarsh and 188 on Penmanshiel and extends the trajectory
-length: Kelmarsh chains now span up to 46 hours, and on Penmanshiel a
-safety-stop chain `system_stop:9210 → system_info:0 →
-system_stop:455` completes a median 19 hours before the outage in 86
-of 445 inference windows with zero control-window hits, a lead long
-enough for scheduled maintenance rather than reactive curtailment. The
-chains remain short in code count (three to four distinct codes) but
-sparse in time, so the degradation is a slow multi-hour progression of
-a few marker codes, not a dense burst.
+The survivors are genuine but modest, and two points matter. First,
+the one operationally striking case is Penmanshiel
+`info:0 → stop:3500 → info:3543`, which completes a median **11.4
+hours** before the outage; its terminal code `info:3543` already fires
+that far ahead, but with four control false positives, and the ordered
+chain removes them, so the chain buys specificity on top of an
+already-long lead. Second, widening the horizon to 72h does not help:
+the guarded Penmanshiel catalog drops to zero, and the guarded
+Kelmarsh chains reduce to four distinct code sets whose many ordered
+variants are the same co-occurring codes in different orders. The
+finding is therefore that the wind-farm precursor is dominated by
+co-located bursts and a small number of code sets; genuine long ordered
+degradation trajectories, once contamination and redundancy are
+removed, are few, which is itself consistent with the paper's thesis
+that co-occurrence is not the same as an ordered trajectory.
 
 **Cross-farm transfer.** Learning the precursor rule on one farm and
 replaying it, unchanged, on the other (shared Senvion code vocabulary)
-transfers asymmetrically: a Kelmarsh-trained rule detects 95% of
-Penmanshiel forced outages (median lead 72 min), while a
-Penmanshiel-trained rule detects 50% of Kelmarsh outages; the
-generator-fan code 2650 is among the precursors shared by both farms.
+transfers asymmetrically. A Kelmarsh-trained rule detects 95% of
+Penmanshiel forced outages at precision 0.35 and 4.3 false alarms per
+turbine-month, with a median 72-minute lead; a Penmanshiel-trained
+rule detects 50% of Kelmarsh outages at precision 0.37, 0.6 false
+alarms per turbine-month, and a 4-minute lead. (This 95% transfer
+recall is a distinct quantity from the 95% within-farm replay recall
+reported below, which happen to coincide.) The generator-fan code
+2650 is among the precursors shared by both farms.
 The generator-fan family transfers; the Penmanshiel safety-system 9000
 family, tied to that site's 2016 commissioning phase, does not, which
 is consistent with the boundary condition stated in §8.
@@ -1468,28 +1478,7 @@ privileged short prefix (`task_waiting:R`) that the binary itemset
 discards. The correct reading of Alibaba is a multiplicity-and-prefix
 effect, not a pure-ordering effect.
 
-### 7.2 What each mined signature means operationally
-
-On Azure PdM, `maintenance:comp4 → software_error:error2 →
-software_error:error3` at `last5` reaches sequence lift 3.73 vs
-itemset lift 2.22 for the same items. The order-specific reading is
-that error2 and error3 are not interchangeable noise: a machine
-reporting error2 first and then error3 is materially more likely to
-reach a `terminal_failure` than
-one that reports them in the other order. In practical monitoring,
-an alarm keyed on the pair-in-order is preferable to the same alarm
-keyed on the pair-as-set.
-
-On Alibaba, `task_success:M → task_success:M → task_success:M` at
-`last3` reaches sequence lift 3.06 vs itemset lift 1.37 for the same
-items. Three consecutive Map completions predict a subsequent Failed
-task more strongly than "the job contains Map completions" alone.
-The operational reading is that the position of the failure inside
-the DAG matters: jobs that make it through a Map-heavy prefix are
-the jobs whose downstream Reduce or Join phases can fail, whereas
-jobs that fail early do so in a different distribution of task types.
-
-### 7.3 Six contrasting case studies
+### 7.2 Six contrasting case studies
 
 Six heterogeneous traces inform when pattern mining recovers
 meaningful predictive structure and when it does not. They differ

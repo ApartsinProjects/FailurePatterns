@@ -57,11 +57,22 @@ def _distinct_seq(win: pd.DataFrame):
     return out
 
 
-def _case_windows(ev, turbines):
-    fo = ev[(ev["event_type"] == "terminal_failure") & ev["entity_id"].isin(turbines)]
+def _case_windows(ev, turbines, exclude_intervening=True):
+    """Pre-outage windows. When exclude_intervening, drop any window that
+    contains a PRIOR forced outage within the horizon, so a window cannot be
+    the aftermath of an earlier outage (guards against repeat-outage
+    clustering wearing a degradation costume)."""
+    allfo = ev[ev["event_type"] == "terminal_failure"]
+    fo = allfo[allfo["entity_id"].isin(turbines)]
     non = ev[ev["event_type"] != "terminal_failure"]
+    fo_by_ent = {e: g["timestamp"].sort_values().to_numpy() for e, g in allfo.groupby("entity_id")}
     wins = []
     for _, o in fo.iterrows():
+        if exclude_intervening:
+            arr = fo_by_ent.get(o["entity_id"])
+            a = np.datetime64(o["timestamp"])
+            if arr is not None and ((arr < a) & (arr >= a - np.timedelta64(int(H.total_seconds()), "s"))).any():
+                continue
         w = non[(non["entity_id"] == o["entity_id"]) &
                 (non["timestamp"] < o["timestamp"]) &
                 (non["timestamp"] >= o["timestamp"] - H)]
@@ -165,6 +176,22 @@ def analyse(name, path):
     cand = _candidates(disc_case, disc_ctrl)
 
     nf, nc = len(inf_case), len(inf_ctrl)
+    # per-single-code control hits and median lead on the inference windows,
+    # for the terminal-code incremental comparison (A2).
+    code_ctrl = Counter()
+    for seq, _ in inf_ctrl:
+        for c in {c for c, _ in seq}:
+            code_ctrl[c] += 1
+    code_lead = {}
+    for code in {c for seq, _ in inf_case for c, _ in seq}:
+        leads = []
+        for seq, anchor in inf_case:
+            hits = [t for c, t in seq if c == code]
+            if hits:
+                leads.append((anchor - hits[-1]).total_seconds() / 60.0)
+        if leads:
+            code_lead[code] = float(np.median(leads))
+
     rows, pvals = [], []
     for chain in cand:
         hf = hc = 0
@@ -184,22 +211,55 @@ def analyse(name, path):
         p = _hyp_upper(hf, hc, nf, nc)
         pooled = (hf + hc) / (nf + nc)
         lift = (hf / nf) / pooled if pooled > 0 else float("nan")
-        rows.append({"chain": " -> ".join(chain), "n_codes": len(chain),
+        term = chain[-1]
+        term_ctrl = code_ctrl.get(term, 0)
+        term_lead = code_lead.get(term)
+        chain_lead = float(np.median(leads)) if leads else None
+        # chain earns its row only if it is more specific (fewer controls) than
+        # its terminal code alone, or gives a longer lead than the terminal code.
+        incremental = (hc < term_ctrl) or (
+            chain_lead is not None and term_lead is not None and chain_lead > term_lead + 5)
+        rows.append({"chain": " -> ".join(chain), "_tuple": chain, "n_codes": len(chain),
                      "inf_case": hf, "inf_case_n": nf, "inf_ctrl": hc, "inf_ctrl_n": nc,
-                     "lift": round(lift, 2),
+                     "lift": round(lift, 2), "max_lift_ceiling": round((nf + nc) / nf, 2),
+                     "terminal_code": term, "terminal_ctrl_hits": term_ctrl,
+                     "terminal_median_lead_min": round(term_lead, 1) if term_lead else None,
+                     "incremental_over_terminal": bool(incremental),
                      "median_span_min": round(float(np.median(spans)), 1) if spans else None,
-                     "median_lead_min": round(float(np.median(leads)), 1) if leads else None})
+                     "median_lead_min": round(chain_lead, 1) if chain_lead is not None else None})
         pvals.append(p)
+    n_validated = 0
+    closed_rows = []
     if pvals:
         qb = by_qvalues(np.array(pvals)); qh = bh_qvalues(np.array(pvals))
         for r, p, qbb, qhh in zip(rows, pvals, qb, qh):
             r["p"] = p; r["q_by"] = float(qbb); r["q_bh"] = float(qhh)
-        rows = [r for r in rows if r["q_by"] < 0.05]
-        rows.sort(key=lambda r: (-r["lift"], r["q_by"]))
+        val = [r for r in rows if r["q_by"] < 0.05]
+        n_validated = len(val)
+        # closed filtering: drop a chain if a super-chain with the SAME case
+        # support is also validated (it is a redundant sub-chain).
+        by_case = {}
+        for r in val:
+            by_case.setdefault(r["inf_case"], []).append(r)
+        def is_sub(a, b):
+            return a != b and _ordered_in(a, list(b))
+        closed = []
+        for r in val:
+            supers = [o for o in by_case.get(r["inf_case"], [])
+                      if is_sub(r["_tuple"], o["_tuple"])]
+            if not supers:
+                closed.append(r)
+        closed.sort(key=lambda r: (-(r["median_lead_min"] or 0), r["q_by"]))
+        closed_rows = closed
+    n_incr = sum(1 for r in closed_rows if r["incremental_over_terminal"])
+    for r in closed_rows:
+        r.pop("_tuple", None)
     return {"farm": name, "disc_turbines": disc_t, "inf_turbines": inf_t,
             "n_inf_case_windows": nf, "n_inf_ctrl_windows": nc,
-            "n_candidates": len(cand), "n_validated_by": len(rows),
-            "validated_chains": rows[:15]}
+            "n_candidates": len(cand), "n_validated_by": n_validated,
+            "n_validated_closed": len(closed_rows),
+            "n_closed_incremental_over_terminal": n_incr,
+            "validated_chains": closed_rows[:15]}
 
 
 def main():
@@ -208,12 +268,13 @@ def main():
                        ("Penmanshiel", ROOT / "data/processed/penmanshiel_events.parquet")]:
         out[name] = analyse(name, path)
         r = out[name]
-        print(f"\n=== {name}: {r['n_candidates']} candidates, {r['n_validated_by']} BY-validated "
-              f"(inf {r['n_inf_case_windows']} case / {r['n_inf_ctrl_windows']} ctrl) ===")
+        print(f"\n=== {name}: {r['n_candidates']} cand, {r['n_validated_by']} BY-validated, "
+              f"{r['n_validated_closed']} closed, {r['n_closed_incremental_over_terminal']} "
+              f"incremental-over-terminal (inf {r['n_inf_case_windows']}/{r['n_inf_ctrl_windows']}) ===")
         for c in r["validated_chains"][:8]:
-            print(f"  {c['chain']}  lift {c['lift']}  span {c['median_span_min']}min  "
-                  f"lead {c['median_lead_min']}min  case {c['inf_case']}/{c['inf_case_n']} "
-                  f"ctrl {c['inf_ctrl']}/{c['inf_ctrl_n']}  q_by {c['q_by']:.1e}")
+            print(f"  {c['chain']}  lift {c['lift']}/{c['max_lift_ceiling']}  lead {c['median_lead_min']}min "
+                  f"(term {c['terminal_code']} ctrl {c['terminal_ctrl_hits']} lead {c['terminal_median_lead_min']})  "
+                  f"case {c['inf_case']}/{c['inf_case_n']} ctrl {c['inf_ctrl']}  incr {c['incremental_over_terminal']}")
     (ROOT / "results/patterns" / _ARGS.out).write_text(
         json.dumps(out, indent=2, default=str), encoding="utf-8")
     return 0
