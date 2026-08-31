@@ -749,6 +749,20 @@ within-window order. On the two boundary traces neither increment
 combines with a presence effect large enough to lift prediction off
 the floor.
 
+Against non-degenerate baselines the mined-pattern features do not win
+on raw accuracy, and we do not claim they do. On Azure `last5` a
+gradient-boosted model on event counts and a binary-bigram logistic
+regression both reach AUROC 0.845, above the mined-itemset features
+(0.778); on Alibaba `last3` the gradient-boosted count model reaches
+0.883, well above the mined-itemset features (0.695). The recency
+baseline (event count plus window time span) stays near 0.57-0.70. The
+value of the mined patterns is therefore not that they maximise a
+held-out score, which a count-vector gradient-boosted model already
+does, but that they are human-readable, individually
+significance-tested signatures that occupy a specific point on the
+accuracy-interpretability frontier and expose the presence /
+multiplicity / order structure a black-box score hides.
+
 ![**Figure 6.** Presence / multiplicity / order decomposition of held-out AUROC per trace, with entity-bootstrap 95% CIs. Solid bars have a CI excluding zero; hatched bars are indistinguishable from no effect. Azure's distinguishing increment is order; Alibaba's is multiplicity.](../results/figures/decomposition.png)
 
 The count-preserving comparator of §4.7 isolates the pure ordering
