@@ -1,6 +1,6 @@
 # Numbers audit — paper/skeleton.md
 
-Total claims audited: 139. Pass: 139. Mismatch: 0.
+Total claims audited: 140. Pass: 140. Mismatch: 0.
 
 ## Full audit trail
 
@@ -77,6 +77,7 @@ Total claims audited: 139. Pass: 139. Mismatch: 0.
 | 6.4               | Penmanshiel clean degradation chains = 2                           | 2            | 2               | PASS        |
 | 6.4               | Penmanshiel longest clean chain lead ~11.4h                        | ~11.4        | 11.4            | PASS        |
 | 6.4               | 72h guarded Penmanshiel chains = 0                                 | 0            | 0               | PASS        |
+| 8                 | SCADA best load-controlled AUROC < 0.60 (no slow degradation)      | <0.60        | 0.541           | PASS        |
 | 6.4               | Kelmarsh->Penmanshiel transfer recall = 0.95                       | 0.95         | 0.952           | PASS        |
 | 6.4               | Penmanshiel->Kelmarsh transfer recall = 0.50                       | 0.50         | 0.498           | PASS        |
 | 6.4               | Kelmarsh fan-family co-location span < 1 min                       | 0.16         | 0.16            | PASS        |

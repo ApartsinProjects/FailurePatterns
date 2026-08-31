@@ -414,6 +414,11 @@ def main() -> int:
     # prior-outage contamination rate (motivates the guard)
     # (checked qualitatively in prose; not a stored artifact)
 
+    # SCADA continuous-channel degradation check (no slow degradation)
+    scd = _load_json(PATT / "scada_degradation_check.json")
+    check("8", "SCADA best load-controlled AUROC < 0.60 (no slow degradation)",
+          scd["best_auroc_level"], "<0.60", scd["best_auroc_level"] < 0.60)
+
     # cross-farm transfer
     cft = {r["direction"]: r for r in _load_json(PATT / "cross_farm_transfer.json")["transfer"]}
     check("6.4", "Kelmarsh->Penmanshiel transfer recall = 0.95",

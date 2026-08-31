@@ -1616,6 +1616,22 @@ at all.
 
 ## 8  Limitations
 
+- **Scope: these traces are dominated by abrupt failures, not slow
+  degradation.** The discrete alarm codes we mine are threshold
+  tripwires that fire near the failure, which raises the question of
+  whether a slow degradation exists in the continuous telemetry that
+  the discrete logs do not capture. For the two wind farms this is
+  directly testable, because the Zenodo releases include the 10-minute
+  SCADA. We regressed five bearing, gear-oil, and stator temperature
+  channels on power, wind, and ambient temperature, and asked whether
+  the load-controlled residual rises before Kelmarsh forced outages
+  over a 48h and a 14-day window. It does not: the best channel reaches
+  AUROC 0.54 for the residual level and 0.62 for its slope, both near
+  chance. The absence of an ordered degradation signal is therefore a
+  property of these failures, which are predominantly abrupt trips, and
+  not merely an artifact of using discrete logs; a system whose faults
+  develop slowly and are sensed continuously would be the natural place
+  to look for the ordered trajectories that are largely absent here.
 - Alibaba results are per-job, computed on `batch_task` alone; the
   `batch_instance` table (21 GB compressed) that would enable
   per-machine failure trajectories on the same trace is left to

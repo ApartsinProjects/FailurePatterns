@@ -1,0 +1,91 @@
+{
+  "load_controlled_on": [
+    "Power (kW)",
+    "Wind speed (m/s)",
+    "Nacelle ambient temperature (\u00b0C)"
+  ],
+  "results": [
+    {
+      "channel": "Generator bearing front temperature (\u00b0C)",
+      "window": "48h-6h",
+      "n_outage": 92,
+      "n_control": 199,
+      "auroc_resid_level": 0.437,
+      "auroc_resid_slope": 0.538
+    },
+    {
+      "channel": "Generator bearing front temperature (\u00b0C)",
+      "window": "14d-1d",
+      "n_outage": 100,
+      "n_control": 199,
+      "auroc_resid_level": 0.426,
+      "auroc_resid_slope": 0.618
+    },
+    {
+      "channel": "Generator bearing rear temperature (\u00b0C)",
+      "window": "48h-6h",
+      "n_outage": 92,
+      "n_control": 199,
+      "auroc_resid_level": 0.491,
+      "auroc_resid_slope": 0.507
+    },
+    {
+      "channel": "Generator bearing rear temperature (\u00b0C)",
+      "window": "14d-1d",
+      "n_outage": 100,
+      "n_control": 199,
+      "auroc_resid_level": 0.533,
+      "auroc_resid_slope": 0.483
+    },
+    {
+      "channel": "Gear oil temperature (\u00b0C)",
+      "window": "48h-6h",
+      "n_outage": 92,
+      "n_control": 199,
+      "auroc_resid_level": 0.541,
+      "auroc_resid_slope": 0.501
+    },
+    {
+      "channel": "Gear oil temperature (\u00b0C)",
+      "window": "14d-1d",
+      "n_outage": 100,
+      "n_control": 199,
+      "auroc_resid_level": 0.538,
+      "auroc_resid_slope": 0.62
+    },
+    {
+      "channel": "Rear bearing temperature (\u00b0C)",
+      "window": "48h-6h",
+      "n_outage": 92,
+      "n_control": 199,
+      "auroc_resid_level": 0.528,
+      "auroc_resid_slope": 0.503
+    },
+    {
+      "channel": "Rear bearing temperature (\u00b0C)",
+      "window": "14d-1d",
+      "n_outage": 100,
+      "n_control": 199,
+      "auroc_resid_level": 0.538,
+      "auroc_resid_slope": 0.586
+    },
+    {
+      "channel": "Stator temperature 1 (\u00b0C)",
+      "window": "48h-6h",
+      "n_outage": 92,
+      "n_control": 198,
+      "auroc_resid_level": 0.477,
+      "auroc_resid_slope": 0.565
+    },
+    {
+      "channel": "Stator temperature 1 (\u00b0C)",
+      "window": "14d-1d",
+      "n_outage": 100,
+      "n_control": 198,
+      "auroc_resid_level": 0.485,
+      "auroc_resid_slope": 0.423
+    }
+  ],
+  "best_auroc_level": 0.541,
+  "reads_as": "no continuous channel shows load-controlled slow degradation before Kelmarsh forced outages"
+}
