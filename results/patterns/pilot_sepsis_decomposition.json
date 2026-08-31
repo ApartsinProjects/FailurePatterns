@@ -1,0 +1,282 @@
+[
+  {
+    "trace": "Sepsis",
+    "horizon": "24h",
+    "n_train": 2576,
+    "n_test": 1107,
+    "n_test_entities": 537,
+    "median_events_per_window": 21.0,
+    "auroc": {
+      "event_count": 0.634,
+      "presence": 0.635,
+      "multiset": 0.644,
+      "bigram": 0.626,
+      "lgbm_multiset": 0.651
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.603,
+        0.664
+      ],
+      "presence": [
+        0.599,
+        0.665
+      ],
+      "multiset": [
+        0.612,
+        0.674
+      ],
+      "bigram": [
+        0.59,
+        0.663
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": 0.001,
+        "ci95": [
+          -0.031,
+          0.028
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.009,
+        "ci95": [
+          -0.015,
+          0.037
+        ]
+      },
+      "order_increment": {
+        "delta": -0.018,
+        "ci95": [
+          -0.056,
+          0.014
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Sepsis",
+    "horizon": "6h",
+    "n_train": 3620,
+    "n_test": 1569,
+    "n_test_entities": 537,
+    "median_events_per_window": 6.0,
+    "auroc": {
+      "event_count": 0.59,
+      "presence": 0.566,
+      "multiset": 0.575,
+      "bigram": 0.551,
+      "lgbm_multiset": 0.572
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.563,
+        0.618
+      ],
+      "presence": [
+        0.537,
+        0.595
+      ],
+      "multiset": [
+        0.548,
+        0.603
+      ],
+      "bigram": [
+        0.521,
+        0.578
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": -0.024,
+        "ci95": [
+          -0.046,
+          -0.001
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.009,
+        "ci95": [
+          -0.004,
+          0.025
+        ]
+      },
+      "order_increment": {
+        "delta": -0.024,
+        "ci95": [
+          -0.055,
+          0.007
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Sepsis",
+    "horizon": "1h",
+    "n_train": 5009,
+    "n_test": 2142,
+    "n_test_entities": 537,
+    "median_events_per_window": 1.0,
+    "auroc": {
+      "event_count": 0.565,
+      "presence": 0.559,
+      "multiset": 0.559,
+      "bigram": 0.523,
+      "lgbm_multiset": 0.55
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.54,
+        0.59
+      ],
+      "presence": [
+        0.531,
+        0.581
+      ],
+      "multiset": [
+        0.531,
+        0.581
+      ],
+      "bigram": [
+        0.499,
+        0.543
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": -0.006,
+        "ci95": [
+          -0.023,
+          0.01
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "order_increment": {
+        "delta": -0.036,
+        "ci95": [
+          -0.058,
+          -0.009
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Sepsis",
+    "horizon": "last10",
+    "n_train": 2576,
+    "n_test": 1107,
+    "n_test_entities": 537,
+    "median_events_per_window": 10.0,
+    "auroc": {
+      "event_count": 0.64,
+      "presence": 0.606,
+      "multiset": 0.668,
+      "bigram": 0.612,
+      "lgbm_multiset": 0.633
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.617,
+        0.66
+      ],
+      "presence": [
+        0.568,
+        0.638
+      ],
+      "multiset": [
+        0.635,
+        0.701
+      ],
+      "bigram": [
+        0.572,
+        0.646
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": -0.034,
+        "ci95": [
+          -0.068,
+          -0.007
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.062,
+        "ci95": [
+          0.038,
+          0.09
+        ]
+      },
+      "order_increment": {
+        "delta": -0.056,
+        "ci95": [
+          -0.1,
+          -0.02
+        ]
+      }
+    }
+  },
+  {
+    "trace": "Sepsis",
+    "horizon": "last5",
+    "n_train": 2576,
+    "n_test": 1107,
+    "n_test_entities": 537,
+    "median_events_per_window": 5.0,
+    "auroc": {
+      "event_count": 0.62,
+      "presence": 0.589,
+      "multiset": 0.647,
+      "bigram": 0.622,
+      "lgbm_multiset": 0.62
+    },
+    "auroc_ci95": {
+      "event_count": [
+        0.603,
+        0.639
+      ],
+      "presence": [
+        0.555,
+        0.623
+      ],
+      "multiset": [
+        0.615,
+        0.689
+      ],
+      "bigram": [
+        0.586,
+        0.658
+      ]
+    },
+    "decomposition": {
+      "presence_effect": {
+        "delta": -0.031,
+        "ci95": [
+          -0.061,
+          -0.0
+        ]
+      },
+      "multiplicity_increment": {
+        "delta": 0.058,
+        "ci95": [
+          0.028,
+          0.086
+        ]
+      },
+      "order_increment": {
+        "delta": -0.025,
+        "ci95": [
+          -0.062,
+          0.012
+        ]
+      }
+    }
+  }
+]

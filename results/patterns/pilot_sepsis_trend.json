@@ -1,0 +1,242 @@
+{
+  "24h": {
+    "all_windows": {
+      "auroc": {
+        "count": {
+          "mean": 0.695,
+          "min": 0.673,
+          "max": 0.731
+        },
+        "presence": {
+          "mean": 0.725,
+          "min": 0.707,
+          "max": 0.741
+        },
+        "multiset": {
+          "mean": 0.741,
+          "min": 0.716,
+          "max": 0.769
+        },
+        "bigram": {
+          "mean": 0.696,
+          "min": 0.669,
+          "max": 0.714
+        }
+      },
+      "multiplicity_increment": {
+        "mean": 0.016,
+        "min": -0.008,
+        "max": 0.045,
+        "frac_pos": 0.88
+      },
+      "order_increment": {
+        "mean": -0.045,
+        "min": -0.064,
+        "max": -0.011,
+        "frac_pos": 0.0
+      }
+    },
+    "n_fail": 1790,
+    "n_ctrl": 1896,
+    "median_events": 31.0
+  },
+  "6h": {
+    "all_windows": {
+      "auroc": {
+        "count": {
+          "mean": 0.61,
+          "min": 0.585,
+          "max": 0.632
+        },
+        "presence": {
+          "mean": 0.634,
+          "min": 0.617,
+          "max": 0.659
+        },
+        "multiset": {
+          "mean": 0.626,
+          "min": 0.601,
+          "max": 0.642
+        },
+        "bigram": {
+          "mean": 0.583,
+          "min": 0.568,
+          "max": 0.603
+        }
+      },
+      "multiplicity_increment": {
+        "mean": -0.009,
+        "min": -0.016,
+        "max": -0.002,
+        "frac_pos": 0.0
+      },
+      "order_increment": {
+        "mean": -0.043,
+        "min": -0.071,
+        "max": -0.022,
+        "frac_pos": 0.0
+      }
+    },
+    "n_fail": 1790,
+    "n_ctrl": 3405,
+    "median_events": 8.0
+  },
+  "last10": {
+    "all_windows": {
+      "auroc": {
+        "count": {
+          "mean": 0.649,
+          "min": 0.636,
+          "max": 0.667
+        },
+        "presence": {
+          "mean": 0.684,
+          "min": 0.666,
+          "max": 0.703
+        },
+        "multiset": {
+          "mean": 0.699,
+          "min": 0.686,
+          "max": 0.719
+        },
+        "bigram": {
+          "mean": 0.67,
+          "min": 0.652,
+          "max": 0.692
+        }
+      },
+      "multiplicity_increment": {
+        "mean": 0.016,
+        "min": 0.009,
+        "max": 0.024,
+        "frac_pos": 1.0
+      },
+      "order_increment": {
+        "mean": -0.029,
+        "min": -0.044,
+        "max": -0.013,
+        "frac_pos": 0.0
+      }
+    },
+    "n_fail": 1790,
+    "n_ctrl": 1896,
+    "median_events": 10.0,
+    "length_matched": {
+      "auroc": {
+        "count": {
+          "mean": 0.5,
+          "min": 0.5,
+          "max": 0.5
+        },
+        "presence": {
+          "mean": 0.563,
+          "min": 0.541,
+          "max": 0.581
+        },
+        "multiset": {
+          "mean": 0.565,
+          "min": 0.54,
+          "max": 0.59
+        },
+        "bigram": {
+          "mean": 0.525,
+          "min": 0.499,
+          "max": 0.555
+        }
+      },
+      "multiplicity_increment": {
+        "mean": 0.002,
+        "min": -0.01,
+        "max": 0.011,
+        "frac_pos": 0.62
+      },
+      "order_increment": {
+        "mean": -0.041,
+        "min": -0.073,
+        "max": -0.009,
+        "frac_pos": 0.0
+      }
+    },
+    "length_matched_n_fail": 1265,
+    "length_matched_n_ctrl": 1896
+  },
+  "last5": {
+    "all_windows": {
+      "auroc": {
+        "count": {
+          "mean": 0.621,
+          "min": 0.609,
+          "max": 0.641
+        },
+        "presence": {
+          "mean": 0.664,
+          "min": 0.644,
+          "max": 0.693
+        },
+        "multiset": {
+          "mean": 0.677,
+          "min": 0.665,
+          "max": 0.697
+        },
+        "bigram": {
+          "mean": 0.641,
+          "min": 0.62,
+          "max": 0.658
+        }
+      },
+      "multiplicity_increment": {
+        "mean": 0.013,
+        "min": 0.004,
+        "max": 0.025,
+        "frac_pos": 1.0
+      },
+      "order_increment": {
+        "mean": -0.036,
+        "min": -0.066,
+        "max": -0.01,
+        "frac_pos": 0.0
+      }
+    },
+    "n_fail": 1790,
+    "n_ctrl": 1896,
+    "median_events": 5.0,
+    "length_matched": {
+      "auroc": {
+        "count": {
+          "mean": 0.5,
+          "min": 0.5,
+          "max": 0.5
+        },
+        "presence": {
+          "mean": 0.573,
+          "min": 0.556,
+          "max": 0.586
+        },
+        "multiset": {
+          "mean": 0.576,
+          "min": 0.557,
+          "max": 0.591
+        },
+        "bigram": {
+          "mean": 0.528,
+          "min": 0.507,
+          "max": 0.537
+        }
+      },
+      "multiplicity_increment": {
+        "mean": 0.003,
+        "min": -0.003,
+        "max": 0.009,
+        "frac_pos": 0.75
+      },
+      "order_increment": {
+        "mean": -0.048,
+        "min": -0.07,
+        "max": -0.026,
+        "frac_pos": 0.0
+      }
+    },
+    "length_matched_n_fail": 1362,
+    "length_matched_n_ctrl": 1896
+  }
+}

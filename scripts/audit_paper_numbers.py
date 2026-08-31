@@ -655,6 +655,55 @@ def main() -> int:
         check("5.6", f"sensitivity {h} {fs} ms={ms} AUROC = {cited}",
               got, str(cited), got is not None and abs(got - cited) < 0.005)
 
+    # ---- §3.7 / §6.13 sepsis clinical decomposition ----
+    sep_load = _load_json(PROC / "sepsis_trend_load_stats.json")
+    check("3.7", "Sepsis: 20,336 ICU stays",
+          sep_load.get("n_patients"), "20,336", eq_int(sep_load.get("n_patients"), 20336))
+    check("3.7", "Sepsis: 1,790 septic stays",
+          sep_load.get("n_septic"), "1,790", eq_int(sep_load.get("n_septic"), 1790))
+    check("3.7", "Sepsis: 8.8% prevalence",
+          sep_load.get("sepsis_prevalence"), "0.088", approx(sep_load.get("sepsis_prevalence"), 0.088))
+
+    sep = _load_json(PATT / "pilot_sepsis_trend.json")
+    lm10 = sep["last10"]["length_matched"]
+    lm5 = sep["last5"]["length_matched"]
+    check("6.13", "Sepsis last5 length-matched presence AUROC = 0.573",
+          lm5["auroc"]["presence"]["mean"], "0.573", approx(lm5["auroc"]["presence"]["mean"], 0.573))
+    check("6.13", "Sepsis last10 length-matched presence AUROC = 0.563",
+          lm10["auroc"]["presence"]["mean"], "0.563", approx(lm10["auroc"]["presence"]["mean"], 0.563))
+    check("6.13", "Sepsis last5 presence per-split min = 0.556",
+          lm5["auroc"]["presence"]["min"], "0.556", approx(lm5["auroc"]["presence"]["min"], 0.556))
+    check("6.13", "Sepsis last10 presence per-split min = 0.541",
+          lm10["auroc"]["presence"]["min"], "0.541", approx(lm10["auroc"]["presence"]["min"], 0.541))
+    check("6.13", "Sepsis length-matched count AUROC = 0.500 (both horizons)",
+          [lm5["auroc"]["count"]["mean"], lm10["auroc"]["count"]["mean"]], "0.500, 0.500",
+          approx(lm5["auroc"]["count"]["mean"], 0.5) and approx(lm10["auroc"]["count"]["mean"], 0.5))
+    check("6.13", "Sepsis last5 multiplicity increment = +0.003 (null)",
+          lm5["multiplicity_increment"]["mean"], "+0.003", approx(lm5["multiplicity_increment"]["mean"], 0.003))
+    check("6.13", "Sepsis last10 multiplicity increment = +0.002 (null)",
+          lm10["multiplicity_increment"]["mean"], "+0.002", approx(lm10["multiplicity_increment"]["mean"], 0.002))
+    check("6.13", "Sepsis last5 order increment = -0.048",
+          lm5["order_increment"]["mean"], "-0.048", approx(lm5["order_increment"]["mean"], -0.048))
+    check("6.13", "Sepsis last10 order increment = -0.041",
+          lm10["order_increment"]["mean"], "-0.041", approx(lm10["order_increment"]["mean"], -0.041))
+    check("6.13", "Sepsis order increment negative in 0 of 8 splits (both horizons)",
+          [lm5["order_increment"]["frac_pos"], lm10["order_increment"]["frac_pos"]], "0.0, 0.0",
+          lm5["order_increment"]["frac_pos"] == 0.0 and lm10["order_increment"]["frac_pos"] == 0.0)
+    # full-window presence in the stated 0.66-0.73 band
+    fp = {h: sep[h]["all_windows"]["auroc"]["presence"]["mean"] for h in ["24h", "last10", "last5"]}
+    check("6.13", "Sepsis full-window presence AUROC in [0.66, 0.73] (24h/last10/last5)",
+          fp, "0.66-0.73", all(0.655 <= v <= 0.732 for v in fp.values()))
+    # raw count classifier (all windows) in the stated 0.62-0.70 band on the tabulated horizons
+    fc = {h: sep[h]["all_windows"]["auroc"]["count"]["mean"] for h in ["24h", "last10", "last5"]}
+    check("6.13", "Sepsis raw event-count AUROC in [0.62, 0.70] (24h/last10/last5)",
+          fc, "0.62-0.70", all(0.615 <= v <= 0.702 for v in fc.values()))
+    # static encoding near-chance on matched windows (supersession claim)
+    sep_corr = _load_json(PATT / "pilot_sepsis_CORRECTION.json")
+    rc = sep_corr["result_full_history"]
+    check("6.13", "Sepsis static-encoding matched presence near 0.52 (both horizons)",
+          [rc["last5"]["presence"], rc["last10"]["presence"]], "~0.52",
+          abs(rc["last5"]["presence"] - 0.525) < 0.02 and abs(rc["last10"]["presence"] - 0.525) < 0.02)
+
     # ---- write report ----
     df_out = pd.DataFrame(claims)
     df_out["match_str"] = df_out["match"].map({True: "PASS", False: "MISMATCH"})

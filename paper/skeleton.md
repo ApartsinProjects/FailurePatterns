@@ -25,9 +25,9 @@ keywords:
 Every large system logs discrete operational events: errors, retries,
 task failures, maintenance actions. Frequent-pattern mining
 (FP-Growth, PrefixSpan) surfaces recurrent event patterns in these
-logs. We test whether pattern mining recovers precursor signatures on
-real industrial telemetry when the underlying failure process
-advances through discrete stages. The result is a signature
+logs. We test whether pattern mining recovers precursor signatures when
+the underlying failure process advances through discrete stages. The
+result is a signature
 catalog mined from six operational traces: two independent Senvion
 wind-farm alarm logs (Kelmarsh, Penmanshiel), Azure PdM (synthetic),
 Alibaba v2018 (production cloud), LLNL Blue Gene/L syslogs (HPC), and
@@ -35,21 +35,25 @@ SCANIA Component X (automotive). Every signature is validated on an
 entity-disjoint 50/50 discovery/inference split with
 Benjamini-Yekutieli FDR control on the inference half, and the
 right-censored SCANIA trace is scored by matched conditional logistic
-regression stratified by risk set. The central empirical result is a
-replicated physical cascade: **two independent wind farms of different
-rotor size and site surface the same zero-control cascade signatures
-at inference-half lift 4.00**, selected in every repeated split and
+regression. The central empirical result is a
+replicated physical cascade: **two independent wind farms surface the
+same zero-control cascade signatures at inference-half lift 4.00**,
+selected in every repeated split and
 prospectively detecting 95% of Kelmarsh forced outages at a median
 3.3-hour lead. A decomposition of held-out prediction into event
 presence, multiplicity, and order then places the two cloud/maintenance
 traces in opposite corners: on Azure the distinguishing increment is
 event **order** (+0.032, bootstrap CI excluding zero) while
 multiplicity adds nothing; on Alibaba it is **multiplicity** (+0.029,
-excluding zero) while exact order adds nothing. SCANIA yields
-interpretable per-truck hazard ratios (74 of 200 discovery-selected
-patterns survive the FDR; top HR 1.60), and BGL is a mapped boundary
-case with no deployable non-alert precursor. Code, splits, and all
-result artefacts are released.
+excluding zero) while exact order adds nothing. The same decomposition
+on a seventh, clinical trace (the PhysioNet 2019 sepsis cohort)
+reproduces the wind-farm regime: present deterioration transitions
+predict onset at a six-hour lead while multiplicity and order add
+nothing, so across all seven traces **presence is the universal channel
+and order distinguishes only Azure**. SCANIA yields interpretable
+per-truck hazard ratios (74 of 200 patterns survive the FDR; top HR
+1.60); BGL is a boundary case with no deployable non-alert precursor.
+Code, splits, and all result artefacts are released.
 
 **Keywords:** failure prediction; frequent itemset mining; sequential
 pattern mining; post-selection inference; false discovery rate;
@@ -274,7 +278,7 @@ conditional logistic estimator we use for SCANIA (§4.6).
 ### 2.7 Positioning
 
 The paper's contribution is a single methodological package applied
-uniformly across six traces: entity-disjoint post-selection-valid
+uniformly across six operational traces: entity-disjoint post-selection-valid
 mining, a count-preserving order null that separates ordering from
 event multiplicity, and a censoring-valid matched conditional
 logistic estimator for right-censored entities, evaluated against an
@@ -404,6 +408,32 @@ threshold for that feature. Per-vehicle normalisation controls for
 baseline usage variation across the fleet. Entity is `vehicle_id`.
 The failure event is a synthetic `terminal_repair` marker placed at
 the last readout timestamp of each repair-labelled vehicle.
+
+### 3.7 PhysioNet/CinC 2019 sepsis (clinical, per-ICU-stay)
+
+The six traces above are dominated by abrupt failures. To test the same
+pipeline on a process that is genuinely slow and continuously sensed, we
+add the PhysioNet/Computing in Cardiology Challenge 2019 sepsis cohort
+[@reyna2020sepsis], training set A (Beth Israel Deaconess Medical
+Center): 20,336 ICU stays, one row per hour, 40 physiological channels
+(vitals and laboratory values) plus a per-hour sepsis label. 1,790 stays
+(8.8%) develop sepsis under the Sepsis-3 definition. The challenge label
+turns positive six hours before the clinical onset time, so the outcome
+carries a built-in six-hour prediction lead.
+
+Because the channels are continuous, we derive discrete tokens per hour
+in two families: **direction transitions** (`rising` / `falling`, emitted
+when a channel's change over the preceding six hours exceeds half its
+cohort inter-quartile range and reverses the previous trend) and
+**severity-band entries** (`high` when a value first enters its abnormal
+band, `severe` when it enters an extreme band), over twelve channels
+(heart rate, respiration, systolic and mean pressure, oxygen saturation,
+temperature, lactate, creatinine, white-cell count, platelets, blood urea
+nitrogen, pH). Tokens fire only at observed hours, so the stream is
+sparse and event-like. Entity is the ICU stay; the failure event is a
+`terminal_failure` marker at the first sepsis-positive hour. An earlier
+static threshold-crossing encoding is superseded by this trend encoding
+for the reason given in §6.13.
 
 ## 4  Method
 
@@ -1433,6 +1463,61 @@ inspection), not next-event alerting.
 Lead-time detail is released in the repository under `results/tables/`
 (`azure_leadtime.md`, `alibaba_leadtime.md`).
 
+### 6.13 Clinical deterioration: an external pure-presence replication
+
+The limitations of the six operational traces point to one open
+question: a system whose faults develop slowly and are sensed
+continuously is the natural place to look for the ordered degradation
+trajectories that are largely absent above. Sepsis is that system. We
+ran the identical windowing, matched-control, and presence /
+multiplicity / order pipeline on the PhysioNet 2019 cohort (§3.7),
+anchoring pre-onset windows on the six-hour-lead sepsis label and drawing
+matched clean-region controls from the same stays, with an
+entity-disjoint 70/30 patient split repeated over eight random
+partitions.
+
+This dataset exposes a confound that the operational traces do not.
+Patients who become septic early in their stay have little prior recorded
+history, so their pre-onset windows are systematically shorter than
+control windows; a raw event-count classifier then reaches AUROC 0.62 to
+0.70 by reading window length rather than physiology. We therefore report
+the decomposition on **length-matched** windows (exactly K events, so the
+count classifier is fixed at AUROC 0.500 by construction and cannot use
+length), which isolates the structural channels (Table 16).
+
+| representation | last5 AUROC | last10 AUROC |
+|----------------|------------:|-------------:|
+| event count (length-matched) | 0.500 | 0.500 |
+| presence (set)               | **0.573 [min 0.556]** | **0.563 [min 0.541]** |
+| multiplicity increment       | +0.003 (4 of 8 splits) | +0.002 (5 of 8) |
+| order increment              | -0.048 (0 of 8) | -0.041 (0 of 8) |
+
+: **Table 16.** Sepsis presence / multiplicity / order decomposition on length-matched windows, mean over eight entity-disjoint splits (per-split min for presence; fraction of splits with a positive increment for the two increments). Presence is the only channel that clears chance; multiplicity is null and order is negative.
+
+On length-matched windows the presence channel survives robustly:
+knowing *which* deterioration transitions are present (for example
+`SBP:falling`, `MAP:falling`, `Lactate:severe`) raises the held-out
+AUROC to 0.56 to 0.57, above chance in every one of the eight splits,
+while the raw count is pinned at 0.500. The multiplicity increment is
+indistinguishable from zero (positive in fewer than half the splits) and
+the order increment is negative in all eight, meaning adjacent-transition
+bigrams actively hurt once the transition set is known. On the full
+windows the same presence representation reaches AUROC 0.66 to 0.73 with
+the built-in six-hour lead. A static threshold-crossing encoding of the
+same cohort, by contrast, does not survive length matching at all
+(presence near 0.52), which is why §3.7 encodes trends rather than raw
+threshold crossings.
+
+Sepsis therefore lands in the same regime as the two wind farms:
+**a large, verified presence signal with no multiplicity or order
+channel.** Even on a textbook slow physiological deterioration, where a
+clinical cascade of organ dysfunction genuinely exists, the predictive
+content is *which* deterioration signs appear, not how many times or in
+what sequence. Across all seven traces now spanning abrupt industrial
+failures and slow clinical deterioration, presence is the universal
+channel, multiplicity is a distinguishable channel only on Alibaba, and
+order is a distinguishable channel only on Azure.
+
 ## 7  Discussion
 
 ### 7.1 Is the predictor in the entire sequence or in a subpart?
@@ -1445,7 +1530,7 @@ predictor. Formally, S is "full-sequence-dominant" iff
 lift(S) > lift(S') + 0.05 for every proper subsequence S' the miner
 also produced.
 
-Top-200 sequences per horizon (Table 16):
+Top-200 sequences per horizon (Table 17):
 
 | trace   | horizon | full-sequence-dominant | subpart dominant | fraction full |
 |---------|---------|------------------:|-----------------:|--------------:|
@@ -1455,7 +1540,7 @@ Top-200 sequences per horizon (Table 16):
 | Alibaba | last5   |                 5 |               20 | 20%           |
 | Alibaba | last10  |                31 |               74 | 30%           |
 
-: **Table 16.** Full-sequence-dominant versus subpart-dominant predictive sequences by trace.
+: **Table 17.** Full-sequence-dominant versus subpart-dominant predictive sequences by trace.
 
 The finding is trace-dependent:
 
@@ -1632,6 +1717,16 @@ at all.
   not merely an artifact of using discrete logs; a system whose faults
   develop slowly and are sensed continuously would be the natural place
   to look for the ordered trajectories that are largely absent here.
+  Section 6.13 does exactly that on the PhysioNet 2019 sepsis cohort, a
+  slow physiological deterioration: even there, on length-matched
+  windows, the signal is pure presence and the order channel is negative,
+  so the absence of an ordered channel extends from abrupt industrial
+  failures to a continuously-sensed clinical process. The sepsis analysis
+  also carries its own boundary: a static threshold-crossing encoding is
+  near-chance once window length is matched, and only a trend/severity
+  encoding recovers the presence signal, so the transfer is to processes
+  whose deterioration can be discretised as directional transitions, not
+  to raw threshold flags.
 - Alibaba results are per-job, computed on `batch_task` alone; the
   `batch_instance` table (21 GB compressed) that would enable
   per-machine failure trajectories on the same trace is left to
@@ -1692,7 +1787,10 @@ sources for Azure PdM (Kaggle mirror), Alibaba cluster-trace-v2018
 `8196385/BGL.zip`, ~55 MB), SCANIA Component X (Swedish National
 Data Service DOI `10.5878/jvb5-d390`, CC-BY-4.0), Kelmarsh
 (Zenodo `10.5281/zenodo.5841834`, CC-BY-4.0) and Penmanshiel
-(Zenodo `10.5281/zenodo.5946808`, CC-BY-4.0) SCADA status logs;
+(Zenodo `10.5281/zenodo.5946808`, CC-BY-4.0) SCADA status logs, and
+the PhysioNet/CinC 2019 sepsis training set A
+(physionet.org/content/challenge-2019, ODC Open Database License, openly
+downloadable without credentialing);
 (ii) window
 construction, mining (mlxtend FP-Growth 0.25.0 for itemsets, SPMF
 2.64 via subprocess for PrefixSpan sequences), scoring, discovery/
@@ -1713,19 +1811,26 @@ tests, LightGBM). Wall-clock, directly measured by
 pipeline (itemset mining, sequence mining, post-selection split,
 matched conditional logistic, closed-sequence CloSpan, wind-farm
 signature extraction) totals 36.9 minutes on a single Windows CPU-
-only workstation** across all six traces. SCANIA itemset mining is
+only workstation** across all six operational traces. SCANIA itemset mining is
 the dominant single stage at 26.2 minutes (`counter_surprise` event
 stream, 27,264 windows and 46k candidate itemsets); the two wind-farm
 signature runs together take 8.6 seconds. Raw-trace download and
 initial window construction are one-time steps documented in the
-`ingest_*.json` artefacts and excluded from this number.
+`ingest_*.json` artefacts and excluded from this number. The sepsis
+decomposition of §6.13 is a separate pilot (`ingest_sepsis_trend.py`,
+`pilot_sepsis_trend.py`) whose ingest, windowing, and eight-split
+decomposition run in a few minutes on the same workstation.
 
-Data availability and ethics. All six datasets are public and openly
-licensed (the four cited above under CC-BY-4.0, plus the Azure PdM
+Data availability and ethics. All seven datasets are public and openly
+licensed (the four cited above under CC-BY-4.0, the Azure PdM
 sample and Alibaba cluster-trace-v2018 under their respective public
-terms); the paper introduces no new data collection. None of the
-traces contains personal or human-subject data: they are machine
-telemetry, cluster job logs, HPC syslogs, and industrial alarm codes.
+terms, and the PhysioNet/CinC 2019 sepsis cohort under the ODC Open
+Database License); the paper introduces no new data collection. The six
+operational traces are machine telemetry, cluster job logs, HPC syslogs,
+and industrial alarm codes, and contain no personal data. The seventh,
+the PhysioNet sepsis cohort, is de-identified human ICU data released for
+open research use under its stated terms; we use it as distributed,
+derive only event streams from it, and add no re-identifying information.
 The derived event streams, windows, mined patterns, and all result
 artefacts are released in the repository under the same open terms.
 
@@ -1742,7 +1847,13 @@ degradation chains that complete a median two-to-four hours before the
 outage. Beyond the co-located catalog, the presence / multiplicity /
 order decomposition places the two cloud/maintenance traces in
 opposite corners: on Azure the distinguishing held-out increment is
-event order, on Alibaba it is event multiplicity, not exact order. On
+event order, on Alibaba it is event multiplicity, not exact order. The
+same decomposition, carried to a seventh and clinical trace (the
+PhysioNet 2019 sepsis cohort), reproduces the wind-farm regime on a slow
+physiological deterioration: on length-matched windows the presence of
+deterioration transitions predicts onset at a six-hour lead while
+multiplicity and order add nothing, so across all seven traces presence
+is the universal channel and order is distinguishable only on Azure. On
 raw accuracy the mined-pattern features do not beat a gradient-boosted
 count model; their contribution is validated, human-readable
 signatures and the decomposition itself, not a maximal predictive

@@ -1,0 +1,10 @@
+{
+  "correction": "The initial sepsis multiplicity-increment finding was a truncation confound, not physiology.",
+  "confound": "Failure (pre-onset) windows are systematically shorter than control windows because early-onset patients have less prior recorded history. At last10, 15% of failure windows have 0 events and only 70% are full, vs 96% full / 0% zero for controls. Raw event_count therefore discriminated (AUROC 0.64) by reading window length, and the presence->multiset gap partly re-encoded that length.",
+  "clean_test": "Restricting to full-history windows (exactly K events) makes count AUROC = 0.500 by construction; the structural signal is then measured with length held constant.",
+  "result_full_history": {
+    "last10": {"count": 0.500, "presence": 0.522, "multiset": 0.519, "multiplicity_increment_mean": -0.003, "frac_positive_over_8_splits": 0.38, "n_fail": 1250, "n_ctrl": 1819},
+    "last5":  {"count": 0.500, "presence": 0.532, "multiset": 0.515, "multiplicity_increment_mean": -0.017, "frac_positive_over_8_splits": 0.00, "n_fail": 1393, "n_ctrl": 1887}
+  },
+  "conclusion": "On length-matched windows the multiplicity increment is null-to-negative and presence itself is near-chance (0.52). Under this binary threshold-crossing discrete-event encoding, sepsis carries no usable presence/multiplicity/order signal; the raw-count 'predictability' is stay-length/data-availability, not a mineable event pattern. Order was already null/negative in the original pilot. Sepsis is NOT a positive multiplicity case; the discrete-event method does not capture this continuous-trend deterioration under threshold discretization."
+}

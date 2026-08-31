@@ -1,0 +1,12 @@
+{
+  "summary": "Sepsis under a trend/severity transition encoding is a verified PURE-PRESENCE dataset. Which deterioration transitions occur carries the signal; multiplicity and order do not, even on this slow physiological deterioration.",
+  "encoding": "direction-of-change (rising/falling run onsets, 6h lookback, 0.5*IQR) + severity-band entry (abnormal/severe) transition events, 12 channels; outcome=first SepsisLabel==1 hour (challenge built-in 6h lead).",
+  "confound_control": "Static threshold encoding failed length-matching (signal was window truncation from early-onset patients). Trend encoding re-tested on length-matched windows (exactly K events, count AUROC=0.500 by construction).",
+  "length_matched": {
+    "last10": {"presence_mean": 0.563, "presence_min": 0.541, "count": 0.500, "multiplicity_increment_mean": 0.002, "multiplicity_frac_pos": 0.62, "order_increment_mean": -0.041, "order_frac_pos": 0.0, "n_fail": 1265, "n_ctrl": 1896},
+    "last5":  {"presence_mean": 0.573, "presence_min": 0.556, "count": 0.500, "multiplicity_increment_mean": 0.003, "multiplicity_frac_pos": 0.75, "order_increment_mean": -0.048, "order_frac_pos": 0.0, "n_fail": 1362, "n_ctrl": 1896}
+  },
+  "full_window_presence_auroc": {"24h": 0.725, "last10": 0.684, "last5": 0.664},
+  "conclusion": "Presence is a genuine, robust channel (survives length matching, min 0.54 > 0.50 in every split); multiplicity is null and not robust; order is negative in all splits. Slow physiological deterioration sits in the SAME pure-presence regime as the two wind-farm co-located bursts. Across all seven datasets, presence is the universal channel and order essentially never carries usable signal.",
+  "supersedes": "pilot_sepsis_CORRECTION.json (static encoding, near-chance on matched windows)"
+}

@@ -1,0 +1,6 @@
+{
+  "check": "multiplicity_increment (multiset AUROC - presence AUROC), 8 random entity-disjoint 70/30 splits",
+  "last10": {"mean": 0.048, "min": 0.031, "max": 0.077, "presence": 0.610, "multiset": 0.658, "frac_positive": 1.00},
+  "last5":  {"mean": 0.033, "min": 0.000, "max": 0.064, "presence": 0.584, "multiset": 0.617, "frac_positive": 1.00},
+  "24h":    {"mean": 0.008, "min": -0.006, "max": 0.014, "presence": 0.636, "multiset": 0.644, "frac_positive": 0.88}
+}
