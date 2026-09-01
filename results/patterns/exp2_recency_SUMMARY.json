@@ -1,0 +1,15 @@
+{
+  "experiment": "Recency / marked-temporal-set test (token-specific timing beyond order)",
+  "hypothesis": "Precursors are permutation-invariant but temporally localized: token-specific recency carries signal even though order does not.",
+  "verdict": "NEGATIVE on real traces (after length-matched validation).",
+  "recency_value_length_matched": {
+    "Azure_last5":    {"mean": 0.058, "min": 0.051, "frac_pos": 1.00, "note": "synthetic positive control only"},
+    "Alibaba_last3":  {"mean": 0.001, "min": 0.000, "frac_pos": 0.75, "note": "null"},
+    "Kelmarsh_last5": {"mean": 0.012, "min": -0.002, "frac_pos": 0.75, "note": "null/noisy"},
+    "Sepsis_last10":  {"mean": 0.024, "min": 0.003, "frac_pos": 1.00, "note": "robust but below +0.03 bar"}
+  },
+  "preregistered_win_condition": "recency_value > +0.03 on >=2 REAL traces below the 0.082 order-injection floor -- NOT MET (only synthetic Azure clears it).",
+  "confound_found": "Generic proximity [window_span, time-since-last-event] scores AUROC 0.73-0.97 even at fixed event count (n_events==K). The raw P+R gain is dominated by generic recency (measurement/window-boundary timing), not token-specific physiology. The stratified recency-null removes it; token-timing is then null on real traces.",
+  "refined_message": "Not only is ORDER absent (Exp 1), token-specific fine TIMING is also absent on real traces once generic proximity is controlled. The predictive content is almost purely event PRESENCE (which events). Hardens the pure-presence thesis; does NOT provide a positive temporal-structure discovery.",
+  "reconstruction_validation": "per-window event-count reconstruction matched stored n_events exactly (Azure/Alibaba/Sepsis mismatch=0; Kelmarsh 11/1928 boundary ties)."
+}

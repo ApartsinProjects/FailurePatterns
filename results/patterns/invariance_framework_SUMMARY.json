@@ -1,0 +1,20 @@
+{
+  "lead": "Power-calibrated invariance framework for event-log failure prediction (the 'Predictive Invariance Profile').",
+  "one_line": "A power-calibrated assay determines which structural channel (presence / multiplicity / order / token-timing) is genuinely predictive; on real traces the signal is approximately invariant to within-window order AND token-specific timing.",
+  "validated_components": {
+    "order_assay": {"power": "10% injected order detected at order_value 0.082 (monotone to 0.271)", "real_traces": "null except synthetic Azure (+0.073)"},
+    "timing_assay": {"power": "10% injected token-timing detected at recency_value 0.079 (monotone to 0.293)", "real_traces": "null: sepsis +0.024 (<0.03 bar), Kelmarsh/Alibaba ~0; synthetic Azure +0.058"},
+    "presence": "dominant channel across all useful-signal traces",
+    "multiplicity": "distinguishable only on Alibaba (+0.029)"
+  },
+  "two_symmetric_confounds": {
+    "apparent_order_is_multiplicity": "Alibaba naive sequence gain collapses under the count-preserving null (already in paper).",
+    "apparent_timing_is_generic_proximity": "Naive recency gain reflects [window span, time-since-last-event] (AUROC 0.73-0.97 even at fixed count); token-specific timing near-null once generic proximity is preserved in the null."
+  },
+  "proposed_confirmatory_experiment": "Calibrated 4-channel recovery benchmark: presence-only / multiplicity-only / order-only / timing-only injections, each modifying ONLY its channel; show the assay recovers each (diagonal channel x detection matrix).",
+  "proposed_figure": "Ground-truth channel x detected-channel matrix (rows: 5 real traces + 4 injections; cols: presence/multiplicity/order/timing value) + injection recovery curves.",
+  "proposed_title": "What Information Predicts Failure? Power-Calibrated Invariance Tests for Event Logs",
+  "status": "STRONG VALIDATED LEAD - external strategist (ChatGPT) recommends consolidating rather than further hunting.",
+  "artifacts": ["exp1_order_sufficiency_SUMMARY.json", "order_capacity_ladder.json", "order_power_calibration.json",
+                "exp2_recency_SUMMARY.json", "recency_marked_set.json", "timing_power_calibration.json"]
+}

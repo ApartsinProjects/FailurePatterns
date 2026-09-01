@@ -1,0 +1,98 @@
+[
+  {
+    "trace": "Azure",
+    "horizon": "last5",
+    "n_windows": 2972,
+    "count_mismatch": 0,
+    "recency_value": {
+      "mean": 0.047,
+      "min": 0.036,
+      "max": 0.059,
+      "frac_pos": 1.0
+    },
+    "PR_minus_P": {
+      "mean": 0.119,
+      "min": 0.104,
+      "max": 0.133,
+      "frac_pos": 1.0
+    },
+    "generic_proximity_auroc_minus_half": {
+      "mean": 0.43,
+      "min": 0.419,
+      "max": 0.441,
+      "frac_pos": 1.0
+    }
+  },
+  {
+    "trace": "Alibaba",
+    "horizon": "last3",
+    "n_windows": 64948,
+    "count_mismatch": 0,
+    "recency_value": {
+      "mean": 0.005,
+      "min": 0.004,
+      "max": 0.006,
+      "frac_pos": 1.0
+    },
+    "PR_minus_P": {
+      "mean": 0.121,
+      "min": 0.118,
+      "max": 0.127,
+      "frac_pos": 1.0
+    },
+    "generic_proximity_auroc_minus_half": {
+      "mean": 0.48,
+      "min": 0.478,
+      "max": 0.482,
+      "frac_pos": 1.0
+    }
+  },
+  {
+    "trace": "Kelmarsh",
+    "horizon": "last5",
+    "n_windows": 1928,
+    "count_mismatch": 11,
+    "recency_value": {
+      "mean": 0.008,
+      "min": -0.003,
+      "max": 0.049,
+      "frac_pos": 0.62
+    },
+    "PR_minus_P": {
+      "mean": 0.018,
+      "min": 0.005,
+      "max": 0.033,
+      "frac_pos": 1.0
+    },
+    "generic_proximity_auroc_minus_half": {
+      "mean": 0.36,
+      "min": 0.315,
+      "max": 0.39,
+      "frac_pos": 1.0
+    }
+  },
+  {
+    "trace": "Sepsis",
+    "horizon": "last10",
+    "n_windows": 3686,
+    "count_mismatch": 0,
+    "recency_value": {
+      "mean": 0.022,
+      "min": 0.002,
+      "max": 0.03,
+      "frac_pos": 1.0
+    },
+    "PR_minus_P": {
+      "mean": 0.057,
+      "min": 0.039,
+      "max": 0.073,
+      "frac_pos": 1.0
+    },
+    "generic_proximity_auroc_minus_half": {
+      "mean": 0.317,
+      "min": 0.307,
+      "max": 0.324,
+      "frac_pos": 1.0
+    }
+  }
+]
